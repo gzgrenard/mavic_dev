@@ -1,0 +1,8 @@
+<FilesMatch "\.combined\.js$">
+	Options +Includes
+	SetOutputFilter INCLUDES
+	XBitHack full 
+	# script.combined.js must be executable (chmod +x)
+	# cache is based on script.combined.js last modification date (touch -m script.combined.js)
+</FilesMatch>
+

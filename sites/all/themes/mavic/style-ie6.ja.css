@@ -1,0 +1,36 @@
+/* no cufon in jap */
+.ja #menu a.level1 {
+	padding-top: 7px;
+	padding-bottom: 0;
+}
+.ja #menu a.level1:hover,
+.ja #menu a.active,
+.ja #menu a.current {
+	padding-top: 7px;
+	padding-bottom: 0;
+}
+
+.ja #menu a.first {
+	padding-top: 11px;
+	padding-bottom: 0;
+}
+.ja #menu a.first:hover{
+	padding-top: 11px;
+	padding-bottom: 0;
+}
+.ja .homedescription h1 {
+	padding: 5px 15px 5px 0;
+}
+
+.ja .homedescription h1 img {
+	padding-left: 5px;
+}
+/*
+.ja #tabs_buttons_gamme.history div.tab {
+	padding-left: 13px;
+	padding-right: 5px;
+}
+
+.ja #tabs_buttons_gamme.history div.last {
+	padding-right: 4px;
+}*/

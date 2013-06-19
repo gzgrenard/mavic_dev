@@ -1,0 +1,74 @@
+<?php
+
+/* @file
+ * The mavic search 404 module files, does all the searching
+ * when a 404 occurs and handles redirect
+ */
+
+
+/**
+ * mavic_search_404_node_presave()
+ * Implements hook_node_presave()
+ * make sure pathauto is disabled on update as we trigger it ourself
+ */
+function mavic_search_404_node_presave($node) {
+  if (variable_get('mavic_search_404_overwrite_autopath', FALSE)) {
+    variable_set('pathauto_update_action', 0);
+  }  
+} /* !mavic_search_404_node_presave() */
+
+/**
+ * mavic_search_404_node_update()
+ * Implements hook_node_update()
+ * check we can update the alias if it's not a system one or if pathauto_perform_alias is enabled
+ */
+function mavic_search_404_node_update($node) {
+  if (variable_get('mavic_search_404_overwrite_autopath', FALSE)) {
+    if ($node->pathauto_perform_alias || ($node->path != 'node/' . $node->nid && !empty($node->path))) {
+      //get old alias
+      if (!$node->pathauto_perform_alias && isset($node->old_alias)) {
+        $old_alias = $node->old_alias;
+      }
+      else {//pathauto_perform_alias is enabled and $node->old_alias has been overwritten or it is a system upddate (i.e. product import) : get old alias
+        $old_alias = drupal_get_path_alias('node/' . $node->nid, $node->language);
+      }
+      //call pathauto checkbox checked or no checkbox (sytem update)
+      if ($node->pathauto_perform_alias || (!isset($node->pathauto_perform_alias))) {
+        //enable pathauto on update
+        variable_set('pathauto_update_action', 2);
+        //create new alias 
+        pathauto_node_update_alias($node, 'update');
+        //disable pathauto on update
+        variable_set('pathauto_update_action', 0);
+      }
+      elseif (!empty($node->path) && $node->path != 'node/' . $node->nid && $node->path != $old_alias) {
+        path_set_alias('node/' . $node->nid, $node->path, isset($node->pid) ? $node->pid : NULL, $node->language);
+      }
+        $node->path = drupal_get_path_alias('node/' . $node->nid, $node->language);
+        //if it's not a new alias (e.g. a child techno becoming an parent and thus receiving a direct URL)
+        //and if the user wants to create a redirection or if it a system update (e.g. product import)
+        //and if the new alias is created 
+        //and it is different from the old alias, 
+        //create a redirection
+        if ($old_alias != 'node/' . $node->nid && ($node->mavic_set_redirect == 1 || !isset($node->mavic_set_redirect)) && $node->path != 'node/' . $node->nid && $node->path != $old_alias) {
+          $redirect = mavic_search_404_insert_redirect($old_alias, $node->path, $node->language);
+          if (is_array($redirect)) {
+            drupal_set_message(t('The alias has changed, a redirection has been created from <em> @redirect_old </em> to <em> @redirect_new </em>.', array('@redirect_old' => $redirect['old'], '@redirect_new' => $redirect['new']), array('context' => 'Alias has changed, redirection created', 'langcode' => 'en')), 'warning');
+          }
+          else {
+            drupal_set_message(t('The alias has changed from <em> @old_alias </em> to <em> @old_path </em>, but the system did not succeed in setting a automatic redirection, please contact your administrator.', array('@old_alias' => $old_alias, '@old_path' => $node->path), array('context' => 'Alias has changed, redirection failed', 'langcode' => 'en')), 'warning');
+          }
+        }
+      //the alias has to be deleted 
+    }
+    elseif (!$node->pathauto_perform_alias && ($node->path == 'node/' . $node->nid || empty($node->path) || !isset($node->path))) {
+      $old_alias = drupal_get_path_alias('node/' . $node->nid, $node->language);
+      //if an alias exist, 
+      if ($old_alias != 'node/' . $node->nid) {
+        if (isset($node->path))
+        //unset it so path module can delete it
+          unset($node->path);
+        //prepare redirection
+        $redirect = mavic_search_404_insert_redirect($old_alias, NULL, $node->language, TRUE);
+        if (is_array($redirect)) {
+          drupal_set_message(t('The alias <em> @redirect_old </em> is ready to be redirected, fol

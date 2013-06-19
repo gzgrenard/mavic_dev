@@ -1,0 +1,369 @@
+<?php 
+
+function mavic_search_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#search':
+      $output = '<p>' . t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site, and is useful for finding both users and posts.', array(), array('context' => 'Helping text', 'langcode' => 'en')) . '</p>';
+      $output .= '<p>' . t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Number of items to index per cron run</em> sets the maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/settings/search')), array('context' => 'Helping text', 'langcode' => 'en')) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@search">Search module</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/'), array('context' => 'Helping text', 'langcode' => 'en')) . '</p>';
+      return $output;
+    case 'admin/settings/search':
+      return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status')), array('context' => 'Admin search', 'langcode' => 'en')) . '</p>';
+    case 'search#noresults':
+      return t('<ul>
+<li>Please, check if your spelling is correct.</li>
+</ul>', array(), array('context' => 'No result for the search', 'langcode' => 'en'));
+  }
+}
+
+function mavic_search_form_alter(&$form, &$form_state, $form_id)
+{
+  if($form_id == 'search_form') {
+		//Retrieve default value before altering
+		$keys = htmlspecialchars($form['basic']['inline']['keys']['#default_value']);
+		
+
+  if ($_REQUEST['more']) {
+    $more = htmlspecialchars($_REQUEST['more']);
+  }
+  else {
+		$elements = explode(" more:", $keys);
+		$more = (count($elements) > 1) ? $elements[1] : "";
+	}
+
+	if (!$more || $more == "") {
+		$more = "all";
+	}
+
+	$keys = preg_replace('/ more:.*/i', '', $keys);
+	
+	//Remove advanced fieldset to build our own
+	unset($form['advanced']);
+	unset($form['basic']);
+
+	$more_js = preg_replace('/\'/', "\\'", $more);
+	$form['#prefix'] = '<div class="search-form-test">' . "\n";
+	if ($_REQUEST['tpl']) {
+		$form['#prefix'] .= '<div class="container-inline helvetica"><b>' . t('Here is a list of results which could correspond to your search.', array(), array('context' => 'List of results for the search', 'langcode' => 'en')) . '<br />' . t('You can also enter one or more key words in the field "search for".', array(), array('context' => 'Add more key words for the search', 'langcode' => 'en')) . '</b></div><br /><br />' . "\n";
+	}
+		$form['#prefix'] .= '<script type="text/javascript" src="http://www.google.com/jsapi"></script>' . "\n";
+		$form['#prefix'] .= <<<EOS
+<script type="text/javascript">
+google.load('search', '1');
+google.setOnLoadCallback(function() {
+	google.search.CustomSearchControl.attachAutoCompletion(
+		'003003641089747231996:bsnpnwdxyvo',
+		document.getElementById('edit-keys-vis'),
+		'search-form');
+});
+
+
+var filter = '$more_js';
+
+function setMoreAndSubmit(more) {
+	filter = more;
+	jQuery('#search-form').submit();
+}
+
+function updateKeys(text) {
+	jQuery('#edit-keys').val(text);
+	if(filter) {
+		jQuery('#edit-keys').val(jQuery('#edit-keys').val() + ' more:' + filter)
+	}
+}
+
+jQuery("table.gsc-completion-container td").live("mouseover", function() {
+	updateKeys($(this).text());
+
+});
+$(document).ready(function() {
+	$("#body-background").ezBgResize();
+});
+
+</script>
+EOS;
+		$form['#suffix'] = '</div>';
+		$form['#suffix'] .= "\n<!-- suggestions -->\n";
+		$form['#suffix'] .= '<div id="suggestion_block">' . "\n";
+		$suggestions = module_invoke('google_cse_adv', 'block', 'view', 1);
+		$form['#suffix'] .= $suggestions['content'];
+		$form['#suffix'] .= "\n</div>\n";
+		$form['#suffix'] .= "\n<!-- filters -->\n";
+		$trad['all'] = t('all', array(), array('context' => 'Filter All', 'langcode' => 'en'));
+		$trad['products'] = t('products', array(), array('context' => 'Filter on products', 'langcode' => 'en'));
+		$trad['news'] = t('news', array(), array('context' => 'Filter on news', 'langcode' => 'en'));
+		$trad['technologies'] = t('technologies', array(), array('context' => 'technologies', 'langcode' => 'en'));
+		$trad['history'] = t('history', array(), array('context' => 'Filter on history', 'langcode' => 'en'));
+		$trad['video'] = t('video', array(), array('context' => 'Filter on video', 'langcode' => 'en'));
+		$class['all'] = ($more == '' || $more == 'all') ? ' class="active"' : '';
+		$class['products'] = ($more && $more == 'macromodel') ? ' class="active"' : '';
+		$class['news'] = ($more && $more == 'news') ? ' class="active"' : '';
+		$class['technologies'] = ($more && $more == 'technology') ? ' class="active"' : '';
+		$class['history'] = ($more && $more == 'history') ? ' class="active"' : '';
+		$class['video'] = ($more && $more == 'video') ? ' class="active"' : '';
+
+		$form['#suffix'] .= <<<EOS
+<div id="search-result-filters">
+	<ul id="search-result-filter-list" class="block search-result-filter">
+		<li{$class['all']}><a href="#" onclick="setMoreAndSubmit('all');">{$trad['all']}</a></li>
+		<li{$class['products']}><a href="#" onclick="setMoreAndSubmit('macromodel');">{$trad['products']}</a></li>
+		<li{$class['news']}><a href="#" onclick="setMoreAndSubmit('news');">{$trad['news']}</a></li>
+		<li{$class['technologies']}><a href="#" onclick="setMoreAndSubmit('technology');">{$trad['technologies']}</a></li>
+		<li{$class['history']}><a href="#" onclick="setMoreAndSubmit('history');">{$trad['history']}</a></li>
+		<li{$class['video']}><a href="#" onclick="setMoreAndSubmit('video');">{$trad['video']}</a></li>
+	</ul>
+</div>
+EOS;
+
+		$form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+		$form['basic']['inline']['prompt'] = array('#type' => 'item', '#title' => t('Enter your keywords', array(), array('context' => 'Title', 'langcode' => 'en')));
+		
+		//Change keys textbox value removing content type entries in it
+		$form['basic']['inline']['keys'] = array(
+		    '#type' => 'hidden',
+		    '#title' => '',
+		    '#default_value' => $keys,
+		    '#size' => 25,
+		    '#maxlength' => 255,
+			'#attributes' => array('autocomplete' => 'off'),
+		);
+
+		//Change keys textbox value removing content type entries in it
+		$form['basic']['inline']['keys-vis'] = array(
+		    '#type' => 'textfield',
+		    '#title' => '',
+		    '#default_value' => $keys,
+		    '#size' => 25,
+		    '#maxlength' => 255,
+			'#attributes' => array('autocomplete' => 'off'),
+		);
+
+		$form['#attributes']['onsubmit'] = "jQuery('#edit-keys').val(jQuery('#edit-keys-vis').val()); if(filter) {jQuery('#edit-keys').val(jQuery('#edit-keys').val() + ' more:' + filter)}; true";
+
+		$form['basic']['inline']['processed_keys'] = array('#type' => 'value', '#value' => array());
+  		$form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Search', array(), array('context' => 'Search', 'langcode' => 'en')), '#prefix' => '<div class="form-item">', '#suffix' => '</div>');
+
+		//Total of items
+		global $pager_total_items;
+		if (!empty($keys)) {
+			$total = (int)$pager_total_items[0];
+			$totalResultStr = '<div class="form-item total-items">('.t('!total results', array('!total' => $total)).')</div>';
+		}
+		$form['basic']['inline']['total'] = array('#type' => 'item', '#title' => '', '#prefix' => $totalResultStr.'<div style="clear:both;"></div>');
+  		
+		
+	}	
+}
+
+/**
+ * list of allowed type for search (without specials types)
+ */
+function _mavic_search_getAllowedSQLContentTypes()
+{
+	$a = array(
+				'history' => t('history', array(), array('context' => 'history', 'langcode' => 'en')),
+				'macromodel' => t('products', array(), array('context' => 'macromodel', 'langcode' => 'en')),
+				'news' => t('news', array(), array('context' => 'news', 'langcode' => 'en')),
+				'page' => t('page', array(), array('context' => 'page', 'langcode' => 'en')),
+				'video' => t('video', array(), array('context' => 'video', 'langcode' => 'en'))
+	);
+	return $a;
+}
+
+/**
+ * liste of allowed type for search (with specials types)
+ * special type have join in SQL
+ */
+function _mavic_search_getAllowedContentTypes()
+{
+	$a = _mavic_search_getAllowedSQLContentTypes();
+	$a['prodvalcarac'] = t('technologies', array(), array('context' => 'technologies', 'langcode' => 'en'));
+	return $a;
+}
+
+function _mavic_search_getContentTypesOptions()
+{
+	$allowed = _mavic_search_getAllowedContentTypes();
+	
+	$nodeTypes = node_type_get_types();
+
+	$types = array();
+	foreach ($nodeTypes as $type)
+	{
+		if (array_key_exists($type->type, $allowed)) {
+			$types[$type->type] = $allowed[$type->type];
+		//$types[$type->type] = $type->name;
+    }
+	}
+	return $types;
+}
+
+/*
+function mavic_search_preprocess_search_results()
+{	
+	$variables['search_results'] = '';
+	foreach ($variables['results'] as $result) {
+	    $variables['search_results'] .= $filters.theme('search_result', $result, $variables['type']);
+	}
+	$variables['pager'] = theme('pager', NULL, 10, 0);
+	// Provide alternate search results template.
+	$variables['template_files'][] = 'search-results-' . $variables['type'];
+}
+*/
+
+function mavic_search_preprocess_search_result(&$variables) {
+  
+  
+	$result = $variables['result'];
+  	$node = $result['node'];
+  	
+  	
+  	if ($node->type=='news') {
+  		$variables['snippet'] = $result['node']->field_news_intro[0]['value'];
+  	}
+	//echo '<pre>';print_r($result);echo '</pre>';
+
+	$variables['url'] = check_url($result['link']);
+	//$variables['title'] = check_plain($result['title']);
+
+	$info = array();
+	if (!empty($result['type'])) {
+		$info['type'] = check_plain($result['type']);
+	}
+	if (!empty($result['user'])) {
+		$info['user'] = $result['user'];
+	}
+	if (!empty($result['date'])) {
+		$info['date'] = format_date($result['date'], 'small');
+	}
+	if (isset($result['extra']) && is_array($result['extra'])) {
+    	$info = array_merge($info, $result['extra']);
+  	}
+  	// Check for existence. User search does not include snippets.
+  	//$variables['snippet'] = isset($result['snippet']) ? $result['snippet'] : '';
+  	//$variables['snippet'] = $result['node']->introduction;
+  	//Provide separated and grouped meta information..
+  	$variables['info_split'] = $info;
+  	$variables['info'] = false;//implode(' - ', $info);
+  	// Provide alternate search result template.
+  	$variables['template_files'][] = 'search-result-' . $variables['type'];
+}
+
+/**
+ * Implementation of theme_pager
+ * @param unknown_type $tags
+ * @param unknown_type $limit
+ * @param unknown_type $element
+ * @param unknown_type $parameters
+ * @param unknown_type $quantity
+ */
+function mavic_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
+
+	global $pager_page_array, $pager_total;
+
+  // Calculate various markers within this pager piece:
+  // Middle is used to "center" pages around the current page.
+  $pager_middle = ceil($quantity / 2);
+  // current is the page we are currently paged to
+  $pager_current = $pager_page_array[$element] + 1;
+  // first is the first page listed by this pager piece (re quantity)
+  $pager_first = $pager_current - $pager_middle + 1;
+  // last is the last page listed by this pager piece (re quantity)
+  $pager_last = $pager_current + $quantity - $pager_middle;
+  // max is the maximum page number
+  $pager_max = $pager_total[$element];
+  // End of marker calculations.
+
+  // Prepare for generation loop.
+  $i = $pager_first;
+  if ($pager_last > $pager_max) {
+    // Adjust "center" if at end of query.
+    $i = $i + ($pager_max - $pager_last);
+    $pager_last = $pager_max;
+  }
+  if ($i <= 0) {
+    // Adjust "center" if at start of query.
+    $pager_last = $pager_last + (1 - $i);
+    $i = 1;
+  }
+  // End of generation loop preparation.
+
+  $li_first = theme('pager_first', (isset($tags[0]) ? $tags[0] : t('« first', array(), array('context' => 'Pager first', 'langcode' => 'en'))), $limit, $element, $parameters);
+  $li_previous = theme('pager_previous', (isset($tags[1]) ? $tags[1] : t('PREVIOUS', array(), array('context' => 'Pager previous', 'langcode' => 'en'))), $limit, $element, 1, $parameters);
+  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('NEXT', array(), array('context' => 'Page next', 'langcode' => 'en'))), $limit, $element, 1, $parameters);
+  $li_last = theme('pager_last', (isset($tags[4]) ? $tags[4] : t('last »', array(), array('context' => 'Pager last', 'langcode' => 'en'))), $limit, $element, $parameters);
+
+  if ($pager_total[$element] > 1) {
+    if ($li_first) {
+      $items[] = array(
+        'class' => 'pager-first',
+        'data' => $li_first,
+      );
+    }
+    if ($li_previous) {
+      $items[] = array(
+        'class' => 'pager-previous',
+        'data' => $li_previous,
+      );
+    }
+
+    // When there is more than one page, create the pager list.
+    if ($i != $pager_max) {
+      if ($i > 1) {
+        $items[] = array(
+          'class' => 'pager-ellipsis',
+          'data' => '…',
+        );
+      }
+      // Now generate the actual pager piece.
+      for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+        if ($i < $pager_current) {
+          $items[] = array(
+            'class' => 'pager-item',
+            'data' => theme('pager_previous', $i, $limit, $element, ($pager_current - $i), $parameters),
+          );
+        }
+        if ($i == $pager_current) {
+          $items[] = array(
+            'class' => 'pager-current',
+            'data' => $i,
+          );
+        }
+        if ($i > $pager_current) {
+          $items[] = array(
+            'class' => 'pager-item',
+            'data' => theme('pager_next', $i, $limit, $element, ($i - $pager_current), $parameters),
+          );
+        }
+      }
+      if ($i < $pager_max) {
+        $items[] = array(
+          'class' => 'pager-ellipsis',
+          'data' => '…',
+        );
+      }
+    }
+    // End generation.
+    if ($li_next) {
+      $items[] = array(
+        'class' => 'pager-next',
+        'data' => $li_next,
+      );
+    }
+    if ($li_last) {
+      $items[] = array(
+        'class' => 'pager-last',
+        'data' => $li_last,
+      );
+    }
+    return theme('item_list', $items, NULL, 'ul', array('class' => 'pager'));
+  }
+}
+
+
+function mavic_search_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
+  if ($query == '' && $primary_table == 'n' && $primary_field = 'nid' && empty($args)) {
+	return array('join'=>'LEFT JOIN content_type_prodvalcarac ctp ON n.nid=ctp.nid ', 'where' => " n.type IN ('" . implode("','", array_keys( _mavic_search_getAllowedSQLContentTypes() ) ) . "') or (n.type='prodvalcarac' and ctp.field_technologie_value = 2)");
+    //return array('where' => " n.type IN ('" . implode("','",array_keys( _mavic_search_getAllowedSQLContentTypes() ) ) . "')");
+  }
+}

@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function mavicsitemap_install() {
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function mavicsitemap_uninstall() {
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function mavicsitemap_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function mavicsitemap_disable() {
+}

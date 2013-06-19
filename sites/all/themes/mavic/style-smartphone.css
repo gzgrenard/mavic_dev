@@ -1,0 +1,36 @@
+@CHARSET "ISO-8859-1";
+	#home_right_content_container {
+		margin-top: 20px;
+	}
+	#home_logo_container {
+		position: static;
+		margin-left: 15px; /* voir js */
+		z-index: 3;
+		margin-bottom: 59px; /* voir js */
+	}
+	#footer.home_footer {
+		position:static;
+		bottom: 0;
+		z-index: 1000;
+		width: 1250px;
+		}
+	#footer .left {
+		width: 935px;
+	}
+	#top_menu.front {
+		width: 993px;
+		position: static;
+	}
+	#language-select-list #list_select_langue {
+    background-color: #FFFFFF;
+    border: 1px solid #7D7D7D;
+    bottom: 28px;
+    display: none;
+    margin: -1px 0 0;
+    padding: 0;
+    position: static;
+    right: 6px;
+    white-space: nowrap;
+    width: 152px;
+    z-index: 1000;
+}

@@ -1,0 +1,19 @@
+.ja .homedescription h1 {
+	padding-top: 5px;
+}
+.ja #product h1 {
+	padding-top: 8px;
+}
+
+.ja #menu a.first {
+	padding-top:8px;
+}
+.ja #menu a.level1 {
+	padding-top: 6px;
+	padding-bottom: 2px;
+}
+.ja #tabs_buttons_gamme.history div.tab {
+	padding-top: 5px;
+	padding-bottom: 4px;
+}
+

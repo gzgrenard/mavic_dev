@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implentation of hook nodeapi. change the filter flag for nodes of type : prodvalcarac (features)
+ */
+function mavic_pass_feature_as_filter_nodeapi(&$node, $op) {
+	switch ($op) {
+		case 'insert':
+		case 'update':
+			if (isset($node->field_filter_value_list) && $node->type == 'filter_type') {
+				$result = update_sql("UPDATE {content_type_prodvalcarac} t1 LEFT JOIN (select * from {content_field_filter_value_list}) t2 ON t1.nid=t2.field_filter_value_list_nid SET t1.field_is_filter_value= CASE WHEN t2.nid IS NULL THEN 0 ELSE 1 END");
+				if($result['success'])
+					drupal_set_message('Features have been updated');
+				else
+					drupal_set_message('Features have not been updated');
+			}
+		break;
+	}
+}

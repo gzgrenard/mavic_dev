@@ -1,0 +1,235 @@
+<?php
+
+/**
+ * @file
+ * Add mavic sitemap
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function mavicsitemap_menu() {
+
+	$items['sitemap.xml'] = array(
+    'title' => 'Sitemap index',
+    'page callback' => 'mavicsitemap_output',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+	return $items;
+}
+
+function mavicsitemap_output() {
+    $lang = substr($_REQUEST['q'], 0, 2);
+    $date = new DateTime();
+    //if no specific language, print the sitemap index
+    if ($lang == 'si') {
+        $langA = i18n_language_list();
+        $dateFormated = $date->format('Y-m-d');
+        $url = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        $url .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        foreach ($langA as $key => $value) {
+            $url .= '<sitemap>' . "\n";
+            $url .= '<loc>http://www.mavic.com/' . $key . '/sitemap.xml</loc>' . "\n";
+            $url .= '<lastmod>' . $dateFormated . '</lastmod>' . "\n";
+            $url .= '</sitemap>' . "\n";
+        }
+        $url .= '</sitemapindex>' . "\n";
+        header("Content-type: text/xml; charset=utf-8");
+	echo $url;
+    //else print the according sitemap
+    }
+    else {
+        $url = '';
+        $dateFormated = $date->format('Y-m-');
+        $dateFormatedY = $date->format('Y-');
+        //home
+        $url .= '<url>' . "\n";
+        $url .= '<loc>http://www.mavic.com/' . $lang . '</loc>' . "\n";
+        $url .= '<lastmod>' . $dateFormated . '01</lastmod>' . "\n";
+        $url .= '<changefreq>monthly</changefreq>' . "\n";
+        $url .= '<priority>1.0</priority>' . "\n";
+        $url .= '</url>' . "\n";
+       //landingpages
+        $res = db_query("SELECT DISTINCT n.nid, n.changed, n.language
+                        FROM {node} n 
+                        WHERE n.type IN ('cxr_landing_page', 
+                        'crossmax_landing_page',
+                        'discipline_home_page',
+                        'landing_page_ss2011',
+                        'range_landing_page',
+                        'tyre_landing_page',
+                        'ss2012_range_landing_page',
+                        'cc40_landing_page',
+						            'ss2013_landing_page')
+                        AND n.language = '" . (string) $lang . "'
+                        AND n.status=1");
+	while ($node = db_fetch_array($res)) {
+            $dt = new DateTime("@" . $node['changed']);
+            $link = 'node/' . $node['nid'];
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<lastmod>' . date_format($dt, 'Y-m-d') . '</lastmod>' . "\n";
+            $url .= '<changefreq>weekly</changefreq>' . "\n";
+            $url .= '<priority>1.0</priority>' . "\n";
+            $url .= '</url>' . "\n";
+        }
+       //products
+        $menuP = 'menu-primary-links-' . $lang;
+        $menuPTree = menu_tree_page_data($menuP);
+        foreach ($menuPTree as $data) {
+            foreach ($data['below'] as $sdata) {
+                foreach ($sdata['below'] as $ssdata) {
+                    foreach ($ssdata['below'] as $subdata) {
+                        $item = menu_get_item($subdata['link']['href']);
+                        $images = $item['page_arguments'][0]->field_otherarticle[0]['nid'];
+                        $res = db_query("SELECT n.title FROM {node} n WHERE n.nid = %d", $images);
+                        while ($node = db_fetch_array($res)) {
+                            $imgName = $node['title'];
+                        }
+                        $url .= '<url>' . "\n";
+                        $url .= '<loc>' . url($subdata['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+                        $url .= '<lastmod>' . $dateFormated . '01</lastmod>' . "\n";
+                        $url .= '<changefreq>monthly</changefreq>' . "\n";
+                        $url .= '<priority>0.9</priority>' . "\n";
+                        if (file_exists(file_directory_path() . '/products/zoom/' . $imgName . '.jpg')) {
+                            $url .= '<image:image>' . "\n";
+                            $url .= '<image:loc>http://www.mavic.com/sites/default/files/products/zoom/' . $imgName . '.jpg</image:loc>' . "\n";//
+                            $url .= '</image:image>' . "\n";
+                        }
+                        $url .= '</url>' . "\n";
+                    }
+                }
+            }
+        }
+        //technos
+        $prodval = 'prodvalcarac';
+        $res = db_query("SELECT DISTINCT n.nid, n.changed, n.language
+                        FROM {node} n
+                        INNER JOIN {content_type_prodvalcarac} p using (nid)
+                        WHERE n.type = '%s'
+			AND n.language = '%s'
+			AND p.`field_technologie_value` IN (" . db_placeholders(range(2, 3), 'int') . ")", array($prodval, $lang, 2, 3));
+	while ($node = db_fetch_array($res)) {
+            $dt = new DateTime("@" . $node['changed']);
+            $link = 'node/' . $node['nid'];
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<lastmod>' . date_format($dt, 'Y-m-d') . '</lastmod>' . "\n";
+            $url .= '<changefreq>monthly</changefreq>' . "\n";
+            $url .= '<priority>0.8</priority>' . "\n";
+            $url .= '</url>' . "\n";
+        }
+        //video
+        $menuV = 'menu-videos';
+        $menuVTree = menu_tree_page_data($menuV);
+        foreach ($menuVTree as $data) {
+            $item = menu_get_item($data['link']['href']);
+            $itemMap = $item['map'][1]->field_vimeo_url[0]['data'];
+            //var_dump($item); die;
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($item['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<video:video>' . "\n";
+            $url .= '<video:thumbnail_loc>' . $itemMap['thumbnail_medium'] . '</video:thumbnail_loc>' . "\n";
+            $url .= '<video:title><![CDATA[' . $itemMap['title'] . ']]></video:title> ' . "\n";
+            $url .= '<video:description><![CDATA[' . substr($itemMap['description'], 0, 2048) . ']]></video:description>' . "\n";
+            $url .= '<video:player_loc allow_embed="yes" autoplay="ap=1">http://vimeo.com/moogaloop.swf?clip_id=' . $itemMap['id'] . '</video:player_loc>' . "\n";
+            $url .= '<video:duration>' . $itemMap['duration'] . '</video:duration>' . "\n";
+            $url .= '<video:publication_date>' . substr($itemMap['upload_date'], 0, 10) . '</video:publication_date>' . "\n";
+            $url .= '<video:live>no</video:live>' . "\n";
+            $url .= '</video:video>' . "\n";
+            $url .= '</url>' . "\n";
+        }
+        //news
+        $menuN = 'menu-news';
+        $menuNTree = menu_tree_all_data($menuN);   
+        foreach ($menuNTree as $data) {
+            foreach ($data['below'] as $subdata) {
+                $item = menu_get_item($subdata['link']['href']);
+                $dt = new DateTime("@" . $item['page_arguments'][0]->changed);
+                $url .= '<url>' . "\n";            
+                $url .= '<loc>' . url($subdata['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+                $url .= '<news:news>' . "\n";
+                $url .= '<news:publication>' . "\n";
+                $url .= '<news:name>Mavic News</news:name>' . "\n";
+                $url .= '<news:language>' . $lang . '</news:language>' . "\n";
+                $url .= '</news:publication>' . "\n";
+                $url .= '<news:publication_date>' . date_format($dt, 'Y-m-d') . '</news:publication_date>' . "\n";
+                $url .= '<news:title><![CDATA[' . $subdata['link']['title'] . ']]></news:title>' . "\n";
+                $url .= '<news:keywords>mavic, sport, bike</news:keywords>' . "\n";
+                $url .= '</news:news>' . "\n";
+                $url .= '</url>' . "\n";
+            }
+        }
+       
+        //careers
+        $menuC = 'menu-careers';
+        $menuCTree = menu_tree_all_data($menuC);   
+        $i=0;
+        foreach ($menuCTree as $data) {
+            if ($i == 0) {
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($data['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<lastmod>' . $dateFormated . '01</lastmod>' . "\n";
+            $url .= '<changefreq>monthly</changefreq>' . "\n";
+            $url .= '<priority>0.6</priority>' . "\n";
+            $url .= '</url>' . "\n";
+            $i++;
+            }
+            else {
+                break;
+            }
+        }
+        //static links : 'shopfinder', 'shopinshop', 'distributor', 'newsletter', 'download/catalogs', 'download/user-guides','download/software', 'size chart', 'mavic/terms-Conditions' 'Mavic Service Center' 'Assistance', 'Assistance on amateur events'
+        $nodeNidA = array(125520, 254614, 221046, 221166, 185445, 185895, 191999, 191818, 73, 151563, 151619, 151651);
+        foreach ($nodeNidA as $nodeNid) {
+            $nodeTrad = translation_node_get_translations($nodeNid);
+            $link = 'node/' . $nodeTrad[$lang]->nid;
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<lastmod>' . $dateFormated . '01</lastmod>' . "\n";
+            $url .= '<changefreq>monthly</changefreq>' . "\n";
+            $url .= '<priority>0.5</priority>' . "\n";
+            $url .= '</url>' . "\n";
+        }    
+        //athletes
+        $menuA = 'menu_athletes';
+        $menuATree = menu_tree_all_data($menuA);   
+        foreach ($menuATree as $data) {
+            $url .= '<url>' . "\n";
+            $url .= '<loc>' . url($data['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+            $url .= '<lastmod>' . $dateFormatedY . '01-01</lastmod>' . "\n";
+            $url .= '<changefreq>yearly</changefreq>' . "\n";
+            $url .= '<priority>0.3</priority>' . "\n";
+            $url .= '</url>' . "\n";
+            foreach ($data['below'] as $subdata) {
+                $url .= '<url>' . "\n";
+                $url .= '<loc>' . url($subdata['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+                $url .= '<lastmod>' . $dateFormatedY . '01-01</lastmod>' . "\n";
+                $url .= '<changefreq>yearly</changefreq>' . "\n";
+                $url .= '<priority>0.3</priority>' . "\n";
+                $url .= '</url>' . "\n";
+            }
+        }
+        //history
+        $menuH = 'menu-history';
+        $menuHTree = menu_tree_page_data($menuH);
+        foreach ($menuHTree as $data) {
+            foreach ($data['below'] as $subdata) {
+                $url .= '<url>' . "\n";
+                $url .= '<loc>' . url($subdata['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+                $url .= '<lastmod>' . $dateFormatedY . '01-01</lastmod>' . "\n";
+                $url .= '<changefreq>yearly</changefreq>' . "\n";
+                $url .= '<priority>0.3</priority>' . "\n";
+                $url .= '</url>' . "\n";
+            }
+        }     
+	header("Content-type: text/xml; charset=utf-8");
+	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\" >\n";
+        echo $url;
+        echo "</urlset>";
+    }
+}
+

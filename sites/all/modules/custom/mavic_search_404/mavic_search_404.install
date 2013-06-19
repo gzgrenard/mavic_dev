@@ -1,0 +1,123 @@
+<?php
+
+/*
+ * @file
+ * mavic_search_404 Module install file
+ */
+
+/**
+ * Setup Search 404 by changing Drupal's 404-page to mavic_search_404.
+ */
+function mavic_search_404_install() {
+  variable_set('site_404', 'mavic_search_404');
+  variable_set('mavic_search_404_page_title', 'Page not found');
+}
+
+/**
+ * Update : add a Call for storing 404 URL, 
+ * ensure this module is called before pathauto and path and 
+ * update mavic_redirect structure
+ */
+function mavic_search_404_update_6200(&$sandbox) {
+	//global $db_url;
+	$ret = array();
+	// Set weight module lower than path and autopath to make sure we can get the path alias of a node being deleted
+	$weight = db_result(db_query("SELECT MIN(weight) FROM {system} WHERE name = 'pahtauto' OR name = 'path'"));
+	$weight = (empty($weight)) ? 0 : $weight;
+	$update_system_weight = db_query("UPDATE {system} SET weight = %d WHERE name = 'mavic_search_404'", $weight - 1);
+	if($update_system_weight === FALSE) {
+	  throw new DrupalUpdateException(t('Module weight not updated', array(), array('context' => 'Module weight not updated', 'langcode' => 'en')));
+	}
+ /* else {
+    t('Module weight updated', array(), array('context' => 'Module weight updated', 'langcode' => 'en'));
+  }*/
+	//set is_active default to 0
+	$update_mavic_redirect_isactive = db_query("ALTER TABLE {mavic_redirect} CHANGE `is_active` `is_active` TINYINT( 1 ) NULL DEFAULT '0' ");
+  if($update_mavic_redirect_isactive === FALSE) {
+    throw new DrupalUpdateException(t('Table mavic_redirect, is_active default remained on 1', array(), array('context' => 'Table mavic_redirect, is_active default remained on 1', 'langcode' => 'en')));
+  }
+  /* else {
+    t('Table mavic_redirect, is_active default set to 0', array(), array('context' => 'Table mavic_redirect, is_active default set to 0', 'langcode' => 'en'));
+  }*/
+	
+	//remove activated redirect when no redirection...
+	$update_mavic_redirect_isactive_url = db_query("UPDATE `mavic_redirect` SET `is_active` = 0 WHERE `url_to_redirect` = '' OR `url_to_redirect` = NULL");
+  if($update_mavic_redirect_isactive_url === FALSE) {
+	throw new DrupalUpdateException(t('Table mavic_redirect, is_active not corrected', array(), array('context' => 'Table mavic_redirect, is_active not corrected', 'langcode' => 'en')));
+  }
+  /* else {
+    t('Table mavic_redirect, is_active corrected', array(), array('context' => 'Table mavic_redirect, is_active corrected', 'langcode' => 'en'));
+  }*/
+	
+	//add new column deleted 
+	$alter_add_column = db_query("ALTER TABLE `mavic_redirect` ADD `deleted` INT( 1 ) UNSIGNED NOT NULL DEFAULT '0'");
+  if($alter_add_column === FALSE) {
+  throw new DrupalUpdateException(t('Table mavic_redirect not updated', array(), array('context' => 'Table mavic_redirect not updated', 'langcode' => 'en')));
+  }
+  /* else {
+    t('TTable mavic_redirect updated', array(), array('context' => 'Table mavic_redirect updated', 'langcode' => 'en'));
+  }*/
+	
+	// Create stored procedure for insert : check the table doesn't exceed 50Mb before inserting a new 404 request (just in case... )
+	//$url = parse_url($db_url);
+	/*$ret[] = (db_query('CREATE DEFINER=`'.$url['user'].'`@`'.$url['host'].'` PROCEDURE `mavic_redirect_insert`(IN `url_str` VARCHAR(200) charset utf8, IN `new_url_str` VARCHAR(200) charset utf8, IN `active` TINYINT(1), IN `hit_num` INT(11), IN `is_deleted` INT(1), OUT `result` VARCHAR(255))
+BEGIN
+					DECLARE minindex INT(11) DEFAULT 0;
+					DECLARE cursize DECIMAL(10,2) DEFAULT 0;
+						DECLARE message VARCHAR(255) DEFAULT "ok";
+					SET cursize = (SELECT round(((data_length + index_length) /1024 /1024 ) , 2) 
+						FROM information_schema.TABLES
+						WHERE table_schema = "mavic"
+						AND table_name = "mavic_redirect");
+
+					IF cursize > 50 THEN
+							SET minindex = (SELECT MIN(id) 
+							FROM mavic_redirect
+							WHERE hit = 0);
+							SET message = "mavic_redirect table MAX size reached (50Mb) : please reduce this table by removing old and unused entries";
+							IF minindex > 0 THEN
+								SET message = CONCAT("mavic_redirect table MAX size reached (50Mb) : entry id", minindex, " has been deleted. Please reduce this table by removing old and unused entries");
+								DELETE FROM mavic_redirect WHERE id = minindex;
+								INSERT INTO mavic_redirect (hit, url, is_active, url_to_redirect, deleted) VALUES (hit_num, url_str, active, new_url_str, is_deleted);
+							END IF;
+					ELSE
+							INSERT INTO mavic_redirect (hit, url, is_active, url_to_redirect, deleted) VALUES (hit_num, url_str, active, new_url_str, is_deleted);
+					END IF;
+					SELECT message INTO result;
+
+				END'
+			) === FALSE) ? array('success' => false,'query' => 'Procedure mavic_redirect_insert not created') : array('success' => true,'query' => 'Procedure mavic_redirect_insert created');*/
+	//cache_clear_all();
+	return t('Everything has been updated properly', array(), array('context' => 'Everything has been updated properly', 'langcode' => 'en'));
+}
+
+function mavic_search_404_uninstall() {
+  if (variable_get('site_404', '') == 'mavic_search_404') {
+    variable_del('site_404');
+  }
+  variable_del('mavic_search_404_redirect_301');
+  variable_del('mavic_search_404_block_show');
+  variable_del('mavic_search_404_do_google_cse');
+  variable_del('mavic_search_404_do_search_by_page');
+  variable_del('mavic_search_404_first');
+  variable_del('mavic_search_404_jump');
+  variable_del('mavic_search_404_ignore');
+  variable_del('mavic_search_404_ignore_query');
+  variable_del('mavic_search_404_ignore_extensions');
+  variable_del('mavic_search_404_page_text');
+  variable_del('mavic_search_404_page_title');
+  variable_del('mavic_search_404_regex');
+  variable_del('mavic_search_404_skip_auto_search');
+  variable_del('mavic_search_404_use_or');
+  variable_del('mavic_search_404_use_search_engine');
+  variable_del('mavic_search_404_disable_error_message');
+  variable_del('mavic_search_404_do_fuzzysearch');
+  variable_del('mavic_search_404_do_mavic_search');  
+  variable_del('mavic_search_404_redirect_force_404');
+  variable_del('mavic_search_404_form_filter_name');
+  variable_del('mavic_search_404_form_filter_regex');
+  variable_del('mavic_search_404_overwrite_autopath');
+  variable_del('mavic_search_404_redirect_deleted');
+  
+  
+}

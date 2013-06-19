@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<library>
+	<media id="paris-roubaix-2011-assistance">
+		<video language="en" permalink="http://www.mavic.com/en/video/Paris-Roubaix-Mavic-at-the-heart-of-the-action">
+			<title><![CDATA[Paris-Roubaix - Mavic at the heart of the action]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixEN.mov</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Paris-Roubaix-Mavic-au-cœur-de-l-action">
+			<title><![CDATA[Paris-Roubaix - Mavic au cœur de l'action]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixFR.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixFR.mov</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Paris-Roubaix-Mavic-als-Teil-des-Rennens">
+			<title><![CDATA[Paris-Roubaix, Mavic als Teil des Rennens]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixDE.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixDE.mov</stream>
+		</video>	
+		<video language="it" permalink="http://www.mavic.com/it/video/Paris-Roubaix-Mavic-nel-cuore-dell-azione">
+			<title><![CDATA[Paris-Roubaix - Mavic nel cuore dell'azione]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixEN.mov</stream>
+		</video>	
+		<video language="es" permalink="http://www.mavic.com/es/video/Paris-Roubaix-Mavic-en-el-centro-de-la-acción">
+			<title><![CDATA[Paris-Roubaix - Mavic en el centro de la acción]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixSP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixSP.mov</stream>
+		</video>		
+		<video language="ja" permalink="http://www.mavic.com/ja/video/パリ～ルーベ／マヴィックの情熱">
+			<title><![CDATA[パリ～ルーベ／マヴィックの情熱]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_paris_roubaix_action_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ParisRoubaixJP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ParisRoubaixJP.mov</stream>
+		</video>				
+	</media>
+	<media id="aerodynamic-wheel-development-with-garmin-transition-part-2">
+		<video language="en" permalink="http://www.mavic.com/en/video/Aerodynamic-wheel-development-with-Garmin-Transition-part-2-windtunnel">
+			<title><![CDATA[Aerodynamic wheel development with Garmin-Transition (part 2 - windtunnel)]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Développement-de-roues-aérodynamiques-avec-l-équipe-Garmin-Transition-2e-partie-soufflerie">
+			<title><![CDATA[Développement de roues aérodynamiques avec l'équipe Garmin-Transition (2e partie - soufflerie)]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Aero-Laufrad-Entwicklung-mit-dem-Team-Garmin-Transition">
+			<title><![CDATA[Aero-Laufrad-Entwicklung mit dem Team Garmin-Transition]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>	
+		<video language="it" permalink="http://www.mavic.com/it/video/Sviluppo-ruota-aerodinamica-con-Garmin-Transition">
+			<title><![CDATA[Sviluppo ruota aerodinamica con Garmin-Transition]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>	
+		<video language="es" permalink="http://www.mavic.com/es/video/Desarrollo-de-ruedas-aerodin%C3%A1micas-con-el-Garmin-Transition">
+			<title><![CDATA[Desarrollo de ruedas aerodinámicas con el Garmin-Transition]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>		
+		<video language="ja" permalink="http://www.mavic.com/ja/video/エアロホイール開発のため、ガーミン-トランジションと共にテストを実施">
+			<title><![CDATA[エアロホイール開発のため、ガーミン-トランジションと共にテストを実施]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_garmin_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_GarminSD2.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_GarminHD2.mp4</stream>
+		</video>				
+	</media>
+	<media id="paris-roubaix-from-inside-the-mavic-service-course">
+		<video language="en" permalink="http://www.mavic.com/en/video/Paris-Roubaix-from-inside-the-Mavic-Service-Course">
+			<title><![CDATA[Paris-Roubaix from inside the Mavic Service Course ]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Paris-Roubaix-vécu-par-le-Service-Course-Mavic">
+			<title><![CDATA[Paris-Roubaix vécu par le Service Course Mavic]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Paris-Roubaix-aus-Sicht-des-Mavic-Service-Course">
+			<title><![CDATA[Paris-Roubaix aus Sicht des Mavic Service Course]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/La-Parigi-Roubaix-vissuta-dal-Service-Course-Mavic">
+			<title><![CDATA[La Parigi-Roubaix vissuta dal Service Course Mavic]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/Paris-Roubaix-así-lo-vive-el-Mavic-Service-Course">
+			<title><![CDATA[Paris Roubaix: así lo vive el Mavic Service Course]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/パリ～ルーベをレースの内側から">
+			<title><![CDATA[パリ～ルーベをレースの内側から]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_parisroubaix_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_PARISROUBAIX.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_PARISROUBAIX.mp4</stream>
+		</video>				
+	</media>
+	<media id="r-d-on-mavic-dh-wheels-with-fabien-barel">
+		<video language="en" permalink="http://www.mavic.com/en/video/R-D-on-Mavic-DH-wheels-with-Fabien-Barel">
+			<title><![CDATA[R&D on Mavic DH wheels with Fabien Barel]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Développement-des-produits-SSC-collaboration-entre-Mavic-et-Fabien-Barel">
+			<title><![CDATA[Développement des produits SSC : collaboration entre Mavic et Fabien Barel]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Test-Entwicklung-von-DH-Laufrädern-mit-Fabien-Barel">
+			<title><![CDATA[Test & Entwicklung von DH-Laufrädern mit Fabien Barel]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/Ricerca-e-sviluppo-sulle-ruote-DH-Mavic-con-Fabien-Barel">
+			<title><![CDATA[Ricerca e sviluppo sulle ruote DH Mavic con Fabien Barel]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/ID-en-ruedas-de-descenso-DH-con-Fabien-Barel">
+			<title><![CDATA[I+D en ruedas de descenso (DH) con Fabien Barel]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/ダウンヒルホイールの研究開発に協力するフェビアン・バレル">
+			<title><![CDATA[ダウンヒルホイールの研究開発に協力するフェビアン・バレル]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_barel_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BAREL.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BAREL.mp4</stream>
+		</video>				
+	</media>	
+	<media id="aerodynamic-wheel-development-with-garmin-transition-part-1">
+		<video language="en" permalink="http://www.mavic.com/en/video/Aerodynamic-wheel-development-with-Garmin-Transition-part-1">
+			<title><![CDATA[Aerodynamic wheel development with Garmin-Transition (part 1)]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Développement-de-roues-aérodynamiques-avec-l-équipe-Garmin-Transition-1ère-partie">
+			<title><![CDATA[Développement de roues aérodynamiques avec l'équipe Garmin-Transition (1ère partie)]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Prototypen-Entwicklung-mit-dem-Team-Garmin-Transitions">
+			<title><![CDATA[Prototypen-Entwicklung mit dem Team Garmin-Transitions]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/Sviluppo-prototipi-con-il-Team-Garmin-Transition">
+			<title><![CDATA[Sviluppo prototipi con il Team Garmin-Transition]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/Desarrollo-de-prototipos-con-el-equipo-Garmin-Transitions">
+			<title><![CDATA[Desarrollo de prototipos con el equipo Garmin-Transitions]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/ガーミン-トランジションとプロトタイプの開発">
+			<title><![CDATA[ガーミン-トランジションとプロトタイプの開発]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_benidorme_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_MAVIC_BENIDORME.mp4</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_MAVIC_BENIDORME.mp4</stream>
+		</video>				
+	</media>
+	<media id="inside-look-mavic-and-julien-absalon-test-mtb-prototypes">
+		<video language="en" permalink="http://www.mavic.com/en/video/Inside-look-Mavic-and-Julien-Absalon-test-MTB-prototypes">
+			<title><![CDATA[Inside look: Mavic and Julien Absalon test MTB prototypes.]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonEN.mov</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Mavic-et-Julien-Absalon-testent-les-prototypes-de-roues-VTT">
+			<title><![CDATA[Mavic et Julien Absalon testent les prototypes de roues  VTT.]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonFR.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonFR.mov</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Mavic-Inside-Julien-Absalon-testet-MTB-Prototypen">
+			<title><![CDATA[Mavic Inside: Julien Absalon testet MTB Prototypen.]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonGER.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonGER.mov</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/Visto-dall-interno-Mavic-e-Julien-Absalon-in-test-con-i-nuovi-prototipi-di-ruote-MTB">
+			<title><![CDATA[Visto dall'interno: Mavic e Julien Absalon in test con i nuovi prototipi di ruote MTB]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonEN.mov</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/Desde-dentro-Mavic-y-Julien-Absalon-prueban-los-prototipos-de-ruedas-para-MTB">
+			<title><![CDATA[Desde dentro: Mavic y Julien Absalon prueban los prototipos de ruedas para MTB.]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonSPA.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonSPA.mov</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/MTBプロトタイプのテストをMAVICと行う、ジュリアン・アブサロン">
+			<title><![CDATA[MTBプロトタイプのテストをMAVICと行う、ジュリアン・アブサロン]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_absalon_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_AbsalonJPN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_AbsalonJPN.mov</stream>
+		</video>				
+	</media>
+	<media id="hushovd_classics">
+		<video language="en" permalink="http://www.mavic.com/en/video/thor-hushovd-prepares-for-the-paris-roubaix">
+			<title><![CDATA[Thor Hushovd prepares for the Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdEN.mov</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/thor-hushovd-se-prepare-pour-le-paris-roubaix">
+			<title><![CDATA[Thor Hushovd se prépare pour le Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdFR.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdFR.mov</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/thor-hushovd-bereitet-sich-auf-paris-roubaix-vor">
+			<title><![CDATA[Thor Hushovd bereitet sich auf Paris-Roubaix vor]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdDE.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdDE.mov</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/thor-hushovd-si-prepara-per-la-paris-roubaix">
+			<title><![CDATA[Thor Hushovd si prepara per la Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdIT.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdIT.mov</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/thor-hushovd-se-prepara-para-la-paris-roubaix">
+			<title><![CDATA[Thor Hushovd se prepara para la Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdSP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdSP.mov</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/thor-hushovd-prepares-for-the-paris-roubaix-jp">
+			<title><![CDATA[Thor Hushovd prepares for the Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_hushovd_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_HushovdJP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_HushovdJP.mov</stream>
+		</video>				
+	</media>
+	<media id="paris_roubaix_challenge">
+		<video language="en" permalink="http://www.mavic.com/en/video/Amateurs-challenge-the-Paris-Roubaix-cobbles">
+			<title><![CDATA[Amateurs challenge the Paris-Roubaix cobbles]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeEN.mov</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Les-amateurs-défient-les-pavés-de-Paris-Roubaix">
+			<title><![CDATA[Les amateurs défient les pavés de Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeFR.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeFR.mov</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Amatuere-fordern-die-Paris-Roubaix-heraus">
+			<title><![CDATA[Amatuere fordern die Paris-Roubaix heraus]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeDE.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeDE.mov</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/Amateurs-challenge-the-paris-roubaix-cobbles">
+			<title><![CDATA[Amateurs challenge the Paris-Roubaix cobbles]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeEN.mov</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/Los-aficionados-desafían-los-adoquines-de-Paris-Roubaix">
+			<title><![CDATA[Los aficionados desafían los adoquines de Paris-Roubaix]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeSP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeSP.mov</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/石畳を走り抜ける「パリ～ルーベ チャレンジ」">
+			<title><![CDATA[石畳を走り抜ける「パリ～ルーベ チャレンジ」]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Challenge_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_ChallengeJP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_ChallengeJP.mov</stream>
+		</video>				
+	</media>	
+	<media id="san_diego">
+		<video language="en" permalink="http://www.mavic.com/en/video/Mavic-Cervelo-partnership-starts-in-San-Diego">
+			<title><![CDATA[Mavic-Cervelo partnership starts in San Diego]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoEN.mov</stream>
+		</video>
+		<video language="fr" permalink="http://www.mavic.com/fr/video/Le-partenariat-Mavic-Cervélo-commence-à-San-Diego">
+			<title><![CDATA[Le partenariat Mavic-Cervélo commence à San Diego]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoFR.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoFR.mov</stream>
+		</video>
+		<video language="de" permalink="http://www.mavic.com/de/video/Mavic-Cervelo-Partnerschaft-beginnt-in-San-Diego">
+			<title><![CDATA[Mavic Cervelo Partnerschaft beginnt in San Diego]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoDE.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoDE.mov</stream>
+		</video>		
+		<video language="it" permalink="http://www.mavic.com/it/video/mavic-cervelo-partnership-starts-insandiego">
+			<title><![CDATA[Mavic-Cervelo partnership starts in San Diego]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoEN.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoEN.mov</stream>
+		</video>
+		<video language="es" permalink="http://www.mavic.com/es/video/La-colaboración-entre-Mavic-y-Cervélo-comienza-en-San-Diego">
+			<title><![CDATA[La colaboración entre Mavic y Cervélo comienza en San Diego.]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoSP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoSP.mov</stream>
+		</video>			
+		<video language="ja" permalink="http://www.mavic.com/ja/video/マヴィック×サーヴェロサンディエゴでの風洞実験">
+			<title><![CDATA[マヴィック×サーヴェロサンディエゴでの風洞実験]]></title>
+			<description></description>
+			<poster>/sites/default/files/webtv/posters/mavic_Sandiego_big.jpg</poster>
+			<stream type="standard">/sites/default/files/webtv/videos/480P_SandiegoJP.mov</stream>
+			<stream type="HD">/sites/default/files/webtv/videos/720P_SandiegoJP.mov</stream>
+		</video>				
+	</media>	
+</library>

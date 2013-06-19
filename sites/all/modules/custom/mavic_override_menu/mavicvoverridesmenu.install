@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function mavicvoverridesmenu_install() {
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function mavicvoverridesmenu_uninstall() {
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function mavicvoverridesmenu_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function mavicvoverridesmenu_disable() {
+}

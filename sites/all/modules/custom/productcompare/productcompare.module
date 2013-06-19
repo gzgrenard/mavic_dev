@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file comparison's product module
+ */
+
+/**
+* Implementation of hook_menu().
+*/
+function productcompare_menu() {
+  $items = array();
+  $items['productcompare/add_product'] = array(
+    'title' => 'Add product',
+    'page callback' => 'productcompare_add',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+    );
+  $items['productcompare/remove_product'] = array(
+    'title' => 'Remove product',
+    'page callback' => 'productcompare_remove',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+    );
+  
+  $items['productcompare/store_products'] = array(
+    'title' => 'Remove product',
+    'page callback' => 'productcompare_store',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+    );
+  
+  $items['productcompare/get_ids'] = array(
+    'title' => 'Get ids',
+    'page callback' => 'productcompare_getids',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK
+    );
+  
+  return $items;
+}
+
+/**
+ * productcompare_add()
+ * Add product to the comparison tool
+ * @param $family
+ * @param $nid
+ */
+function productcompare_add($family, $nid) {
+	global $user;
+	$nid = intval($nid);
+	$_SESSION['productcompare_list'][$family][]=$nid;
+	
+	while (sizeof($_SESSION['productcompare_list'][$family]) > 3)	{
+		array_shift($_SESSION['productcompare_list'][$family]);
+	}
+	
+	exit();
+}
+
+/**
+ * productcompare_remove()
+ * Remove a product from the comparison tool
+ * @param $family
+ * @param $nid
+ */
+function productcompare_remove($family, $nid) {
+	global $user;
+	$nid = intval($nid);
+	
+	unset($_SESSION['productcompare_list'][$family][ array_search( $nid, $_SESSION['productcompare_list'][$family]) ] );
+	
+	$_SESSION['productcompare_list'][$family]=array_values($_SESSION['productcompare_list'][$family]);
+	exit();
+}
+
+/**
+ * productcompare_store()
+ * Store
+ * @param $family
+ * @param $nids
+ */
+function productcompare_store($family=0, $nids=NULL ) {
+	global $user;
+	if (is_string($nids)) {
+		$nid = explode($nids,'-');
+		$_SESSION['productcompare_list'][$family] = explode('-', $nids);
+	}
+	else {
+		unset($_SESSION['productcompare_list'][$family]);
+	}
+	exit();
+	
+}
+
+/**
+ * productcompare_getids()
+ * Get ids
+ * @param $family
+ */
+function productcompare_getids($family) {
+	echo implode('-', $_SESSION['productcompare_list'][$family]);
+	exit();
+}

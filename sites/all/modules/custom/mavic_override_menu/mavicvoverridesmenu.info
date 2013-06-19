@@ -1,0 +1,11 @@
+; $Id: nodesymlinks.info,v 1.2.2.1 2011/09/21 01:47:51 wojtha Exp $
+name = mavicvoverridesmenu
+description = "alter node form to make menu description field available "
+core = 7.x
+package = mavic
+version = "7.x-1.1"
+project = "mavicvoverridesmenu"
+
+files[] = mavicvoverridesmenu.install
+
+

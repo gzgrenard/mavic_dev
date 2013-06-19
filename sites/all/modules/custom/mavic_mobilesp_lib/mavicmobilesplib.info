@@ -1,0 +1,9 @@
+name = mavicmobilesplib
+description = "user-agent detection for mobile compliance"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavicmobilesplib"
+
+files[] = mobileesp.php
+

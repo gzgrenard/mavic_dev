@@ -1,0 +1,152 @@
+/* technologies pages */
+#techno_list_cat_big a, #techno_list_cat_small a
+{
+	display:inline-block;
+}
+#techno_title {
+	padding: 10px 0px 0px 0px;
+}
+.techno_brother {
+	margin-bottom: 4px;
+	border : 0px;
+}
+
+
+/* end technologies pages */
+
+/*ssc  align product page*/
+#product h1 img
+{
+	margin-top: 7px;
+}
+#product .right .yellow h2
+{
+
+	margin: 6px 0px 0px 11px;
+	padding: 0px;
+}
+
+.homedescription h1 img
+{
+	position:relative;
+	top: -1px;
+}
+
+
+#change_image
+{
+	width: 340px;
+	overflow: show;
+	padding: 3px 0px 0px 3px;
+	margin: 0px 0px 0px 0px;
+}
+#change_image a.feature-image,
+#change_image a.empty
+{
+	padding: 0px;
+	margin: 0px 3px 0px 0px;
+	border: none;
+}
+#change_image img
+{
+	border:none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#main_content .box ul.pager li.pager-next
+{
+	position:relative;
+	top: -17px;
+}
+
+
+#menu a.level1 {
+	padding-top: 3px;
+	padding-bottom: 5px;
+}
+
+#menu a.first {
+	padding-top: 8px;
+}
+
+#tabs_buttons div.tab,
+#tabs_buttons_gamme div.tab {
+	padding-top: 6px;
+	padding-bottom: 3px;
+}
+.tab_space {
+	margin-top: 25px;
+}
+
+.view-news-page .news_item_active {
+	zoom: 1;
+}
+
+#mavic_search h1 {
+	margin: 0;
+	padding-left: 17px;
+	padding-bottom: 0px;
+}
+#search-form {
+	margin: 0;
+}
+
+#sscaltiumBlock {
+	padding-top: 50px;
+}
+
+.webform ul.customselect-list 
+{
+	left: -221px;
+	top: 26px;
+	min-width: 219px;
+}
+
+.webform .form-item 
+{
+	padding: 2px 0px 2px 0px;
+	margin:0px;
+}
+.webform .form-submit
+{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.webform #edit-submitted-language-display
+{
+	width: 120px;
+}
+.webform #edit-submitted-language
+{
+	width: 128px;
+	min-width: 128px;
+
+	left: -130px;
+}
+#right_content p.content,
+#home_right_content p.content {
+	margin-top: 5px;
+	}
+.clear {
+height: 1px;
+}
+/*
+* video
+*/
+#discipline_content .flash_content {
+position: relative;
+}
+#player_encart {
+position: relative;
+}
+#player_encart object , #discipline_content object{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+#discipline_content .video_block{
+	height: 278px;
+}

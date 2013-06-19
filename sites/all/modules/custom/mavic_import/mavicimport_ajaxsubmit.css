@@ -1,0 +1,26 @@
+html.js input.form-submit.throbbing {
+  background:url(status-active.gif) no-repeat right center;
+  padding-right:18px;
+}
+.warning-msg {
+	color: #ff6600;
+}
+.error-msg {
+	color: #ff0000;
+}
+
+#uploaded_file_reports, #upload_fields {
+    margin-top: 60px;
+}
+#choice_upload {
+    width: 400px;
+    height: 60px;
+    margin: 30px auto;
+    font-size: 18px;
+}
+#choice_upload label{
+    padding-left: 15px;
+}
+tbody {
+    border-top: 0px;
+}

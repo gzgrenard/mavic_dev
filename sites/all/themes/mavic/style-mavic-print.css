@@ -1,0 +1,102 @@
+/* PRINT CSS */
+
+/* design containers */
+body {
+	overflow: visible !important;
+}
+#container {
+	overflow: visible !important;
+	height: auto !important;
+}
+
+#subcontainer {
+	width: auto !important;
+	margin: 0px 0px 0px 0px !important;
+	padding: 0px 0px 0px 0px !important;
+	float: none !important;
+}
+
+#main_content {
+	min-height: 0px !important;
+	padding: 0px 0px 0px 0px !important;
+	width: auto !important;
+	float: none !important;
+}
+
+#product {
+	margin: 0px 0px 0px 0px !important;
+}
+
+/* force show wanted block */
+#technologies_content { display: block !important; }
+#features_content { display: block !important; }
+#product .right { width: 300px; }
+#product .left { width: 340px; }
+
+/* hide unwanted block */
+#menu { display: none !important; }
+#breadcrumb { display: none !important; }
+#tabs_buttons { display: none !important; }
+#right_content_container { display: none !important; }
+#logo_container { display: none !important; }
+#footer { display: none !important; }
+#body-background { display: none !important; }
+#black_screen { display: none !important; }
+
+/* hide unwanted block for product page */
+#zoomBar { display: none !important; }
+#change_view { display: none !important; }
+p.actions { display: none !important; }
+#technologies_content .more { display: none !important; }
+#news_prev_next { display: none !important; }
+
+#list_nextnews { display: none !important; }
+#list_morenews { display: none !important; }
+.morenews { display: none !important; }
+#pc_select_1 { display: none !important; }
+
+/* hide unwanted block for news page */
+#tabs_buttons_gamme { display: none; }
+
+/* hide unwanted block for techno page */
+.techno_brother { display: none !important; }
+.techno_brother img { display: none !important; }
+.techno_brother_title { display: none !important; }
+#techno_prev_next { display: none !important; }
+
+/*
+
+/* styles modifications *//*
+	.tab_space { margin-top: 15px; }
+	#technologies_content { display: block !important; }
+	#features_content { display: block !important; }
+
+	#main_content .color0 { background-color: transparent; }
+	#main_content .color1 { background-color: transparent; }
+
+	#tabs .features { padding-top: 0; }
+	#tabs .technologies { padding-left: 0; padding-top: 0; }
+	#tabs .gallery { padding-top: 0; }
+	#tabs .tab_content { padding-bottom: 0; }
+	#tabs .features p {
+		margin: 0;
+		padding-left: 0;
+		padding-bottom: 0;
+		padding-top: 0;
+	}
+	#tabs .features p.color1 {
+		padding-bottom: 10px;
+		padding-top: 10px;
+	}
+	#main_content span.bold {
+		background: transparent;
+		padding-left: 0;
+	}
+	#product { margin-top: 0 !important; }
+	#product .right,
+	#product .left { float: none; width: auto; }
+	#product .right p { padding-left: 0; }
+	#tabs .technologies div img.big { float: none; margin-right: 0; }
+	#tabs .technologies p { padding-left: 0; padding-right: 0; }
+	#product .right .yellow h2 { margin-left: 0; }
+	#product h1 { padding-left: 0; }

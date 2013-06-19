@@ -1,0 +1,9 @@
+/************************************
+ss2013 Landing page
+************************************/
+#slideShow_container {
+    position: relative;
+}
+#slideShow_container .hidden {
+    display: none;
+}

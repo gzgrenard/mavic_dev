@@ -1,0 +1,8 @@
+<config>
+	<autoPlay>false</autoPlay>
+	<controlBarAutoHide>true</controlBarAutoHide>
+	<controlBarPosition>bottom</controlBarPosition>
+	<playButtonOverlay>false</playButtonOverlay>
+	<skin>/sites/default/modules/webtv/skin-mavic.xml</skin>
+	<videoService>http://www.mavic.com/sites/default/modules/webtv/service/service-webtv.php</videoService>
+</config>

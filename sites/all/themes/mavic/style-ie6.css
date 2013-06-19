@@ -1,0 +1,64 @@
+/* background image flickering fix */
+html {
+  filter: expression(document.execCommand("BackgroundImageCache", false, true));
+}
+.download_content {
+	height: 23px;
+	line-height: 25px;
+	padding: 5px 6px 0;
+	vertical-align: middle;
+}
+
+#menu a.level1 {
+	padding-top: 1px;
+	padding-bottom: 0px;
+}
+
+#menu a.first {
+	padding-top: 8px;
+}
+
+#select_page #list_select li {
+	border: 1px solid white;
+}
+
+#language-select-list #list_select_langue {
+	right: 14px;
+}
+
+
+
+.galleria-counter {
+	bottom: -1px !important;
+}
+
+.ez-checkbox, .ez-radio { 
+	display:inline; 
+	height: 20px;
+	margin-right: -5px;
+	padding: 0px;
+	
+}
+
+.webform ul.customselect-list 
+{
+	
+	top: 26px;
+	
+	width: 219px;
+}
+
+#shopfinder #legend img {
+	margin-top: 3px;
+}
+
+#shopfinder #options .optionblock .title div.label img {
+	margin-top: 3px;
+}
+
+/*
+	gallerie
+*/
+#gallery {
+	margin-left: -4px;
+}

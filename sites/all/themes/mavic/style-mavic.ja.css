@@ -1,0 +1,50 @@
+.ja #filters_content div.filter {
+	font-size: 10px;
+}
+
+.ja #main_content h1 {
+	line-height: 21px;
+}
+.ja #right_content p.title,
+.ja #home_right_content p.title {
+	padding-top: 5px;
+	line-height: 16px;
+}
+
+.ja #product h1 {
+	line-height: 28px;
+}
+
+.ja .homedescription h1 {
+	padding-bottom: 8px;
+}
+
+.ja .history_item .title,
+.ja .history_item_active .title {
+	margin-top: 5px;
+}
+
+.ja #tabs_buttons div.tab,
+.ja #tabs_buttons_gamme div.tab {
+	padding-top: 5px;
+	padding-bottom: 4px;
+}
+
+.ja #tabs_buttons_gamme.history div.tab {
+	background-position: 7px 11px;
+}
+
+.ja #tabs_buttons_gamme.history div.active {
+	background-position: 5px 13px;
+}
+
+body{
+	font-family:Tahoma, Helvetica, Arial,'Lucida Grande','Lucida Console',メイリオ,Merio,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',Osaka, sans-serif
+}
+
+#search_input{
+	font-family:Arial,メイリオ,Merio,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',Osaka, sans-serif
+}
+#mavic_search .search-form-test .form-checkboxes,#main_content .search-form-test #edit-submit {
+	font-family:Tahoma,メイリオ,Merio,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',Osaka, sans-serif
+}

@@ -1,0 +1,6 @@
+.toFloat label, .toFloat input {
+    float: left;
+}
+.missing {
+    color: red;
+}

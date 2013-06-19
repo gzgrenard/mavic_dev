@@ -1,0 +1,316 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+/**
+ * Implementation of hook_update().
+ */
+
+function mavicimport_update_6204(&$sandbox) {
+  $schema['mavicimport_files_warnings'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'sheet' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'line' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'message' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  
+  $schema['mavicimport_settings'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'system_name' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'settings' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+
+  $schema['mavicimport_files'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'filename' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'author' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'upload' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'modified' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'created' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'notes' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'path' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'filemime' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'filesize' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'sid' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  
+  
+  if (db_table_exists('mavicimport_files_warnings')) {
+      db_drop_table('mavicimport_files_warnings');
+  }
+  if (db_table_exists('mavicimport_settings')) {
+      db_drop_table('mavicimport_settings');
+  }
+  if (db_table_exists('mavicimport_files')) {
+      db_drop_table('mavicimport_files');
+  }
+  db_create_table('mavicimport_files_warnings', $schema['mavicimport_files_warnings']);
+  db_create_table('mavicimport_settings', $schema['mavicimport_settings']);
+  db_create_table('mavicimport_files', $schema['mavicimport_files']);
+  return t('Everything has been executed well');
+
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function mavicimport_install() {
+	// We need to launch this module after menu module and symlink module
+	db_query("UPDATE {system} SET weight = 10 WHERE name = 'mavicimport'");
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function mavicimport_uninstall() {
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function mavicimport_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function mavicimport_disable() {
+}
+/**
+* Implements hook_schema().
+*/
+function mavicimport_schema() {
+$schema['mavicimport_files_warnings'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'serial',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'sheet' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'line' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'message' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'text',
+      'not null' => TRUE,
+    ),
+  ),
+  'primary key' => array('id'),
+);
+
+  $schema['mavicimport_settings'] = array(
+    'description' => 'TODO: please describe this table!',
+    'fields' => array(
+      'id' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'system_name' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => TRUE,
+      ),
+      'settings' => array(
+        'description' => 'TODO: please describe this field!',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+
+$schema['mavicimport_files'] = array(
+  'description' => 'TODO: please describe this table!',
+  'fields' => array(
+    'id' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'serial',
+      'not null' => TRUE,
+    ),
+    'filename' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'author' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'upload' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'modified' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'created' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'notes' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'text',
+      'not null' => TRUE,
+    ),
+    'status' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'path' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'filemime' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'varchar',
+      'length' => '255',
+      'not null' => TRUE,
+    ),
+    'filesize' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'sid' => array(
+      'description' => 'TODO: please describe this field!',
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'primary key' => array('id'),
+);
+
+return $schema;
+}

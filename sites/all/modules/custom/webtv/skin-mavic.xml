@@ -1,0 +1,63 @@
+ <skin>
+        <elements basePath="/sites/default/modules/webtv/assets/skins/mavic/">
+            <!-- Background elements for the control bar -->
+            <element id="controlBarBackdrop" src="backDrop_center.png"/> <!-- 2 x 35 -->
+            <element id="controlBarBackdropleft" src="backDrop_center.png"/> <!-- 2 x 35 -->
+            <element id="controlBarBackdropRight" src="backDrop_center.png"/> <!-- 2 x 35 -->
+            <!-- Pause Button states -->
+            <element id="pauseButtonNormal" src="pauseButtonUp.png"/> <!-- 24 x 24 -->
+            <element id="pauseButtonDown" src="pauseButtonOver.png"/> <!-- 24 x 24 -->
+            <element id="pauseButtonOver" src="pauseButtonOver.png"/> <!-- 24 x 24 -->
+            <!-- Play Button elements -->
+            <element id="playButtonNormal" src="playButtonUp.png"/> <!-- 24 x 24 -->
+            <element id="playButtonDown" src="playButtonOver.png"/> <!-- 24 x 24 -->
+            <element id="playButtonOver" src="playButtonOver.png"/> <!-- 24 x 24 -->
+            <!-- Scrub Bar elements -->
+            <element id="scrubBarTrack" src="scrub_no_load.png"/> <!-- 2 x 9 -->
+            <element id="scrubBarTrackLeft" src="scrub_no_load.png"/> <!-- 2 x 9 -->
+            <element id="scrubBarTrackRight" src="scrub_no_load.png"/> <!-- 2 x 9 -->
+            <element id="scrubBarLoadedTrack" src="scrub_loaded.png"/> <!-- 2 x 9 -->
+            <element id="scrubBarLoadedTrackEnd" src="scrub_loaded.png"/> <!-- 2 x 9 -->
+            <element id="scrubBarPlayedTrack" src="scrub_loaded_played.png"/> <!-- 2 x 9 -->
+             <!-- DVR/Live Scrub Bar elements -->
+            <element id="scrubBarScrubberNormal" src="scrub_tab.png"/> <!-- 9 x 9 -->
+            <element id="scrubBarScrubberDown" src="scrub_tab.png"/> <!-- 9 x 9 -->
+            <element id="scrubBarScrubberOver" src="scrub_tab.png"/> <!-- 9 x 9 -->
+            <element id="scrubBarScrubberDisabled" src="scrub_tab.png"/> <!-- 9 x 9 -->
+            <element id="scrubBarTimeHint" src="time_hint.png"/> <!-- 65 x 43 --> <!-- TO BE FIXED -->
+            <!-- Fullscreen Enter -->
+            <element id="fullScreenEnterButtonNormal" src="fullscreenButton.png"/> <!-- 20 x 24 -->
+            <element id="fullScreenEnterButtonDown" src="fullscreenButtonOver.png"/> <!-- 20 x 24 -->
+            <element id="fullScreenEnterButtonOver" src="fullscreenButtonOver.png"/> <!-- 20 x 24 -->
+            <!-- Fullscreen Leave -->
+            <element id="fullScreenLeaveButtonNormal" src="fullscreenButtonLeave.png"/> <!-- 20 x 24 -->
+            <element id="fullScreenLeaveButtonDown" src="fullscreenButtonLeaveOver.png"/> <!-- 20 x 24 -->
+            <element id="fullScreenLeaveButtonOver" src="fullscreenButtonLeaveOver.png"/> <!-- 20 x 24 -->
+			<!-- Mute Button states -->
+            <element id="volumeButtonNormal" src="volume_low_normal.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonDown" src="volume_low_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonOver" src="volume_low_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonLowNormal" src="volume_low_normal.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonLowDown" src="volume_low_normal.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonLowOver" src="volume_low_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonMedNormal" src="volume_med_normal.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonMedDown" src="volume_med_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonMedOver" src="volume_med_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonHighNormal" src="volume_high_normal.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonHighDown" src="volume_high_over.png"/> <!-- 19 x 24 -->
+            <element id="volumeButtonHighOver" src="volume_high_over.png"/> <!-- 19 x 24 -->
+			 <!-- Unmute button states -->
+            <element id="unmuteButtonNormal" src="volume_mute.png"/> <!-- 19 x 24 -->
+            <element id="unmuteButtonDown" src="volume_mute_over.png"/> <!-- 19 x 24 -->
+            <element id="unmuteButtonOver" src="volume_mute_over.png"/> <!-- 19 x 24 -->
+			<!-- Volume Slider -->
+            <element id="volumeBarBackdrop" src="volume_back.png"/> <!-- 31 x 97 -->
+			<element id="volumeBarSliderNormal" src="volume_slider.png"/> <!-- 13 x 13 -->
+            <element id="volumeBarSliderDown" src="volume_slider.png"/> <!-- 13 x 13 -->
+            <element id="volumeBarSliderOver" src="volume_slider.png"/> <!-- 13 x 13 -->
+			<element id="volumeBarTrack" src="volumeBarTrack.png"/> <!-- 5 x 2 -->
+            <element id="volumeBarTrackEnd" src="volumeBarTrackEnd.png"/> <!-- 5 x 2 -->
+			<!-- Buffering Overlay -->
+			<element id="bufferingOverlay" src="bufferingOverlay.swf"/> <!-- 124 x 54 -->
+        </elements>
+    </skin>

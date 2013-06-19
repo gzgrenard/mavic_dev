@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+/**
+ * Implementation of hook_update().
+ */
+
+function mavicmeta_update_6204() {
+
+
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function mavicmeta_install() {
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function mavicmeta_uninstall() {
+//	drupal_uninstall_schema('mavicmeta');
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function mavicmeta_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function mavicmeta_disable() {
+}
+/**
+* Implements hook_schema().
+*/
+function mavicmeta_schema() {
+}

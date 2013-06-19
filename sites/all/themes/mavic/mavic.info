@@ -1,0 +1,7 @@
+; $Id: mavic.info,v 1.0 2010/07/2 $
+name = mavic
+description = Mavic
+version = 1.0
+core = 6.x
+engine = phptemplate
+stylesheets[all][] = style-admin.css

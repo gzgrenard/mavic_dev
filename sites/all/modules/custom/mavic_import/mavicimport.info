@@ -1,0 +1,16 @@
+name = mavicimport
+description = "import system for Mavic xls and xml"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavicimport"
+
+files[] = lib/mavicimport_ajaxsubmit_limitFilter.php
+files[] = lib/PHPExcel.php
+files[] = mavicimport_distributor_form_submit.php
+files[] = mavicimport_export_unlocshop_xls.php
+files[] = mavicimport_export_xls.php
+files[] = mavicimport_news_form_submit.php
+files[] = mavicimport_shop_form_submit.php
+files[] = mavicimport_xls_bulk_form_submit.php
+files[] = mavicimport.install

@@ -1,0 +1,61 @@
+
+html.js fieldset.collapsed legend a, html.js fieldset.collapsible legend a {
+	font: 18px/200% Verdana,sans-serif;
+}
+html.js fieldset.collapsed.missing legend a, html.js fieldset.collapsible.missing legend a {
+	background: url("/misc/watchdog-error.png") 0 50% no-repeat;
+}
+html.js fieldset.collapsed.outdated legend a, html.js fieldset.collapsible.outdated legend a {
+	background: url("/misc/watchdog-warning.png") 0 50% no-repeat;
+}
+html.js fieldset.collapsed.updated legend a, html.js fieldset.collapsible.updated legend a {
+	background: url("/misc/watchdog-ok.png") 0 50% no-repeat;
+}
+
+
+html.js .resizable-textarea {
+    width: 80%;
+}
+.mavicmeta_img_container {
+	margin-top: 4%; 
+}
+.mavicmeta_img_container img{
+	margin-right: 30px; 
+
+}
+
+
+.row_container {
+	position: relative;
+}
+.mavicmeta_field_left, .mavicmeta_field_right {
+	width: 49%;
+	float: left;
+}
+.submit_field {
+	width: 45%;
+	border: 1px solid #D9EAF5;
+    margin: 3em 0;
+    padding: 1em;
+
+}
+.clearBoth {
+clear: both;
+width: 100%;
+height: 1px;
+border-top: 1px solid #D9EAF5;
+}
+#tooltipDisplayer {
+	position: absolute;
+	z-index: 99;
+	top:0px;
+	left:0px;
+	background:white;
+	border: 1px solid #d5d5d5;
+	background: #fafafa;
+	width: 150px;
+	font-size: 11px;
+	line-height: 13px;
+	margin: 0px;
+	padding: 10px;
+}

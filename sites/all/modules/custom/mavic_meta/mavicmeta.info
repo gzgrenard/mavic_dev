@@ -1,0 +1,9 @@
+name = mavicmeta
+description = "Handling of all front-page meta-data"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavic_meta"
+
+files[] = includes/mavicmeta.admin.inc
+files[] = includes/mavicmeta.settings.inc

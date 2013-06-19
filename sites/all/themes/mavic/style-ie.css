@@ -1,0 +1,108 @@
+HTML {
+	/*overflow: hidden;*/
+}
+img {
+	-ms-interpolation-mode: bicubic;
+}
+
+#product .right h2 {
+	padding-top: 0px;
+	padding-bottom: 8px;
+}
+
+.submenu .submenucontent a.link span {
+	padding-top: 3px;
+}
+
+.homedescription h1 img {
+	position:relative;
+	top: -4px;
+}
+
+#container {
+	position: relative;
+}
+
+#content_gamme_items .hidder {
+	filter:alpha(opacity=0);
+}
+
+#productCompareContainer #productCompareClose {
+	padding-top: 2px;
+	background-position: 10px 10px;
+}
+
+#productCompareContainer #productCompareClose:hover {
+	background-position: 10px 10px;
+}
+
+#nextprevmacro{
+	height: 19px;
+}
+
+#search_form .submit {
+	margin-top: 8px;
+}
+
+.child_techno_content {
+	margin-top: -17px;
+}
+
+#tabs_buttons_gamme div.tab {
+	background-position: 10px 12px;
+}
+
+#tabs_buttons_gamme div.active {
+	background-position: 8px 14px;
+}
+#tabs_buttons div.tab {
+	background-position: 5px 12px;
+}
+
+#tabs_buttons div.active{
+	background-position: 3px 14px;
+}
+#tabs_buttons_gamme.history div.tab {
+	background-position: 8px 12px;
+}
+#tabs_buttons_gamme.history div.active {
+	background-position: 7px 14px;
+}
+
+.techno_brother_title {
+	padding-top: 3px;
+	padding-bottom: 5px;
+	line-height: 1px;
+}
+
+/* for galleria */
+.galleria-bt-zoom, .galleria-bt-zoom:hover {
+	background-position: 0 0px !important;
+}
+
+body .galleria-lightbox-box .galleria-lightbox-next, body .galleria-lightbox-box .galleria-lightbox-close {
+	right: 8px;
+}
+#nlsubmit {
+	float: left;
+	margin: 0 20px 0 0;
+
+}
+#nlsubmit a{
+margin-top: 3px;
+}
+
+#nlsubmit input{
+	line-height: 17px;
+	font-size: 12px;
+	height: 15px;
+	border: 2px solid white;
+	background-color: white;
+	text-align: left;
+}
+#nlsubmit .submitnl{
+	cursor: pointer;
+	height:21px;
+}
+
+/* end galleria */

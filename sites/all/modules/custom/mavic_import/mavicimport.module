@@ -1,0 +1,1640 @@
+<?php
+
+require_once('parameters.php');
+
+/**
+ * Implementation of hook_form_alter(). 
+ * change input select in input text for menu weight and menu symlink weight
+ * desactivate teaser button
+ * handle ajax call
+ */
+function mavicimport_form_alter(&$form, &$form_state, $form_id) {
+	if (isset($form['#node']) && $form['#node']->type . '_node_form' == $form_id && isset($form['menu']['weight'])) {
+		$form['menu']['weight']['#type'] = 'textfield';
+		if (isset($form['menu']['nodesymlinks']['items'])) {
+			foreach ($form['menu']['nodesymlinks']['items'] as $key => $value) {
+				if (isset($form['menu']['nodesymlinks']['items'][$key]['weight']['#type']))
+					$form['menu']['nodesymlinks']['items'][$key]['weight']['#type'] = 'textfield';
+			}
+		}
+	}
+	elseif ($form_id == 'menu_edit_item' && isset($form['menu']['weight'])) {
+		$form['menu']['weight']['#type'] = 'textfield';
+	}
+	elseif ($form_id == 'menu_overview_form') {
+		foreach ($form as $key => $value) {
+			if (isset($form[$key]['weight']['#type']))
+				$form[$key]['weight']['#type'] = 'textfield';
+		}
+	}
+	if (isset($form['body_field']['teaser_include'])) {
+		$form['body_field']['teaser_include']['#access'] = FALSE;
+	}
+	if (isset($form['#ajaxsubmit'])) {
+		mavicimport_ajaxsubmit_load();
+		if (!isset($form['#attributes'])) {
+			$form['#attributes'] = array();
+		}
+		$form['#attributes']['class'] = (isset($form['#attributes']['class']) ? $form['#attributes']['class'] . ' ' : '') . 'ajaxsubmit';
+		$form['#validate'][] = 'mavicimport_ajaxsubmit_prepare';
+		$form['#submit'][] = 'mavicimport_ajaxsubmit_prepare';
+		$form['#pre_render'][] = 'mavicimport_ajaxsubmit_dispatch';
+		$form['ajaxsubmit'] = array(
+			'#type' => 'hidden',
+			'#value' => 0,
+		);
+	}
+}
+
+/*
+ * Implementation of hook_theme() : customize the mavicimport_xls_bulk form
+ */
+
+function mavicimport_theme($existing, $type, $theme, $path) {
+	return array(
+		'mavicimport_xls_bulk_form' => array(
+			'arguments' => array('form' => NULL),
+			'path' => drupal_get_path('module', 'mavicimport') . '/themes',
+			'template' => 'mavicimport-form',
+			'preprocess functions' => array('mavicimport_xls_bulk_preprocess_form')
+		)
+	);
+}
+
+/**
+ * Implementation of hook_permission().
+ * add news user perm for shop add/delete
+ */
+function mavicimport_permission() {
+	return array(
+		"Admin import-export",
+		"Import Shop",
+		"Edit Shop Andorra (ad)",
+		"Edit Shop Argentina (ar)",
+		"Edit Shop Australia (au)",
+		"Edit Shop Austria (at)",
+		"Edit Shop Belgium (be)",
+		"Edit Shop Brazil (br)",
+		"Edit Shop Bulgaria (bg)",
+		"Edit Shop Canada (ca)",
+		"Edit Shop Chile (cl)",
+		"Edit Shop China (cn)",
+		"Edit Shop Colombia (co)",
+		"Edit Shop Costa Rica (cr)",
+		"Edit Shop Croatia (hr)",
+		"Edit Shop Cyprus (cy)",
+		"Edit Shop Czech Republic (cz)",
+		"Edit Shop Denmark (dk)",
+		"Edit Shop Dominican Republic (do)",
+		"Edit Shop Ecuador (ec)",
+		"Edit Shop El Salvador (sv)",
+		"Edit Shop Estonia (ee)",
+		"Edit Shop Finland (fi)",
+		"Edit Shop France (fr)",
+		"Edit Shop Germany (de)",
+		"Edit Shop Greece (gr)",
+		"Edit Shop Guatemala (gt)",
+		"Edit Shop Hong Kong S.A.R. China (hk)",
+		"Edit Shop Hungary (hu)",
+		"Edit Shop Indonesia (id)",
+		"Edit Shop Iran (ir)",
+		"Edit Shop Ireland (ie)",
+		"Edit Shop Israel (il)",
+		"Edit Shop Italy (it)",
+		"Edit Shop Latvia (lv)",
+		"Edit Shop Lithuania (lt)",
+		"Edit Shop Malta (mt)",
+		"Edit Shop Mexico (mx)",
+		"Edit Shop Namibia (na)",
+		"Edit Shop New Zealand (nz)",
+		"Edit Shop Norway (no)",
+		"Edit Shop Panama (pa)",
+		"Edit Shop Philippines (ph)",
+		"Edit Shop Poland (pl)",
+		"Edit Shop Portugal (pt)",
+		"Edit Shop Romania (ro)",
+		"Edit Shop Russia (ru)",
+		"Edit Shop Serbia (rs)",
+		"Edit Shop Singapore (sg)",
+		"Edit Shop Slovakia (sk)",
+		"Edit Shop Slovenia (si)",
+		"Edit Shop South Africa (za)",
+		"Edit Shop South Korea (kr)",
+		"Edit Shop Spain (es)",
+		"Edit Shop Sweden (se)",
+		"Edit Shop Switzerland (ch)",
+		"Edit Shop Taiwan (tw)",
+		"Edit Shop Thailand (th)",
+		"Edit Shop Turkey (tr)",
+		"Edit Shop Ukraine (ua)",
+		"Edit Shop United Kingdom (uk)",
+		"Edit Shop United States (us)",
+		"Edit Shop Uruguay (uy)",
+		"Edit Shop Venezuela (ve)",
+		"Edit Shop Guadeloupe (gp)",
+		"Edit Shop Martinique (mq)",
+		"Edit Shop Reunion (re)",
+		"Edit Shop French Guiana (gf)",
+		"Edit All Shops"
+	);
+}
+
+/**
+ * Implements hook_node_validate()
+ * mavicimport_node_validate()
+ * Ensure shops nodes are created by right's owners
+ */
+function mavicimport_node_validate($node, $form, &$form_state) {
+  if ($node->type == 'shop') {
+    $node->locations[0]['country_name'] = location_country_name($node->locations[0]['country']);
+    if (!user_access('Edit Shop ' . strtolower($node->locations[0]['country_name']) . ' (' . $node->locations[0]['country'] . ')') && !user_access('Edit All Shops'))
+      form_set_error('country', t('You can not create shops for this country') . '(' . $node->locations[0]['country_name'] . ')(' . $node->locations[0]['country'] . ')');
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function mavicimport_menu() {
+	$items['mavicimport'] = array(
+		'title' => 'Mavic Import',
+		'weight' => '1',
+		'page callback' => 'mavicimport_xls_bulk',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	$items['mavicimport/xls_bulk'] = array(
+		'title' => 'XLS-XML bulk import',
+		'weight' => '1',
+		'page callback' => 'mavicimport_xls_bulk',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_DEFAULT_LOCAL_TASK,
+	);
+
+	$items['mavicimport_ajaxsubmit'] = array(
+		'title' => 'Ajax submit handling',
+		'page callback' => 'mavicimport_ajaxsubmit_dispatch',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+
+	$items['mavicimport/config'] = array(
+		'title' => 'Mavic import settings',
+		'weight' => '2',
+		'page callback' => 'mavicimport_xls_settings',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_LOCAL_TASK,
+	);
+	
+	$items['mavicimport/restore'] = array(
+		'title' => 'Mavic recovery tool',
+		'weight' => '3',
+		'page callback' => 'mavicimport_recovery',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_LOCAL_TASK,
+	);
+
+
+	$items['mavicimport/download'] = array(
+		'title' => 'Download files',
+		'page callback' => 'mavicimport_ForceFileDownload',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+
+	$items['mavicimport/news'] = array(
+		'title' => 'News',
+		'weight' => '3',
+		'page callback' => 'mavicimport_news',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_LOCAL_TASK,
+	);
+
+	$items['mavicimport_shop'] = array(
+		'title' => 'Shops Import',
+		'weight' => '0',
+		'page callback' => 'mavicimport_shop',
+		'access arguments' => array('Import Shop'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	$items['mavicimport_distributor'] = array(
+		'title' => 'Distributors Import',
+		'weight' => '1',
+		'page callback' => 'mavicimport_distributor',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	$items['mavicexport'] = array(
+		'title' => 'Mavic Export',
+		'weight' => '0',
+		'page callback' => 'mavicimport_export_xls',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	$items['linelist'] = array(
+		'title' => '',
+		'weight' => '0',
+		'page callback' => 'mavicimport_export_linelist',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK,
+	);
+
+	$items['unlocshop'] = array(
+		'title' => '',
+		'weight' => '0',
+		'page callback' => 'mavicimport_export_unlocshop',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK,
+	);
+
+
+	return $items;
+}
+
+function mavicimport_test($nid = NULL) {
+	if (empty($nid))
+		$nid = 98831;
+	echo "<pre>";
+	print_r(load_mavic_node($nid));
+	echo "</pre>";
+}
+
+//-----------------------------------------------------------------------------------------------
+
+/**
+ * excel news tabs
+ */
+function mavicimport_news() {
+	$output = '';
+	if (!empty($_SESSION['csv_html'])) {
+		$output .= $_SESSION['csv_html'];
+		unset($_SESSION['csv_html']);
+	}
+	else {
+		$_SESSION['csv_area'] = '';
+		$_SESSION['title_bar'] = TRUE;
+	}
+	$output .= $_SESSION['debug_mavic'];
+	unset($_SESSION['debug_mavic']);
+	$output .= '<p>Wanted columns :<br>id, title, resume, content, category, url picture, landscape, date, id_country, id_parent, macromodel_code list, range list</p>';
+	$output .= drupal_get_form('mavicimport_news_form');
+	unset($_SESSION['csv_area']);
+	unset($_SESSION['title_bar']);
+
+	return $output;
+}
+
+/**
+ * excel news form
+ */
+function mavicimport_news_form($form_state) {
+	$form['csv'] = array('#type' => 'textarea',
+		'#default_value' => $_SESSION['csv_area'],
+		'#cols' => 80,
+		'#rows' => 20,
+		'#title' => 'CSV code');
+	$form['simulation'] = array('#type' => 'checkbox',
+		'#default_value' => TRUE,
+		'#title' => 'Simulation only'
+	);
+	$form['title_bar'] = array('#type' => 'checkbox',
+		'#default_value' => $_SESSION['title_bar'],
+		'#title' => 'With title bar'
+	);
+	$form['drop'] = array('#type' => 'checkbox',
+		'#default_value' => FALSE,
+		'#title' => 'Drop all previous news'
+	);
+	$form['submit'] = array('#type' => 'submit', '#value' => 'Load');
+	return $form;
+}
+
+/**
+ * excel news treatment
+ */
+function mavicimport_news_form_submit($form, &$form_state) {
+	global $parameters;
+	require('mavicimport_news_form_submit.php');
+}
+
+//-----------------------------------------------------------------------------------------------
+/**
+ * Recovery
+ */
+function mavicimport_recovery() {
+	$output .= '<p>' . t('Before each Excel import, a backup of the database is automatically run.');
+	$output .= t('The system can store up to five revisions : To restore the website to the state it was in prior to the last import, please select the restore point <strong>with the same filename/date as the Excel file last imported</strong>.') . '</p>';
+	$output .= '<p>' . t('e.g. After importing the file <em>corrupted_linelist_xlsx.xlsx</em> on Tuesday 22nd January, the system was corrupted. To restore the website to the state it was in <strong>prior</strong> to this import, select the problematic file from the <em>Available recovery backups</em>, which in this case would be <em>corrupted_linelist_xlsx.xlsx (Tue, 22 Jan 2013 11:17:59 +0100)</em>.') . '</p>';
+	$output .= '<p>' . t('<strong>This recovery process is global and affects all data regardless of content type (i.e. news, contest registration, highlights, etc.)</strong>');
+	$output .= '<ul><li>' . t('It will restore the entire website to the state it was in prior to the date that the chosen file was imported') . '</li>';
+	$output .= '<li>' . t('It is irreversible') . '</li>';
+	$output .= '<li>' . t('It can take several minutes, so please be patient and wait until the confirmation message is displayed') . '</li></ul></p>';
+	$output .= drupal_get_form('mavicimport_recovery_form');
+	return $output;
+}
+
+/**
+ * Recovery form
+ */
+function mavicimport_recovery_form($form_state) {
+	$path = drupal_get_path('module', 'mavicimport');
+	$listBckp = scandir($path . '/backup');
+	$listBckpFiles = array();
+	foreach ($listBckp as $bckp) {
+		if (preg_match( '/[^_]\d+/', $bckp, $result)) {
+			$listBckpFiles[$result[0]] = $bckp;
+		}
+	}
+	if (!empty($listBckpFiles)) {
+		ksort($listBckpFiles);
+		$options = array();
+		foreach ($listBckpFiles as $timstp => $filename) {
+			$options[$filename] = str_replace(array($timstp . '_', '.gz'), array('', '.xlsx'), $filename) . ' (' . date(r, $timstp) . ')';
+		}
+		$form[$timstp] = array(
+			'#type' => 'radios',
+			'#title' => t('Available recovery backups'),
+			'#default_value' => array_pop($listBckpFiles),
+			'#options' => $options,
+			'#required' => TRUE,
+			'#description' => t('The system will be restored to the state it was in prior to the import of the selected file.'),
+			);
+		$form['submit'] = array('#type' => 'submit', '#value' => 'Restore');
+	}
+	else {
+		$form['submit'] = array('#type' => 'submit', '#value' => 'No backup available', '#disabled' => TRUE );
+	}
+	
+	return $form;
+
+
+}
+
+/**
+ * Recovery treatment
+ */
+function mavicimport_recovery_form_submit($form, &$form_state) {
+	$path = drupal_get_path('module', 'mavicimport');
+	$listBckp = scandir($path . '/backup');
+	$backupFile = array_shift($form_state['values']);
+	if (in_array($backupFile, $listBckp)) {
+		if (mavicimport_restore_db($backupFile) !== FALSE) {
+			drupal_set_message(t('The database has been successfully restored.'), 'status');
+		}
+		else {
+			drupal_set_message(t('The recovery failed on @backupfile, please contact your administrator', array('@backupfile' => $backupFile), array('context' => 'Recovery failed', 'langcode' => 'en')), 'error');
+		}		
+	}
+	else {
+		drupal_set_message($backupFile . ' ? lol...', 'status');
+	}
+}
+
+//-----------------------------------------------------------------------------------------------
+/**
+ * settings
+ */
+function mavicimport_xls_settings() {
+	$output .= '<p>Excel delimiters per sheet. </p>';
+	$output .= drupal_get_form('mavicimport_xls_settings_form');
+	return $output;
+}
+
+/**
+ * settings form
+ */
+function mavicimport_xls_settings_form($form_state) {
+	global $parameters;
+
+	$parameters_default = $parameters['excel_default'];
+
+	$res = db_query("SELECT * FROM {mavicimport_settings}");
+	while ($settings = db_fetch_object($res)) {
+		if (!empty($settings->system_name) && !empty($settings->settings)) {
+			$parameters_default = unserialize($settings->settings);
+		}
+	}
+
+	foreach ($parameters_default as $sheet => $sheetA) {
+		$form[$sheet] = array(
+			'#type' => 'fieldset',
+			'#title' => check_plain($sheet),
+			'#collapsible' => TRUE,
+			'#collapsed' => TRUE,
+		);
+
+
+		$col_range_desc = t('Alphabetical correspondance of the last mandatory column (meaning that columns situated after the last mandatory one shall be ommited), eg. <em>BT</em>');
+		$max_row_desc = t('Maximum number of rows, including header (which must always be present), eg. <em>122</em>');
+		$col_name_desc = t('Alphabetical correspondance for mandatory data eg. <em>LINE</em> could correspond to the column <em>A</em>');
+		$option = array_combine(range('A', 'Z'), range('A', 'Z'));
+
+
+		switch ($sheet) {
+			case 'LINELIST' :
+				$col_name_desc = 'Alphabetical correspondance for mandatory data eg. <em>FAMILY</em> could correspond to the column <em>B</em>';
+				break;
+			case 'LINELIST_TRANSLATION' :
+				$col_name_desc = 'Alphabetical correspondance for mandatory data eg. <em>fr</em> could correspond to the column <em>B</em>';
+				break;
+			case 'RANGE_FILTER' :
+				$col_name_desc = 'Alphabetical correspondance for <em>LINE</em>, <em>FAMILY</em> and <em>TAB</em> : values for filters related columns cannot be modified as they are handled automatically';
+				$option = array('A' => 'A', 'B' => 'B', 'C' => 'C');
+				break;
+			case 'RANGE_FILTER_TRANSLATION' :
+				$col_name_desc = 'Alphabetical correspondance for mandatory data eg. <em>fr</em> could correspond to the column <em>B</em>';
+				break;
+			case 'RANGE_RANK_LANDSCAPE' :
+				$col_name_desc = 'Alphabetical correspondance for mandatory data eg. <em>LINE_SYSTEM</em> could correspond to the column <em>B</em>';
+				break;
+			case 'TECHNO_IMPORT' :
+				$col_name_desc = 'Alphabetical correspondance for mandatory data eg. <em>SEASON</em> could correspond to the column <em>B</em>';
+				break;
+			default :
+				break;
+		}
+		$form[$sheet]['col_name_fieldset'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Column name correspondance'),
+			'#collapsible' => TRUE,
+			'#collapsed' => TRUE,
+			'#description' => check_plain($col_name_desc),
+		);
+
+		$form[$sheet][$sheet . '__' . 'col_range'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Column range'),
+			'#default_value' => $sheetA['col_range'],
+			'#size' => 10,
+			'#maxlength' => 20,
+			'#description' => check_plain($col_range_desc),
+			'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		$form[$sheet][$sheet . '__' . 'max_row'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Maximum number of rows'),
+			'#default_value' => $sheetA['max_row'],
+			'#size' => 10,
+			'#maxlength' => 10,
+			'#description' => check_plain($max_row_desc),
+			'#element_validate' => array('mavicimport_xls_settings_max_row_validate'),
+		);
+
+		$toFlip = $sheetA['col_name'];
+		$col_nameA = array_flip($toFlip);
+		$i = 0;
+		foreach ($col_nameA as $col_name => $col_name_index) {
+			if ($sheet == 'RANGE_FILTER' && $i > 2) {
+				$form[$sheet]['col_name_fieldset'][$sheet . '__col_name_' . $col_name] = array(
+					'#type' => 'hidden',
+					'#title' => check_plain($sheet . ' : ' . $col_name),
+					'#value' => $col_name_index,
+					'#options' => $option,
+				);
+			}
+			else {
+				$form[$sheet]['col_name_fieldset'][$sheet . '__col_name_' . $col_name] = array(
+					'#type' => 'select',
+					'#title' => check_plain($sheet . ' : ' . $col_name),
+					'#default_value' => $col_name_index,
+					'#options' => $option,
+				);
+			}
+			$i++;
+		}
+	}
+
+	$form['submit'] = array('#type' => 'submit', '#value' => 'Save settings');
+	return $form;
+}
+
+/**
+ * settings validation
+ */
+function mavicimport_xls_settings_max_row_validate($element, &$form_state) {
+	if (intval($element['#value']) < 2 || intval($element['#value']) > 1000) {
+		form_error($element, t('You cannot set a maximum number of rows lower than 2 or higher than 1000'));
+	}
+}
+
+function mavicimport_xls_settings_col_range_validate($element, &$form_state) {
+	$patern = '/^[A-Z]{1,2}$/';
+	$resP = preg_match($patern, $element['#value']);
+	if (empty($resP)) {
+		form_error($element, t('You cannot set an index higher than <em>ZZ</em> or use any other characters than capital A-Z'));
+	}
+}
+
+function mavicimport_xls_settings_form_validate($form, &$form_state) {
+	$allSheetValue = array();
+	foreach ($form_state['values'] as $sheet__Field_nameStr => $form_values) {
+		$sheet__Field_name = explode('__', $sheet__Field_nameStr);
+		$sheet = $sheet__Field_name[0];
+		$field_name = $sheet__Field_name[1];
+		if ($field_name != 'col_range' && $field_name != 'max_row') {
+
+			if (!isset($allSheetValue[$sheet]))
+				$allSheetValue[$sheet] = array();
+			if (in_array($form_values, $allSheetValue[$sheet])) {
+				form_set_error($sheet__Field_nameStr, t('You cannot set two identical colum index for different column names.'));
+			}
+			else {
+				$allSheetValue[$sheet][] = $form_values;
+			}
+		}
+	}
+}
+
+/**
+ * settings treatment
+ */
+function mavicimport_xls_settings_form_submit($form, &$form_state) {
+	global $parameters;
+
+	$parameters['sheets'] = array();
+
+	$paramTest = $parameters['excel_default'];
+
+	$AzAr = range('A', 'Z');
+
+	$done = array();
+
+	foreach ($form_state['values'] as $sheet__Field_nameStr => $form_values) {
+		$sheet__Field_name = explode('__', $sheet__Field_nameStr);
+		$sheet = $sheet__Field_name[0];
+		$field_name = $sheet__Field_name[1];
+		if (isset($paramTest[$sheet])) {
+			if (!isset($done[$sheet])) {
+				$parameters['sheets'][$sheet] = array();
+				$done[$sheet] = array();
+			}
+
+			if ($field_name == 'col_range') {
+				$col_range = check_plain(trim($form_values));
+				$parameters['sheets'][$sheet]['col_range'] = (string) $col_range;
+				$done[$sheet]['col_range'] = (string) $col_range;
+			}
+			elseif ($field_name == 'max_row') {
+				$max_row = check_plain(intval($form_values));
+				$parameters['sheets'][$sheet]['max_row'] = (int) $max_row;
+				$done[$sheet]['max_row'] = (int) $max_row;
+			}
+			else {
+				$col_name_index_int = (int) array_keys($AzAr, $form_values);
+				$parameters['sheets'][$sheet]['col_name'][$col_name_index_int] = str_replace('col_name_', '', $field_name);
+				$done[$sheet]['col_name'][(string) $form_values] = str_replace('col_name_', '', $field_name);
+			}
+		}
+	}
+
+	$tobestored = new stdClass();
+	$tobestored->system_name = 'excel';
+	$tobestored->settings = serialize($done);
+
+	if (db_query("SELECT * FROM {mavicimport_settings} WHERE system_name = '%s'", 'excel')) {
+		db_query("DELETE FROM {mavicimport_settings} WHERE system_name = '%s'", 'excel');
+	}
+
+	if (drupal_write_record('mavicimport_settings', $tobestored) === FALSE) {
+		drupal_set_message(t('An error occured while storing the settings'), 'error');
+	}
+	else {
+		drupal_set_message(t('New excel settings stored successfully'), 'status');
+	}
+}
+
+//-----------------------------------------------------------------------------------------------
+/**
+ * Load ajax needed file
+ */
+function mavicimport_ajaxsubmit_load() {
+	$path = drupal_get_path('module', 'mavicimport');
+	drupal_add_js('misc/jquery.form.js');
+	drupal_add_js($path . '/mavicimport_ajaxsubmit.js');
+	drupal_add_js('misc/collapse.js'); //for collapsible fieldset
+	drupal_add_css($path . '/mavicimport_ajaxsubmit.css');
+}
+
+/**
+ * Helper function to determine if the current form post is via ajaxsubmit.
+ */
+function mavicimport_ajaxsubmit_is_ajaxsubmit() {
+	return isset($_POST['ajaxsubmit']) && $_POST['ajaxsubmit'];
+}
+
+/**
+ * Cache or retrieve form state.
+ */
+function mavicimport_ajaxsubmit_form_state($form_state = NULL) {
+	static $data;
+	if ($form_state !== NULL) {
+		$data = $form_state;
+	}
+	return $data;
+}
+
+/**
+ * On validate and submit, set the destination.
+ *
+ * in case we need to call drupal_goto().
+ */
+function mavicimport_ajaxsubmit_prepare($form, &$form_state) {
+	if (mavicimport_ajaxsubmit_is_ajaxsubmit()) {
+		$_REQUEST['destination'] = 'mavicimport_ajaxsubmit/' . $form['form_id']['#value'];
+		// Save a copy of the redirect information.
+		// Then unset it to prevent redirection before we can render.
+		if (isset($form_state['redirect'])) {
+			$form_state['_redirect'] = $form_state['redirect'];
+		}
+		unset($form_state['redirect']);
+		mavicimport_ajaxsubmit_form_state($form_state);
+	}
+}
+
+/**
+ * Return form submit result.
+ */
+function mavicimport_ajaxsubmit_dispatch($form = NULL) {
+	$form_state = mavicimport_ajaxsubmit_form_state();
+	// Ensure this is the form that was submitted.
+	if ((mavicimport_ajaxsubmit_is_ajaxsubmit() && isset($form_state) && $form_state['values']['form_id'] == $form['form_id']['#value']) || arg(0) == 'mavicimport_ajaxsubmit') {
+		// If we are responding after a redirect, the $form argument (arg(1))
+		// will be the form_id.
+
+		if (is_string($form)) {
+			$form_id = $form;
+			$form = NULL;
+		}
+		else {
+			$form_id = $form['form_id']['#value'];
+		}
+		$result = array(
+			'message' => drupal_get_messages(), //form_get_errors()
+			'step' => mavicimport_ajaxsubmit_set_step(),
+			'files' => mavicimport_ajaxsubmit_set_file(),
+			'confirm' => mavicimport_ajaxsubmit_set_confirm(),
+			'callbacks' => mavicimport_ajaxsubmit_set_callback(),
+		);
+		if (isset($_SESSION['ajaxsubmit_resetAfter'])) {
+			$result['thisIsTheEnd'] = TRUE;
+		}
+		mavicimport_ajaxsubmit_clearAll();
+		drupal_add_http_header('Content-type', 'text/html'); //instead of text/javascript or application/json... jquery is strange...
+		print mavicimport_ajaxsubmit_to_js($result); //json_encode($result,JSON_FORCE_OBJECT) or drupal_to_js  doesn't convert properly to js objects
+		//stop it now as we are handling ajax
+		exit();
+	}
+	//clear the session and cache tables on page new loading : assume the process is over or has to be restarted after an error
+	mavicimport_ajaxsubmit_clearAll(FALSE, TRUE);
+	return $form;
+}
+
+/**
+ * Converts a PHP variable into json readable as js object.
+ * Unlike its Drupal based equivalent, the converted object is supportted by the JSON.parse method
+ * and supports HTML tags : security is allready handled by the module ACL.
+ *
+ */
+function mavicimport_ajaxsubmit_to_js($var, $isobject = FALSE) {
+	switch (gettype($var)) {
+		case 'boolean':
+			return $var ? 'true' : 'false'; // Lowercase necessary!
+		case 'integer':
+		case 'double':
+		case 'float':
+			if ($isobject)
+				return '"' . $var . '"';
+			return $var;
+		case 'resource':
+		case 'string':
+			return '"' . str_replace(array('\\\''), array('\''), addslashes($var)) . '"';
+
+		case 'array':
+			// Arrays in JSON can't be associative. If the array is empty or if it
+			// has sequential whole number keys starting with 0, it's not associative
+			// so we can go ahead and convert it as an array.
+			if (empty($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
+				$output = array();
+				foreach ($var as $v) {
+					$output[] = mavicimport_ajaxsubmit_to_js($v);
+				}
+				return '[ ' . implode(', ', $output) . ' ]';
+			}
+		// Otherwise, fall through to convert the array as an object.
+		case 'object':
+			$output = array();
+			foreach ($var as $k => $v) {
+				$output[] = mavicimport_ajaxsubmit_to_js($k, TRUE) . ': ' . mavicimport_ajaxsubmit_to_js($v, TRUE);
+			}
+			return '{ ' . implode(', ', $output) . ' }';
+		default:
+			return 'null';
+	}
+}
+
+/**
+ * Set or retrieve the next step without any action from the end user.
+ * If the function is called with no arguments, this function returns the next step
+ *
+ * @param boolean $next clears the session if true
+ * @param mixed $temp_data
+ * @param string $type The current process type.
+ * @return the next step and associated data if any
+ */
+function mavicimport_ajaxsubmit_set_step($next = FALSE, $temp_data = NULL, $type = NULL) {
+	if ($temp_data) {
+		$_SESSION['ajaxsubmit_step'] = array();
+		$_SESSION['ajaxsubmit_step'][$type] = $temp_data;
+	}
+	if ($next) {
+		unset($_SESSION['ajaxsubmit_step']);
+	}
+
+	return isset($_SESSION['ajaxsubmit_step']) ? $_SESSION['ajaxsubmit_step'] : NULL;
+}
+
+/**
+ * Set or retrieve temporary status of files while checking/importing/deleting data
+ * If the function is called with no arguments, this function returns all files.
+ *
+ * @param boolean $clear clears all data if true and no file specified
+ * @param string $file name of the file
+ * @param mixed $temp_data usually a file object
+ * @return all the files or the one specified, (but does not clear the data in this last case, even if $clear is set to true)
+ */
+function mavicimport_ajaxsubmit_set_file($clear = FALSE, $file = NULL, $temp_data = NULL) {
+	return mavicimport_ajaxsubmit_set_tempData('ajaxsubmit_files', $clear, $file, $temp_data);
+}
+
+/**
+ * Set or retrieve temporary data for import once confirmed
+ * If the function is called with no arguments, this function returns all data associated to their files
+ * Those data are not transferred to the end user.
+ *
+ * @param boolean $clear : clears data if true
+ * @param string $file name of the file or worksheet 
+ * @param array $temp_nodes
+ * @return all the data or the one specified, (but does not clear anything in this last case, even if $clear is set to true)
+ */
+function mavicimport_ajaxsubmit_set_data($clear = FALSE, $fileName = NULL, $temp_nodes = NULL) {
+	return mavicimport_ajaxsubmit_set_tempData('ajaxsubmit_data', $clear, $fileName, $temp_nodes);
+}
+
+/**
+ * 
+ * handler for storing temporary data.
+ * It uses the table initially used by the drupal batch api
+ * @param string $process
+ * @param boolean $clear
+ * @param string $fileName
+ * @param array $temp_data
+ */
+function mavicimport_ajaxsubmit_set_tempData($process, $clear = FALSE, $file = NULL, $temp_data = NULL) {
+	//set data
+	if (!empty($temp_data)) {
+		//initialise and/or store the data
+		if (!isset($_SESSION[$process][$file])) {
+
+			if (!isset($_SESSION[$process])) {
+				$_SESSION[$process] = array();
+			}
+
+			db_query("INSERT INTO {batch} (token, timestamp) VALUES ('', %d)", $_SERVER['REQUEST_TIME']);
+			$pId = db_last_insert_id('batch', 'bid');
+			db_query("UPDATE {batch} SET token = '%s', batch = '%s' WHERE bid = %d", drupal_get_token($pId), serialize($temp_data), $pId);
+			$_SESSION[$process][$file] = $pId;
+		}
+		else {
+			db_query("UPDATE {batch} SET batch = '%s' WHERE bid = %d", serialize($temp_data), $_SESSION[$process][$file]);
+		}
+		//retrieve data
+	}
+	elseif (!empty($file)) {
+		$pId = isset($_SESSION[$process][$file]) ? $_SESSION[$process][$file] : NULL;
+		if (isset($pId) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = '%s'", $pId, drupal_get_token($pId)))) {
+			//clear this file's data if specified
+			if ($clear) {
+				unset($_SESSION[$process][$file]);
+				db_query("DELETE FROM {batch} WHERE bid = %d", $pId);
+			}
+			return unserialize($data);
+		}
+		else {
+			return FALSE;
+		}
+	}
+	//clear everything if specified
+	if ($clear) {
+		if (isset($_SESSION[$process])) {
+			$dbph = array_values($_SESSION[$process]);
+			db_query("DELETE FROM {batch} WHERE bid in (" . db_placeholders($dbph, 'int') . ")", $dbph);
+			//unset($_SESSION[$process]);
+			session_unregister($process);
+		}
+	}
+
+	//return everything
+	$allData = array();
+	if (isset($_SESSION[$process])) {
+		foreach ($_SESSION[$process] as $sheet => $pId) {
+			$data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = '%s'", $pId, drupal_get_token($pId)));
+			$allData[$sheet] = unserialize($data);
+		}
+	}
+
+
+	return (!empty($allData)) ? $allData : NULL;
+}
+
+/**
+ * Set or retrieve data defining the confirm process
+ * If the function is called with no arguments, this function returns the current process
+ *
+ * @param boolean $next clears the session if true
+ * @param mixed $temp_data
+ * @param string $type
+ * @return the confirm_process and associated data if any
+ */
+function mavicimport_ajaxsubmit_set_confirm($next = FALSE, $temp_data = NULL, $type = NULL) {
+	if ($temp_data) {
+		$_SESSION['ajaxsubmit_confirm'] = array();
+		$_SESSION['ajaxsubmit_confirm'][$type] = $temp_data;
+	}
+
+	$confirmation = isset($_SESSION['ajaxsubmit_confirm']) ? $_SESSION['ajaxsubmit_confirm'] : NULL;
+
+	if ($next) {
+		unset($_SESSION['ajaxsubmit_confirm']);
+	}
+
+
+	return $confirmation;
+}
+
+/**
+ * Set or retrieve parameter for any of the ajax js functions. 
+ * It is usually used to display the message describing the current process to the end user by using the
+ * "beforeSubmit" function. 
+ * If the function is called with no arguments, this function returns the ajax parameter and clear the session's var
+ *
+ * @param array $funcParams name of the function as key and parameters as value
+ * @return the ajax parameter
+ */
+function mavicimport_ajaxsubmit_set_callback($funcParams = NULL) {
+	if ($funcParams != NULL) {
+		$_SESSION['ajaxsubmit_callbacks'] = $funcParams;
+	}
+	else {
+		$funcParams = isset($_SESSION['ajaxsubmit_callbacks']) ? $_SESSION['ajaxsubmit_callbacks'] : NULL;
+		unset($_SESSION['ajaxsubmit_callbacks']);
+		return $funcParams;
+	}
+}
+
+/**
+ * Clear all mavicimport_ajaxsubmit temporary data
+ */
+function mavicimport_ajaxsubmit_clearAll($after = FALSE, $force = FALSE) {
+	if ($after) {
+		$_SESSION['ajaxsubmit_resetAfter'] = TRUE;
+		mavicimport_ajaxsubmit_set_step(TRUE);
+	}
+	elseif (isset($_SESSION['ajaxsubmit_resetAfter']) || $force) {
+		mavicimport_ajaxsubmit_set_callback();
+		mavicimport_ajaxsubmit_set_step(TRUE);
+		mavicimport_ajaxsubmit_set_confirm(TRUE);
+		mavicimport_ajaxsubmit_set_file(TRUE);
+		mavicimport_ajaxsubmit_set_data(TRUE);
+		unset($_SESSION['ajaxsubmit_resetAfter']);
+	}
+}
+
+//-----------------------------------------------------------------------------------------------
+
+/**
+ * XLS/XML bulk import
+ */
+function mavicimport_xls_bulk() {
+	$output = drupal_get_form('mavicimport_xls_bulk_form');
+	return $output;
+}
+
+/**
+ * Uploaded file checking
+ * 
+ * @global array $parameters
+ * @param boolean $all set on true to retrieve all files, false for just the last xls file without the warnings' report
+ */
+function mavicimport_check_uploaded_files($all = TRUE) {
+	global $parameters;
+	//file_check_location($source)
+	//file_set_status($file, $status);
+	//mavicimport_ajaxsubmit_set_file(TRUE);
+	$fileN = db_result(db_query("SELECT COUNT(*) FROM {mavicimport_files}"));
+	if ($fileN > 0) {
+		$result = array();
+		$lastXls = array();
+		$res = db_query("SELECT * FROM {mavicimport_files}");
+		while ($uploadedFile = db_fetch_object($res)) {
+			$warnings = array();
+			$notes = unserialize($uploadedFile->notes);
+			unset($uploadedFile->notes);
+			$uploadedFile->type = $notes['type'];
+			if ($notes['type'] == 'xml' && $all) {
+				$uploadedFile->season = $notes['season'];
+				$uploadedFile->range = $notes['range'];
+				$uploadedFile->fileshortname = $notes['fileshortname'];
+				if ($uploadedFile->status == 2) {
+					$_SESSION['error_check'] = TRUE;
+				}
+				$filename = $uploadedFile->fileshortname;
+				$resusl = db_query("SELECT * FROM {mavicimport_files_warnings} WHERE sheet = '%s' ", $filename);
+				while ($warning = db_fetch_array($resusl)) {
+					if (!empty($warning))
+						array_push($warnings, $warning);
+				}
+				$uploadedFile->warnings = $warnings;
+				array_push($result, $uploadedFile);
+			}
+			elseif ($notes['type'] == 'xlsx') {
+				if (empty($lastXls)) {
+					$lastXls[] = $uploadedFile;
+				}
+				else {
+					if ($uploadedFile->upload > $lastXls[0]->upload) {
+						$lastXls[0] = $uploadedFile;
+					}
+					else {
+						continue;
+					}
+				}
+				if ($all) {
+					if ($uploadedFile->status == 2) {
+						$_SESSION['error_check'] = TRUE;
+					}
+
+					$sheetsList = array('RANGE_RANK_LANDSCAPE', 'LINELIST', 'RANGE_FILTER', 'TECHNO_IMPORT');
+					foreach ($sheetsList as $sheet) {
+						$sheetW = array();
+						$resusl = db_query("SELECT * FROM {mavicimport_files_warnings} WHERE sheet = '%s' ", $sheet);
+						while ($warning = db_fetch_array($resusl)) {
+							if (!empty($warning))
+								array_push($sheetW, $warning);
+						}
+						$warnings[$sheet] = $sheetW;
+					}
+					$uploadedFile->warnings = $warnings;
+				}
+				$lastXls[0] = $uploadedFile;
+			}
+		}
+		if (!empty($lastXls)) {
+			array_push($result, $lastXls[0]);
+		}
+	}
+	else {
+
+		$result = NULL;
+	}
+	return $result;
+}
+
+/**
+ * Implementation of hook_preprocess_form().
+ * set/unset var used in the template
+ */
+function mavicimport_xls_bulk_preprocess_form(&$vars) {
+	$vars['list_xml_files'] = array();
+	for ($i = 0; $i <= $vars['form']['num_xml_files']['#value']; $i++) {
+		$varf = 'xml_file_' . $i;
+		if (isset($vars['form'][$varf])) {
+			array_push($vars['list_xml_files'], $vars['form'][$varf]);
+			unset($vars['form'][$varf]);
+		}
+		else {
+			break;
+		}
+	}
+	$vars['seasons'] = $vars['form']['seasons'];
+	$vars['xls_file_upload'] = $vars['form']['xls_file_upload'];
+	$vars['ignore_warnings'] = $vars['form']['ignore_warnings'];
+	$vars['delete_prodFeatures'] = $vars['form']['delete_prodFeatures'];
+	$vars['submit_xls_upload'] = $vars['form']['submit_xls_upload'];
+	$vars['error_check'] = $_SESSION['error_check'];
+	unset($vars['form']['seasons']);
+	unset($vars['form']['submit_xls_upload']);
+	unset($vars['form']['ignore_warnings']);
+	unset($vars['form']['xls_file_upload']);
+	unset($vars['form']['delete_prodFeatures']);
+}
+
+/**
+ * Implementation of hook_form().
+ * retrieve the list of files allready uploaded and imported 
+ */
+function mavicimport_xls_bulk_form($form_state) {
+	global $parameters;
+	$form = array();
+	$form['#ajaxsubmit'] = TRUE;
+	//$form['#ajaxsubmit_callbacks' = '';
+	$form['#attributes']['enctype'] = 'multipart/form-data';
+	$uploadedFiles = mavicimport_check_uploaded_files();
+	$num_xml_files = 0;
+	$excell = TRUE;
+	if (is_array($uploadedFiles)) {
+		foreach ($uploadedFiles as $uploadedFile) {
+			if ($uploadedFile->type == 'xml') {
+				$num_xml_files++;
+				$varf = 'xml_file_' . $num_xml_files;
+			}
+			else {
+				$varf = 'xls_file_upload';
+				$excell = FALSE;
+			}
+			$form[$varf] = array(
+				'#title' => check_plain($uploadedFile->filename),
+				'#type' => 'file',
+				'#description' => (check_plain($uploadedFile->status) == 2) ? '<a href="#' . check_plain($uploadedFile->fileshortname) . '_warnings" class="file-warnings">Warnings !</a>' : '<a href="#' . check_plain($uploadedFile->fileshortname) . '_warnings" class="file-ok" >OK</a>',
+				'#author' => $uploadedFile->author,
+				'#upload' => $uploadedFile->upload,
+				'#modified' => $uploadedFile->modified,
+				'#created' => $uploadedFile->created,
+				'#status' => $uploadedFile->status,
+				'#filepath' => $uploadedFile->path,
+				'#filemime' => $uploadedFile->filemime,
+				'#filesize' => $uploadedFile->filesize,
+				'#warnings' => $uploadedFile->warnings,
+				'#season' => $uploadedFile->season,
+				'#fileshortname' => $uploadedFile->fileshortname,
+			);
+
+			//mavicimport_ajaxsubmit_set_file(FALSE, $uploadedFile->fileshortname, $uploadedFile);		
+		}
+	}
+	if ($excell) {
+		$form['xls_file_upload'] = array(
+			'#title' => 'New XLSX workbook',
+			'#type' => 'file',
+			'#description' => 'no XLSX workbook have yet been uploaded',
+		);
+	}
+	$form['xml_file_0'] = array(
+		'#title' => 'New XML file',
+		'#type' => 'file',
+		'#description' => 'Add additional XML file here',
+	);
+
+	$seasons = array('FW update', 'SS update', 'specify season');
+	$form['seasons'] = array(
+		'#type' => 'select',
+		'#title' => 'Saison',
+		'#default_value' => 2,
+		'#options' => $seasons,
+		'#description' => 'When importing xml, you must specify<br />the season (Fall-Winter or Spring-Summer),<br />even if this update concerns only yearly ranges.',
+	);
+
+
+
+	$form['ignore_warnings'] = array(
+		'#type' => 'checkbox',
+		'#default_value' => FALSE,
+		'#title' => 'Ignore warnings'
+	);
+
+	$form['delete_prodFeatures'] = array(
+		'#type' => 'checkbox',
+		'#default_value' => FALSE,
+		'#title' => 'Delete all features'
+	);
+
+	$form['num_xml_files'] = array(
+		'#type' => 'hidden',
+		'#value' => $num_xml_files,
+	);
+	//disabled si erreur ou si warning sans checkbox
+	//$submit_disabled = ($_SESSION['error_check'] != 2);
+	$form['submit_xls_upload'] = array(
+		//'#disabled' => $submit_disabled,
+		'#type' => 'submit',
+		'#value' => 'Upload and check new file(s) *',
+		'#prefix' => '<div id="submit_xls_bulk">',
+		'#suffix' => '</div>'
+	);
+
+
+	return $form;
+}
+
+/**
+ * XLS bulk treatment
+ */
+function mavicimport_xls_bulk_form_submit($form, &$form_state) {
+	global $parameters;
+
+	require('mavicimport_xls_bulk_form_submit.php');
+}
+
+/**
+ * File force download
+ */
+function mavicimport_ForceFileDownload() {
+	$file = $_GET['file'];
+	if (($file != "") && (file_exists("./sites/default/files/mavicimport/" . basename($file)))) {
+		$size = filesize("./sites/default/files/mavicimport/" . basename($file));
+		header("Content-Type: application/force-download; name=\"" . basename($file) . "\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Length: $size");
+		header("Content-Disposition: attachment; filename=\"" . basename($file) . "\"");
+		header("Expires: 0");
+		header("Cache-Control: no-cache, must-revalidate");
+		header("Pragma: no-cache");
+		readfile("./sites/default/files/mavicimport/" . basename($file));
+		exit();
+	}
+	else {
+		return drupal_not_found();
+	}
+}
+
+/*
+ * Output an sql back-up file of mavic tables and erase the oldest backup if exceeding 5
+ *
+ * @param string $source, name of the file 
+ * @param boolean $noCacheNoSession, ignore cache and session tables' data, default to true
+ * @return boolean true in case of sussessfull creation, false otherwise
+
+ */
+
+function mavicimport_dump_db($source, $noCacheNoSession = TRUE) {
+	global $db_url;
+	//check existing backup and delete the oldest one if more than 5;
+	$path = drupal_get_path('module', 'mavicimport');
+	$listBckp = scandir($path . '/backup');
+	$thisOne = 1000000000000;
+	$source = str_replace(array('.xlsx', ' '), array('', '_'), $source);
+	if (count($listBckp) > 7) {
+		foreach ($listBckp as $bckp) {
+			if (preg_match( '/[^_]\d+/', $bckp, $result)) {
+				if ($result[0] < $thisOne) {
+					$thisOne = $result[0];
+					$toDelete = $bckp;
+				}
+			}
+		}
+		unlink($path . '/backup/' . $toDelete);
+	}
+
+	
+	$url = parse_url($db_url);
+	$url['user'] = urldecode($url['user']);
+	$url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
+	$backupFile = $path . "/backup/" . $_SERVER['REQUEST_TIME']  . '_' . $source . '.gz';
+	$ignore = ($noCacheNoSession) ? '--ignore-table=mavic.cache --ignore-table=mavic.cache_block --ignore-table=mavic.cache_content --ignore-table=mavic.cache_emfield_xml --ignore-table=mavic.cache_filter --ignore-table=mavic.cache_form --ignore-table=mavic.cache_location --ignore-table=mavic.cache_menu --ignore-table=mavic.cache_page --ignore-table=mavic.cache_update --ignore-table=mavic.cache_views --ignore-table=mavic.cache_views_data --ignore-table=mavic.sessions ' : '';
+	$command = "mysqldump --opt --hex-blob mavic -u " . $url['user'] . " -p" . $url['pass'] . " " . $ignore . "| gzip > " . $backupFile;
+	return system($command);
+}
+
+
+function mavicimport_restore_db($restorePoint = FALSE) {
+	global $db_url;
+	$path = drupal_get_path('module', 'mavicimport') . '/backup';	
+	//if no restoration point, take the latest one
+	if (!$restorePoint) {
+		$listBckp = scandir($path);
+		$thisOne = 0;
+		foreach ($listBckp as $bckp) {
+			if (preg_match( '/[^_]\d+/', $bckp, $result)) {
+				if ($result[0] > $thisOne) {
+					$thisOne = $result[0];
+					$restorePoint = $bckp;
+				}
+			}
+		}
+	}
+	$backupFile = $path . "/" . $restorePoint;
+	if (file_exists($backupFile)) {
+		$url = parse_url($db_url);
+		$url['user'] = urldecode($url['user']);
+		$url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
+		$command = "gunzip < " . $backupFile . " | mysql -u " . $url['user'] . " -p" . $url['pass'] . " mavic";
+		return system($command);
+	}
+	return FALSE;
+}
+
+
+
+//-----------------------------------------------------------------------------------------------
+
+/**
+ * excel shop tabs
+ */
+function mavicimport_shop() {
+	$output = '';
+	if (!empty($_SESSION['csv_html'])) {
+		$output .= $_SESSION['csv_html'];
+		unset($_SESSION['csv_html']);
+	}
+	else {
+		$_SESSION['csv_area'] = '';
+		$_SESSION['title_bar'] = TRUE;
+	}
+	$output .= $_SESSION['debug_mavic'];
+	unset($_SESSION['debug_mavic']);
+	$output .= drupal_get_form('mavicimport_shop_form');
+	unset($_SESSION['csv_area']);
+	unset($_SESSION['title_bar']);
+	return $output;
+}
+
+/**
+ * excel shop form
+ */
+function mavicimport_shop_form($form_state) {
+	$form['csv'] = array('#type' => 'textarea',
+		'#default_value' => $_SESSION['csv_area'],
+		'#cols' => 80,
+		'#rows' => 20,
+		'#title' => 'CSV code');
+	$form['simulation'] = array('#type' => 'checkbox',
+		'#default_value' => TRUE,
+		'#title' => 'Simulation only'
+	);
+	$form['title_bar'] = array('#type' => 'checkbox',
+		'#default_value' => $_SESSION['title_bar'],
+		'#title' => 'With title bar'
+	);
+	$form['sleep_time'] = array('#type' => 'textfield',
+		'#default_value' => 1,
+		'#title' => 'Sleep time (0-10)'
+	);
+	$form['field_set'] = array(
+		'#type' => 'fieldset',
+		'#tree' => TRUE,
+		'#title' => 'Drop by country',
+		'#attributes' => array('class' => 'locations'),
+		'#collapsible' => TRUE,
+		'#collapsed' => TRUE
+	);
+	$res = db_query('select distinct country from {location} n');
+	$country_name = array();
+	while ($country = db_fetch_array($res)) {
+		$country_name[$country['country']] = location_country_name($country['country']);
+	}
+	if (user_access('Edit All Shops')) {
+		asort($country_name); //TODO : UTF8 sorting...
+		foreach ($country_name as $key => $value) {
+			$form['field_set']['drop_' . $key] = array('#type' => 'checkbox',
+				'#default_value' => FALSE,
+				'#title' => check_plain($value),
+			);
+		}
+	}
+	else {
+		$i = 0;
+		$countryPerm = mavicimport_perm();
+		$countryPermT = count($countryPerm);
+		foreach ($countryPerm as $value) {
+			$i++;
+			if ($i > 2 && $i < $countryPermT) {
+				if (user_access($value)) {
+					$countryCode = substr($value, -3, 2);
+					if (!empty($country_name[$countryCode])) {
+						$form['field_set']['drop_' . $countryCode] = array('#type' => 'checkbox',
+							'#default_value' => FALSE,
+							'#title' => check_plain($country_name[$countryCode]),
+						);
+					}
+				}
+			}
+		}
+	}
+	if (user_access('administer menu')) {
+		$form['drop'] = array('#type' => 'checkbox',
+			'#default_value' => FALSE,
+			'#title' => 'Or drop all previous shop'
+		);
+	}
+	$form['submit'] = array('#type' => 'submit', '#value' => 'Load');
+	return $form;
+}
+
+/**
+ * excel shop treatment
+ */
+function mavicimport_shop_form_submit($form, &$form_state) {
+	global $parameters;
+	require('mavicimport_shop_form_submit.php');
+}
+
+//-----------------------------------------------------------------------------------------------
+
+/**
+ * excel distributor tabs
+ */
+function mavicimport_distributor() {
+	$output = '';
+	if (!empty($_SESSION['csv_html'])) {
+		$output .= $_SESSION['csv_html'];
+		unset($_SESSION['csv_html']);
+	}
+	else {
+		$_SESSION['csv_area'] = '';
+		$_SESSION['title_bar'] = TRUE;
+	}
+	$output .= $_SESSION['debug_mavic'];
+	unset($_SESSION['debug_mavic']);
+	$output .= '<p>' . t('Wanted columns :<br>id (not use), city, country (location), countries (distribution), address, email, fax, phone, name, state, website, zip, mp3(0:-1), expert_plus, maviclab, premium, wheels, rims, tyres, computers, pedals, footwear, apparel, accessories, test center, filter 2, filter 3, filter 4') . '</p>';
+	$output .= drupal_get_form('mavicimport_distributor_form');
+	unset($_SESSION['csv_area']);
+	unset($_SESSION['title_bar']);
+	return $output;
+}
+
+/**
+ * excel distributor form
+ */
+function mavicimport_distributor_form($form_state) {
+	$form['csv'] = array('#type' => 'textarea',
+		'#default_value' => $_SESSION['csv_area'],
+		'#cols' => 80,
+		'#rows' => 20,
+		'#title' => 'CSV code');
+	$form['simulation'] = array('#type' => 'checkbox',
+		'#default_value' => TRUE,
+		'#title' => t('Simulation only')
+	);
+	$form['title_bar'] = array('#type' => 'checkbox',
+		'#default_value' => $_SESSION['title_bar'],
+		'#title' => t('With title bar')
+	);
+	$form['drop'] = array('#type' => 'checkbox',
+		'#default_value' => FALSE,
+		'#title' => t('Drop all previous distributor')
+	);
+	$form['submit'] = array('#type' => 'submit', '#value' => 'Load');
+	return $form;
+}
+
+/**
+ * excel distributor treatment
+ */
+function mavicimport_distributor_form_submit($form, &$form_state) {
+	global $parameters;
+	require('mavicimport_distributor_form_submit.php');
+}
+
+//-----------------------------------------------------------------------------------------------
+
+/**
+ * export linelist and unlocated shop (lien)
+ */
+function mavicimport_export_xls() {
+	return '<br /><br /><center><input type="button" onclick="window.location.href=\'/en/linelist\'" value="' . t('Export Linelist') . '"></center><br /><center><input type="button" onclick="window.location.href=\'/en/unlocshop\'" value="' . t('Export unlocated shop') . '"></center><br />';
+}
+
+/**
+ * export linelist (csv)
+ */
+function mavicimport_export_linelist() {
+	global $parameters;
+	require_once('lib/PHPExcel/IOFactory.php');
+	require('mavicimport_export_xls.php');
+	exit();
+}
+
+/**
+ * export unlocated shop (csv)
+ */
+function mavicimport_export_unlocshop() {
+	global $parameters;
+	require('mavicimport_export_unlocshop_xls.php');
+	exit();
+}
+
+//-----------------------------------------------------------------------------------------------
+/**
+ * build table from csv
+ * $form : drupal form array
+ * $form_state : drupal form data array
+ * $nb_cols : number of columns needed in the excel table
+ * $cleanCols : list of columns (array) that must be cleaned ( like systemCols, but can be empty)
+ */
+function build_tab($form, &$form_state, $nb_cols, $cleanCols = array(), $noEmpty = array()) {
+	global $parameters;
+	$error = FALSE;
+
+	//
+	// delete unwanted tab and new line
+	//
+	$form_state['values']['csv'] = str_replace(array("\r", "\xC2\xA0"), '', $form_state['values']['csv']); // windows chars
+// ces regexp doivent nettoyer les cvs pour gérer des retour à la ligne dans une cellule mais pose pb en cas d'ajout de " dans une cellule
+// pour l'instant on passe par le doublement des quotes mais c'est encore boiteux
+	$form_state['values']['csv'] = preg_replace("/\"\"/", '||guillemet||', $form_state['values']['csv']);
+	$form_state['values']['csv'] = preg_replace("/\"([^\n\t\"]*)(\n|\t)+([^\n\t\"]*)\"/", '$1 $3', $form_state['values']['csv']);
+	$form_state['values']['csv'] = str_replace("||guillemet||", "\"", $form_state['values']['csv']);
+
+	//
+	// make table
+	//
+	$lines = explode("\n", $form_state['values']['csv']);
+	array_pop($lines); // we delete the last line
+	$nb_line = count($lines);
+	$tab = array();
+	if ($form_state['values']['title_bar'] && ($nb_line < 2)) {
+		drupal_set_message(t('Only title bar present.'), 'error');
+		return 'error';
+	}
+
+	if ($nb_line > $parameters['max_rows']) {
+		drupal_set_message(t('Too many rows. Max @max_rows rows allowed in same time', array('@max_rows' => $parameters['max_rows']), array('context' => 'too many rows', 'langcode' => 'en')), 'error');
+		return 'error';
+	}
+
+	foreach ($lines as $nb => $line) {
+		$tmp = array_map('trim', explode("\t", $line));
+		if ($nb_cols != count($tmp)) {
+			drupal_set_message(t('Row !nb do not have !nb_cols columns.', array('!nb' => check_plain($nb + 1), '!nb_cols' => check_plain($nb_cols)), array('context' => 'Columns are missing', 'langcode' => 'en')), 'error');
+			$error = TRUE;
+		}
+		else {
+			foreach ($cleanCols as $col) {
+				$tmp[$col] = preg_replace('@[^a-zA-z/\+\-_0-9;]@', '', $tmp[$col]); // no utf8
+				$tmp[$col] = strtolower($tmp[$col]); // il n y a plus dutf8 a ce stade
+			}
+			foreach ($noEmpty as $col) {
+				if (empty($tmp[$col])) {
+					drupal_set_message(t('Empty cell column !col, row !nb', array('!col' => check_plain($col + 1), '!nb' => check_plain($nb + 1)), array('context' => 'Empty cell column', 'langcode' => 'en')), 'error');
+					$error = TRUE;
+				}
+			}
+		}
+		$tab[] = $tmp;
+	}
+
+	//
+	//  build HTML
+	//
+	if (count($lines) > 0) {
+		$_SESSION['csv_html'] = '<div style="overflow:scroll;height:300px;max-height:300px"><table border=1 cellspacing="0" cellpading="2">';
+		$_SESSION['csv_html'] .= '<tr>';
+		$_SESSION['csv_html'] .= "<td>Rows/Cols</td>";
+		for ($col = 1; $col <= $nb_cols; $col++)
+			$_SESSION['csv_html'] .= "<td>$col</td>";
+		$_SESSION['csv_html'] .= '</tr>';
+		foreach ($tab as $nb => $line) {
+			if ($nb == 0 && $form_state['values']['title_bar'])
+				$_SESSION['csv_html'] .= "<tr class='odd'><td>" . ($nb + 1) . "</td>";
+			else
+				$_SESSION['csv_html'] .= "<tr><td>" . ($nb + 1) . "</td>";
+			foreach ($line as $nb => $col) {
+				$_SESSION['csv_html'] .= '<td>"' . check_plain($col) . '"</td>';
+			}
+			$_SESSION['csv_html'] .= '</tr>';
+		}
+		$_SESSION['csv_html'] .= '</table></div>';
+	}
+
+	if ($form_state['values']['simulation']) {
+		$_SESSION['title_bar'] = $form_state['values']['title_bar'];
+		$_SESSION['csv_area'] = $form_state['values']['csv'];
+		drupal_set_message(t('Check your Datas.'));
+		return 'simulation';
+	}
+
+	if ($error)
+		return 'error';
+
+	//
+	// we delete the title bar for treatment
+	//
+	if ($form_state['values']['title_bar'])
+		array_shift($tab);
+
+	return $tab;
+}
+
+/**
+ * Return a brand new or existing node
+ *
+ * @param string $title only taken into account if $changeTitle is true
+ * @param string $type can be a boolean : put false when updating an existing node whose nid is allready known
+ * @param string $body
+ * @param string $lang
+ * @param int $tnid tnid with a query, nid if allready known
+ * @param int $pathauto
+ * @param string $query to complete the basic node query which retrieve the nid or false when updating an existing node whose nid is allready known
+ * @param boolean $get_menu passed over function load_mavic_node
+ * @param boolean $get_sym passed over function load_mavic_node
+ * @param boolean $new_menu false or the array to be added/merged to/with the updated/new node
+ * @param boolean $update_only true to disable the creation of new node when not found in the DB
+ * @param boolean $changeTitle
+ * @param boolean $clearCCK set to true to retrieve the latest saved data : use only in case of batch update which needs new data not allready set by the pre-built process (should not be the case anymore)
+ * @param boolean $checkingOnly true if update of a node which nid is allready know and given to the $tnid param of if creating a node from scratch.
+ * 
+ * @return the created/updated node. Error if try to create a new node while $update_only is set to true, or if invalid $query  and $checkingOnly on false
+ * 
+ */
+function build_mavic_node($title, $type, $body, $lang, $tnid, $pathauto, $query = FALSE, $get_menu = FALSE, $get_sym = FALSE, $new_menu = FALSE, $update_only = FALSE, $changeTitle = TRUE, $clearCCK = FALSE, $checkingOnly = FALSE) {
+
+	if ($query === FALSE && $checkingOnly && $type === FALSE) {
+		if ($clearCCK)
+			cache_clear_all('content:' . $nid . ':' . $nid, content_cache_tablename());
+		$newNode = load_mavic_node($tnid, $get_menu, $get_sym);
+	}
+	elseif ($query !== FALSE && $nid = db_result(db_query('select n.nid from {node} n ' . $query . ' and n.`language`="' . $lang . '" and n.type="' . $type . '"'))) {
+		if ($clearCCK)
+			cache_clear_all('content:' . $nid . ':' . $nid, content_cache_tablename());
+		$newNode = load_mavic_node($nid, $get_menu, $get_sym);
+	}
+	elseif ($update_only) {
+		return 'error_update';
+	}
+	else {
+		$newNode = new stdClass();
+		if ($checkingOnly)
+			$newNode->is_new = TRUE;
+		if (empty($tnid)) {
+			if ($lang == 'en') {
+				$newNode->tnid = 0;
+			}
+			elseif ($lang != '' && $checkingOnly === FALSE) {
+				return 'error';
+			}
+		}
+		else {
+			$newNode->tnid = $tnid;
+		}
+		$newNode->type = $type;
+		if ($lang != '')
+			$newNode->language = $lang;
+		$newNode->status = 1;
+		$newNode->promote = 0;
+	}
+	if ($changeTitle || !isset($newNode->title) || ($newNode->title == ''))
+		$newNode->title = $title;
+	if (!empty($body)) {
+		$newNode->body = $body;
+	}
+
+	$newNode->pathauto_perform_alias = $pathauto;
+	if (is_array($new_menu)) { // il y a des cas ou on veut recup le menu mais sans le modifier (techno)
+		if (!empty($newNode->menu))
+			$newNode->menu = array_merge($newNode->menu, $new_menu);
+		else
+			$newNode->menu = $new_menu;
+		if ($lang != '')
+			$newNode->menu['language'] = $lang;
+	}
+	return $newNode;
+}
+
+//
+// factorisation de la sauvegarde d'un node
+//
+function save_mavic_node(&$newNode) {
+	global $language;
+	$tmp_lang = $language->language;
+	$language->language = $newNode->language; // corrige un bug de compatibilite entre i18 et menu
+	$newNode = node_submit($newNode);
+	node_save($newNode);
+	if (($newNode->language == 'en') && $newNode->tnid == 0) {
+		$newNode->tnid = $newNode->nid;
+		node_save($newNode);
+	}
+	$language->language = $tmp_lang;
+	if ($newNode->title != '')
+		$msg = "$newNode->type saved ($newNode->language): " . $newNode->title;
+	else
+		$msg = "$newNode->type saved ($newNode->language): " . $newNode->body;
+	return $msg;
+}
+
+//
+// factorisation du chargement d'un node
+//
+function load_mavic_node($nid, $get_menu = TRUE, $get_sym = TRUE) {
+	$node = node_load($nid);
+	if ($get_menu) {
+		$menu = db_fetch_array(db_query_range("SELECT * FROM {menu_links} WHERE link_path = 'node/%d' AND module = 'menu' ORDER BY mlid ASC", $nid, 0, 1));
+		if (!empty($menu)) {
+			$menu['options'] = unserialize($menu['options']);
+			$node->menu = $menu;
+			/*
+			  if($get_sym) {
+			  $sym_list = array();
+			  $sym_res = db_query("SELECT * FROM {menu_links} WHERE link_path LIKE 'node/%d/mid/%%' AND module = 'nodesymlinks' ", $nid);
+			  while ($sym = db_fetch_array($sym_res)) {
+			  $sym['options'] = unserialize($sym['options']);
+			  $sym_list[] = $sym;
+			  }
+			  if(!empty($sym_list)) $node->menu['nodesymlinks'] = array('items'=>$sym_list);
+			  } */
+		}
+	}
+	return $node;
+}

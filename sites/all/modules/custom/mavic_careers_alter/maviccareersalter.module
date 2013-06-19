@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Adds menu item fields to the node form
+ */
+ 
+/**
+ * Implements hook_form_FORM_ID_alter
+ * maviccareersalter_form_careers_node_form_alter()
+ * Adds menu item fields to the node form.
+ * Overriden to add description field
+ */ 
+function maviccareersalter_form_careers_node_form_alter(&$form, &$form_state, $form_id) {
+    // Note - doing this to make sure the delete checkbox stays in the form.
+  //drupal_set_message('<pre>'.print_r($form,true).'</pre>');
+  global $user;
+  if (user_access('Access form elements Carerrs node edition') && !user_access('administer')) {
+  //if(is_array($user->roles) && in_array('Edit careers', $user->roles)) {
+    
+    if ($form['path'])
+      unset($form['path']);
+      
+    if ($form['revision_information'])
+      unset($form['revision_information']);
+      
+    if ($form['options'])
+      unset($form['options']);
+      
+    if ($form['menu'])
+      unset($form['menu']);
+      
+    if ($form['author'])
+      unset($form['author']);
+  }
+}
+
+/**
+ * Implements hook_permission()
+ * maviccareersalter_permission()
+ */ 
+function maviccareersalter_permission() {
+  return array(
+    'Access form elements Carerrs node edition' => array(
+      'title' => t('Access form elements Carerrs node edition'),
+      'description' => 'Restricted form elements on Careers node edition'),
+    );
+}

@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function maviccareersalter_install() {
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function maviccareersalter_uninstall() {
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function maviccareersalter_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function maviccareersalter_disable() {
+}

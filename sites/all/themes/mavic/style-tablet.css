@@ -1,0 +1,22 @@
+@CHARSET "ISO-8859-1";
+body{
+		min-width: 991px;
+	}
+	
+	#language-select-list #list_select_langue {
+    background-color: #FFFFFF;
+    border: 1px solid #7D7D7D;
+    bottom: 28px;
+    display: none;
+    margin: -1px 0 0;
+    padding: 0;
+    position: static;
+    right: 6px;
+    white-space: nowrap;
+    width: 152px;
+    z-index: 1000;
+}
+
+	#home_logo_container {
+		bottom: 80px; /* voir js */
+	}

@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for NodeSymlinks.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function mavicaltermenu_install() {
+	// We need to launch this module before menu module and symlink module
+	db_query("UPDATE {system} SET weight = -10 WHERE name = 'mavicaltermenu'");
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function mavicaltermenu_uninstall() {
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+
+function mavicaltermenu_enable() {
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function mavicaltermenu_disable() {
+}

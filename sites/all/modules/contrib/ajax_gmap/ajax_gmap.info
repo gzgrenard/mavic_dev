@@ -1,0 +1,7 @@
+name = "AJAX GMAP"
+description = "Enable AJAX for pagers and exposed filters of gmap views"
+package = "Location"
+dependencies[] = "views"
+dependencies[] = "gmap"
+core = "7.x"
+version = "7.x-1.0"

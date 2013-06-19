@@ -1,0 +1,10 @@
+; $Id: nodesymlinks.info,v 1.2.2.1 2009/09/12 01:47:51 wojtha Exp $
+name = mavicpatch
+description = "patch for mavic"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavicpatch"
+
+files[] = mavicpatch.install
+

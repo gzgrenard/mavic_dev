@@ -1,0 +1,1100 @@
+<?php
+
+/**
+ * @file
+ * Mavic meta module
+ */
+
+/* * **************************************** */
+/* INCLUDES                                  */
+/* * **************************************** */
+
+// A registry of variable_get defaults.
+include_once('includes/mavicmeta.settings.inc');
+
+/**
+ * Implements hook_init().
+ */
+function mavicmeta_init() {
+	
+}
+
+function mavicmeta_help($path, $arg) {
+	switch ($path) {
+		case 'mavicmeta':
+			$output = '<p>' . t('The meta_mavic module adds the ability to set the meta description, page title and sharing info for each front page of the website.') . '</p>';
+			$output .= '<p>' . t('To automate part of the process :') . '<ul>';
+			$output .= '<li>' . t('Pages can be classified according to the menu or the content type they belong to : all nodes belonging to the same content-type or level within a menu can then have their fields synchronised.') . '</li>';
+			$output .= '<li>' . t('Some context dependant values can be replaced by tokens. For example the title of a page can be replaced with the token <em>[title]</em> : the system will then replace this token with the according value when stored.') . '</li>';
+			$output .= '<li>' . t('Check the <a href="@meta_setting">settings</a> to modify the listing of menus, content-types and nodes along with their according tokens.', array('@meta_setting' => url('mavicmeta/settings'))) . '</li></ul></p>';
+			
+			$output .= '<p>' . t('To proceed :') . '<ol>';
+			$output .= '<li>' . t('Select a language.') . '</li>';
+			$output .= '<li>' . t('Select a type and, in case of a menu, select an item. All pages titles belonging to the same content-type or menu-level will appear along with a flag indicating their status (up-to-date, out-dated or missing).') . '</li>';
+			$output .= '<li>' . t('Click on the page title you want to edit to expand the drop-down form, edit the fields (start typing in a bracket <em>[</em> to see and select all available tokens) ), check the one you want to be applied to all pages listed there and click <em>save</em>.') . '</li></ol></p>';
+			return $output;
+		case 'mavicmeta/settings':
+			$output = '<p>' . t('Here are classified, for the current language, all the front-pages of the website.') . '</p>';
+			$output .= '<p>' . t('They can be grouped by :') . '</p>';
+			$output .= '<p><strong>' . t('Menu listing') . '</strong><br />';
+			$output .= t('Select the according <em>Menu: name-of-the-menu</em> and enter a human-readable description in the textfield underneath.') . '<br />';
+			$output .= t('A menu needs its language mode to be defined :') . '<ul>';
+			$output .= '<li>' . t('<em>single</em> mode in case of a menu dedicated to one language (eg. <em>Primary links english</em>)') . '</li>';
+			$output .= '<li>' . t('<em>multi</em> mode in case of a menu containing all languages (eg. <em>Athletes</em>)') . '</li></ul>';
+			$output .= t('For each level of the menu, you need to set the list of available tokens (enter a human-readable description for each token you wish to use or leave blank).') . '<br />';
+			$output .= t('Except for the first level, you can tell the system to ignore levels which are not rendered as front-page by unchecking it.') . '</li></ul></p>';
+			$output .= '<p><strong>' . t('Content-type listing') . '</strong><br />';
+			$output .= t('Select the according <em>Content-type: name-of-the-content-type</em> and enter a human-readable description in the textfield underneath.') . '<br />';
+			$output .= t('A content-type does not needs its language mode to be defined.') . '</br>';
+			$output .= t('Set the list of available tokens by entering a human-readable description for each token you wish to use or leave blank.') . '</p>';
+			$output .= '<p><strong>' . t('Node') . '</strong><br />';
+			$output .= t('Select <em>Node (nid)</em> and enter the according nid in the textfield underneath.') . '<br />';
+			$output .= t('A node does not needs its language mode to be defined.') . '</br>';
+			$output .= t('Set the list of available tokens by entering a human-readable description for each token you wish to use or leave blank.') . '</p>';
+			$output .= '<p><strong>' . t('The system give the ability to set the metatags for all items belongings to same level of a menu, but only if all nodes inside a level belongs to the same content-type : so make sure to select menus which don\'t mix different content-types on the same level (eg. the techno menu mixes different content-types and shall not be used : use content-type listing instead).') . '</strong></p>';
+
+			return $output;
+	}
+}
+
+function mavicmeta_form_alter(&$form, &$form_state, $form_id) {
+	global $language;
+	if ($form_id == 'mavicmeta_list_form') {
+		
+		$path = drupal_get_path('module', 'mavicmeta');
+		drupal_add_js($path . '/assets/mavicmeta.js');
+		drupal_add_js($path . '/assets/mavicmeta.autocomplete.js');
+		drupal_add_css($path . '/assets/mavicmeta.css');
+		
+	}
+	elseif ($form_id == 'mavicmeta_admin_form') {
+		$path = drupal_get_path('module', 'mavicmeta');
+		drupal_add_js($path . '/assets/mavicmeta.admin.js');
+		//get current language
+		$lang = $language->language;
+		//get list of menus
+		$menusList = menu_get_menus();
+		//get list of content-type
+		$contentTypesList = content_types();
+		//get list of availables tokens per content-type
+		$tokensList = token_get_list();
+		$tokensContypeList = array();
+		//get default tokens 
+		$tokensDefault = array();
+		foreach ($tokensList['node reference'] as $field => $value) {
+				$tokensDefault[] = $field;
+		}
+		//get specific tokens
+		$tokenField = $tokensList['CCK text'];
+		foreach ($contentTypesList as $keyCT => $contentType) {
+			
+			$tokensListChecked = array();
+			foreach ($contentType['fields'] as $field => $notUsed) {
+				if (isset($tokenField[$field . '-formatted']))
+						$tokensListChecked[] = $field . '-formatted';
+			}
+			//add default one
+			$tokensListMerged = array_merge($tokensListChecked, $tokensDefault);
+			 
+			$tokensContypeList[$keyCT] = $tokensListMerged;
+			
+		}
+		/*
+		 * TODO :
+		 * -Give ability to set the list of available tokens outside those ones (CCK text + some node reference)
+		 * -Set all languages at once : menu_tree_all_data is filtered with only the current language and did not find a
+		 * way to get all menu item in all languages...
+		 * -add a btn to reset ? mavicmeta_variable_set('langs',mavicmeta_variable_default('langs'));
+		 */
+
+		$def_params = mavicmeta_variable_get('langs');
+
+		/*$form['debug'] = array(
+			'#type' => 'textarea',
+			'#value' => var_export($def_params, true),
+		);*/
+		
+		
+		$params = $def_params[$lang];
+		//get languages
+	$langOptTemp = array_keys($def_params);
+	$langOpt = array_combine($langOptTemp, $langOptTemp);
+	$form['langOpt'] = array(
+		'#type' => 'select',
+		'#default_value' => $lang,
+		'#options' => $langOpt,
+	);
+			$menusListL = $menusList;
+			$contentTypesListL = $contentTypesList;
+			//language fieldset
+			$form[$lang] = array(
+				'#type' => 'fieldset',
+				'#title' => check_plain($lang),
+				'#collapsible' => TRUE,
+				'#collapsed' => FALSE,
+			);
+
+			$options = array(
+				0 => 'Select...',
+				'HP' => 'Home Page (Default)',
+			);
+			foreach ($contentTypesListL as $contentTypeName => $k) {
+				$options['content-type**' . $contentTypeName] = 'Content-type: ' . $contentTypeName;
+			}
+			foreach ($menusListL as $menuSys => $menuName) {
+				$options['menu**' . $menuSys] = 'Menu: ' . $menuName;
+			}
+			$options['node'] = 'Node (nid)';
+		
+			
+			foreach ($params as $type => $typeContent) {
+				$LevelType = array();
+				//if a menu, get level/contentType
+				if (isset($menusListL[$type])) {
+					$typeName = 'menu';
+					$menu = menu_tree_all_data($type);//
+					mavicmeta_admin_menu_walk($menu, &$LevelType);
+				//if a contentType
+				}
+				elseif (isset($contentTypesListL[$type])) {
+					$typeName = 'content-type';
+					$LevelType[] = $type;
+				//if node
+				}
+				elseif (is_int($type)) {
+					$typeName = 'node';
+					$LevelType[] = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $type));
+				//default (home page)	
+				}
+				else {
+					$typeName = 'HP';
+					$LevelType[] = 'HP';
+					$tokensContypeList['HP'] = $tokensDefault;
+				}
+				
+				//
+				$structure = array(
+					'#type' => 'fieldset',
+					'#title' => 'tokens',									
+					'#collapsible' => TRUE,
+					'#collapsed' => TRUE,
+				);
+				$storedStuctures = $typeContent['structure'];
+				$depth = count($LevelType);
+				$level = 0;
+				$structure['list'] = array();
+				foreach ($LevelType as $contentType) {
+					$level++;
+					$structure['list'][$level] = array();
+					$storedStucture = array_shift($storedStuctures);					
+					
+					//if not a menu or just one level, select it by default and store this value in a hidden fields :
+					if ($depth == 1) {
+						$structure['list'][$level][$lang . '_*_' . $type . '_*_structure_*_' . $level] = array (
+							'#value' => 1,
+							'#type' => 'hidden',
+						);
+					}
+					else {//else display a checkbox
+						$structure['list'][$level][$lang . '_*_' . $type . '_*_structure_*_' . $level] = array('#type' => 'checkbox',
+                                                                                    							 '#value' => (is_array($storedStucture)) ? 1 : 0,
+                                                                                    						  );
+					}
+					
+					//tokens
+					foreach ($tokensContypeList[$contentType] as $tokens) {
+						$tokensKey = '[' . $tokens . ']';
+						$structure['list'][$level . '_*_list'][$lang . '_*_' . $type . '_*_structure_*_' . $level . '_*_' . $tokens] = array(
+							'#title' => check_plain($tokens),
+							'#type' => 'textfield',
+							'#size' => 35,
+							'#value' => (isset($storedStucture[$tokensKey])) ? $storedStucture[$tokensKey] : '',
+						);
+					}
+				}
+				$optionDef = ($typeName == 'node' || $typeName == 'HP') ? $typeName : $typeName . '**' . $type;
+				$form[$lang]['list'][$type] = array(
+					$lang . '_*_' . $type . '_*_delete' => array(
+						'#type' => 'checkbox',
+						'#value' => 0,
+						'#disabled' => ($type == 'HP'),
+					),//textfield
+					$lang . '_*_' . $type . '_*_systemName' => array(
+						'#type' => 'hidden',
+						'#value' => $optionDef,
+						/*'#disabled' => ($type == 'HP'),
+						'#options' => $options,*/
+					),
+					$lang . '_*_' . $type . '_*_name' => array(
+						'#type' => 'textfield',
+						'#value' => $typeContent['name'],
+						'#size' => 28,
+						'#disabled' => ($typeName == 'node'),
+					),//textfield
+					$lang . '_*_' . $type . '_*_type' => array(
+						'#type' => 'hidden',
+						'#value' => $typeContent['type'],
+					),//select
+					$lang . '_*_' . $type . '_*_lang' => array(
+						'#type' => 'select',
+						'#options' => array(
+							'multi' => 'multi',
+							'single' => 'single',
+						),
+						'#default_value' => $typeContent['lang'],
+						'#disabled' => ($typeName != 'menu'),
+					),//select
+					$lang . '_*_' . $type . '_*_structure' => $structure,//fieldset
+				);
+				if ($optionDef != 'node')
+					unset($options[$optionDef]);
+			}
+			
+			//last "add one" row
+			$form[$lang]['list']['addOne'] = array(
+					$lang . '_*_addOne_*_delete' => array(
+						'#value' => '',
+					),
+					$lang . '_*_addOne_*_systemName' => array(
+						'#title' => t('Add a new content-type, menu or node'),
+						'#type' => 'select',
+						'#default_value' => 0,
+						'#options' => $options,
+						'#description' => t('Select a content-type, a menu or a specific page (<em>node</em>)'),
+
+					),
+					$lang . '_*_addOne_*_name' => array(
+						'#type' => 'textfield',
+						'#size' => 28,
+						'#description' => t('Enter a human-readable description for a<br />menu/content-type or the NID of a specific page/node'),
+					),
+					$lang . '_*_addOne_*_type' => array(
+						'#type' => 'hidden',
+						'#value' => 'addOne',
+					),//select
+					$lang . '_*_addOne_*_lang' => array(
+						'#type' => 'select',
+						'#options' => array(
+							'multi' => 'multi',
+							'single' => 'single',
+						),
+					),//select
+					$lang . '_*_addOne_*_structure' => array(
+						'#value' => t('You must save this new type a first time in order to see the available tokens.'),
+					),
+			);
+
+		//}
+		$form['submit'] = array(
+			'#type' => 'submit',
+			'#value' => t('save'),
+		);
+	}
+}
+
+function mavicmeta_theme() {
+	$theme['mavicmeta_admin_render'] = array(
+		'arguments' => array('form' => array()),
+	);
+	return $theme;
+}
+
+
+function mavicmeta_menu() {
+	$items['mavicmeta'] = array(
+		'title' => 'Mavic metatag listing',
+		'weight' => '1',
+		'page callback' => 'mavicmeta_list',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_NORMAL_ITEM,
+	);
+
+	$items['mavicmeta/list'] = array(
+		'title' => 'Mavic metatag listing',
+		'weight' => '1',
+		'page callback' => 'mavicmeta_list',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_DEFAULT_LOCAL_TASK,
+	);
+
+	$items['mavicmeta/settings'] = array(
+		'title' => 'Mavic metatag settings',
+		'weight' => '2',
+		'page callback' => 'mavicmeta_settings',
+		'access arguments' => array('Admin import-export'),
+		'file' => 'includes/mavicmeta.admin.inc',
+		'type' => MENU_LOCAL_TASK,
+	);
+
+	$items['mavicmeta/ajax_lang_cat'] = array(
+		'page callback' => 'mavicmeta_ajax_lang_cat',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+
+	$items['mavicmeta/ajax_submit'] = array(
+		'page callback' => 'mavicmeta_ajax_submit',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+
+	$items['mavicmeta/ajax_token'] = array(
+		'page callback' => 'mavicmeta_ajax_token',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+
+
+	$items['mavicmeta/autocomplete'] = array(
+		'title' => 'Ajax submit handling',
+		'page callback' => 'mavicmeta_autocomplete',
+		'access arguments' => array('Admin import-export'),
+		'type' => MENU_CALLBACK
+	);
+	return $items;
+}
+
+function mavicmeta_list($langDefault = 'en', $catDefault = NULL, $menuItem = '1_0') {
+	//	error_log(print_r(my, true)." : \n\r", 3, "D:/projects/mavic/trunk/www/logs/debug_log.log");
+
+	$output = drupal_get_form('mavicmeta_list_form', $langDefault, $catDefault, $menuItem);
+	return $output;
+}
+
+function mavicmeta_list_form($form_state, $langDefault, $catDefault, $rangemenuItem) {
+
+	//Get range if any
+	$menuItem = explode('_', $rangemenuItem);
+	//get node collector var
+	$syncNodes = array();//mavicmeta_variable_get('sync');
+	mavicmeta_variable_set('sync', $syncNodes);
+	//get list of contentType/menu by language
+	$langparams = mavicmeta_variable_get('langs'); //mavicmeta_variable_default();
+	//get languages
+	$langOptTemp = array_keys($langparams);
+	$langOpt = array_combine($langOptTemp, $langOptTemp);
+	//get categories for default lang ('en')
+	$catOptVal = $langparams[$langDefault];
+	$catOpt = array();
+
+	foreach ($catOptVal as $fieldValue => $fieldText) {
+		if (is_int($fieldValue)) {
+			$catOpt[$fieldValue] = db_result(db_query("SELECT title FROM {node} WHERE nid = %d", $fieldValue));
+		}
+		else {
+			$catOpt[$fieldValue] = $fieldText['name'];
+		}
+		if ($catDefault == NULL)
+			$catDefault = $fieldValue;
+	}
+	//get content list for the first category
+	//enable caching
+	$form['#cache'] = TRUE;
+	//set wrapper for ajax target
+	$form['#prefix'] = '<div id="mavicmeta_wrapper_contentType">';
+	$form['#suffix'] = '</div>';
+	//set multipart for img download
+	$form['#attributes'] = array('enctype' => 'multipart/form-data');
+	//select lang
+	$form['mavicmeta_lang'] = array(
+		'#type' => 'select',
+		'#title' => t('language'),
+		'#default_value' => $langDefault,
+		'#options' => $langOpt,
+		'#ajax' => array(
+			'event' => 'change',
+			'callback' => 'mavicmeta_ajax_lang_cat',
+			'wrapper' => 'mavicmeta_wrapper_contentType',
+		),
+	);
+	//select category
+	$form['mavicmeta_contentType'] = array(
+		'#type' => 'select',
+		'#title' => t('Categories'),
+		'#default_value' => $catDefault,
+		'#options' => $catOpt,
+		'#ajax' => array(
+			'event' => 'change',
+			'callback' => 'mavicmeta_ajax_lang_cat',
+			'wrapper' => 'mavicmeta_wrapper_contentType',
+		),
+	);
+
+	switch ($catOptVal[$catDefault]['type']) {// menu, contentType, node
+		case 'HP' :
+			$frontPageNids = mavicmeta_variable_get('defNid');
+			mavicmeta_form_populate($frontPageNids[$langDefault], $catOptVal[$catDefault], &$form, &$form_state, &$syncNodes, 1, $menuItem[1], $menuItem[0]);
+			break;
+		case 'menu' :
+			//select menu level : we don't populate the whole menu as a form as it would be too big(memcache limit)
+			//so we split it according to defined levels and display a select box listing all menu item
+			$form['mavicmeta_menu'] = array(
+				'#type' => 'select',
+				'#title' => t('menu levels'),
+				'#ajax' => array(
+					'event' => 'change',
+					'callback' => 'mavicmeta_ajax_lang_cat',
+					'wrapper' => 'mavicmeta_wrapper_contentType',
+				),
+			);
+			if ($rangemenuItem != '0_1')
+				$form['mavicmeta_menu']['#default_value'] = $rangemenuItem;
+
+			$menu = menu_tree_all_data($catDefault);
+			mavicmeta_menu_walk($menu, $catOptVal[$catDefault], $menuItem, &$form, &$form_state, &$syncNodes);
+			
+			$targetLevel = $syncNodes[$menuItem[0]];
+			$count = count($targetLevel);
+			foreach ($targetLevel as $nid => $level) {
+				mavicmeta_form_populate($nid, $catOptVal[$catDefault], &$form, &$form_state, &$syncNodes, $count, $menuItem[1], $menuItem[0], $level);
+			}
+			/*$form['debug'] = array(
+				'#value' => var_export($form['mavicmeta_menu'],true),
+			);*/
+
+			break;
+		case 'content-type' :
+			$count = db_result(db_query("SELECT COUNT(*)
+				FROM {node} n
+				INNER JOIN {url_alias} a 
+				ON CONVERT(SUBSTRING(a.src,6),UNSIGNED) = n.nid
+                WHERE n.type = '%s'
+			AND n.language = '%s'
+			AND n.status = 1", array($catDefault, $langDefault)));
+			$res = db_query("SELECT DISTINCT n.nid, n.changed
+                        FROM {node} n
+                        INNER JOIN {url_alias} a 
+				ON CONVERT(SUBSTRING(a.src,6),UNSIGNED) = n.nid
+				WHERE n.type = '%s'
+			AND n.language = '%s'
+			AND n.status = 1", array($catDefault, $langDefault));
+			while ($node = db_fetch_array($res)) {
+				mavicmeta_form_populate($node['nid'], $catOptVal[$catDefault], &$form, &$form_state, &$syncNodes, $count, $menuItem[1], $menuItem[0]);
+			}
+
+			break;
+		case 'node' :
+			mavicmeta_form_populate($catDefault, $catOptVal[$catDefault], &$form, &$form_state, &$syncNodes, 1, $menuItem[1], $menuItem[0]);
+			break;
+	}
+	//set node collector var
+	mavicmeta_variable_set('sync', $syncNodes);
+
+	return $form;
+}
+
+function mavicmeta_menu_walk($menu, $dataType, $menuItem, $form, $form_state, $syncNodes, $level = 1) {
+	static $range = 1;
+	static $oldLevel = 1;
+	static $previousLevel = array();
+	static $thisItem = NULL;
+	@reset($menu);
+	$structure = $dataType['structure'];
+	//set the current level : 
+	//if go down the tree
+	if ($oldLevel < $level) {
+		$range++;
+		$target_level = $range;
+	//if go up the tree
+	}
+	elseif ($oldLevel > $level) {
+		$target_level = $previousLevel[$level];
+	}
+	else {
+		$target_level = $range;
+	}
+	$previousLevel[$level] = $target_level;
+	$oldLevel = $level;
+
+	foreach ($menu as $data) {
+		if (is_array($structure[$level]) && (count($data['below']) > 1 xor $level == count($structure))) {
+			
+			//get the node
+			$pathAlias = drupal_get_path_alias($data['link']['href']);
+			$nid = (int) str_replace('node/', '', $data['link']['href']);
+
+			if (!isset($syncNodes[$target_level]))
+				$syncNodes[$target_level] = array();
+			$syncNodes[$target_level][$nid] = $level;
+			
+			$form['mavicmeta_menu']['#options'][$target_level . '_' . $nid] = $pathAlias; // . ' ' . $itemStatus;
+		}
+		$subLevel = $level;
+		if ($level < count($structure)) {
+			$subLevel++;
+			mavicmeta_menu_walk($data['below'], $dataType, $menuItem, &$form, &$form_state, &$syncNodes, $subLevel);
+		}
+	}
+}
+function mavicmeta_admin_menu_walk($menu, $LevelType) {
+	@reset($menu);
+	foreach ($menu as $data) {
+		$nid = (int) str_replace('node/', '', $data['link']['href']);
+		$LevelType[] = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $nid));
+		mavicmeta_admin_menu_walk($data['below'], &$LevelType);
+		break;
+	}
+}
+
+function mavicmeta_form_populate($nid, $dataType, $form, $form_state, $syncNodes, $count = NULL, $thisMenuItem = 0, $thisRange = 1, $level = 1) {
+
+	//load the node
+	$node = node_load($nid);
+	//check status
+	$status = mavicmeta_variable_get('status');
+	$itemStatus = 'updated';
+	$itemStatusMsg = t('This node is up-to-date.');
+	if (isset($status[$nid]) && $status[$nid] < $node->changed) {
+		$itemStatus = 'outdated';
+		$itemStatusMsg = t('This node is outdated : some of its content has been modified outside this interface (e.g. after a products\' import), please check it and click <em>Save</em> to validate.') . '<br />';
+	}
+	if (empty($node->field_page_metashare_image[0]) ||
+			empty($node->field_page_title[0]['value']) ||
+			empty($node->field_page_description[0]['value']) ||
+			empty($node->field_page_keyword[0]['value']) ||
+			empty($node->field_page_metashare_description[0]['value']) ||
+			empty($node->field_page_metashare_title[0]['value'])
+	) {
+		$itemStatus = 'missing';
+		$itemStatusMsg = '<span class="error">' . t('Some of the fields of this node are empty, please complete.') . '</span>';
+	}
+
+	switch ($dataType['type']) {
+		case 'menu':
+			$globalTooltip = array(
+				'fields' => 'Apply this value to all nodes belonging to the same level within this menu',
+			);
+			break;
+		case 'content-type':
+			if ($count > 1) {
+				$globalTooltip = array(
+					'fields' => 'Apply this value to all nodes belonging to the same contentype',
+				);
+			}
+			else {
+				$globalTooltip = array();
+			}
+
+			break;
+		default:
+			$globalTooltip = array();
+			break;
+	}
+
+	//fieldset	
+	$form[$nid]['list_item_fieldset'] = array(
+		'#attributes' => array('class' => $itemStatus),
+		'#type' => 'fieldset',
+		'#title' => $node->title,
+		'#collapsible' => TRUE,
+		'#collapsed' => !($count === NULL || $count === 1 || $thisMenuItem == $nid),
+		'#prefix' => '<div id="autocomplete_' . $nid . '" class="autocomplete"><script>tokenList["autocomplete_' . $nid . '"] = ' . drupal_to_js($dataType['structure'][$level]) . ';</script>',
+		'#suffix' => '</div>',
+	);
+	//node level identify which node^s to synchronise if needed)
+	$form[$nid]['list_item_fieldset'][$nid . '_level'] = array(
+		'#type' => 'hidden',
+		'#value' => $thisRange,
+	);
+
+	//field_page_metashare_image
+	
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_metashare_image'", $node->type))) {
+		if (!empty($node->field_page_metashare_image[0])) {
+			$file = $node->field_page_metashare_image[0];
+			$thumbpath = imagefield_file_admin_thumb_path($file);
+			$filename = $node->field_page_metashare_image[0]['filename'];
+			$prefix = '<div class="row_container"><div class="mavicmeta_field_left mavicmeta_img_container"><div id="mavicmeta_img_' . $nid . '" class="mavicmeta_img"><img src="/' . $thumbpath . '" alt="' . $filename . '"/><input id="' . $nid . '-remove-img" class="form-submit remove_img" type="submit" value="remove" name="notOp"><div class="imgToHide">';
+			$suffix = '</div></div></div>';
+		}
+		else {
+			$prefix = '<div class="row_container"><div class="mavicmeta_field_left"><div id="mavicmeta_img_' . $nid . '" class="mavicmeta_img">';
+			$suffix = '</div></div>';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_img_download'] = array(
+			'#prefix' => $prefix,
+			'#type' => 'file',
+			'#size' => 40,
+			'#title' => t('Shared picture'),
+			'#suffix' => $suffix,
+		);
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_img_download'] = array(
+			'#value' => 'The field <em>field_page_metashare_image</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left error"><strong>',
+			'#suffix' => '</strong></div>',
+		);
+	}
+
+	//node status
+	$form[$nid]['list_item_fieldset'][$nid . '_hidden_status'] = array(
+		'#value' => $itemStatus,
+		'#type' => 'hidden',
+	);
+	$form[$nid]['list_item_fieldset'][$nid . '_status'] = array(
+		'#title' => t('Status:'),
+		'#value' => '<table><tr><td><strong>' . t('Node title:') . ' </strong></td><td> ' . $node->title . ' </td></tr><tr><td><strong>' . t('Node path:') . ' </strong></td><td>' . drupal_get_path_alias('node/' . $node->nid) . '</td></tr><tr><td><strong>' . t('Status:') . ' </strong></td><td> ' . $itemStatusMsg . '</td></tr></table>',
+		'#prefix' => '<div class="mavicmeta_field_right submit_field">',
+		'#suffix' => '</div></div><div class="clearBoth"></div>',
+	);
+
+
+	//field_page_title
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_title'", $node->type))) {
+		if (!empty($node->field_page_title[0]['value'])) {
+			$def_value = $node->field_page_title[0]['value'];
+		}
+		else {
+			$def_value = '';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_title'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Page title'),
+			'#default_value' => $def_value,
+			'#cols' => 40,
+			'#rows' => 2,
+			'#description' => t('Title of the page'),
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left">',
+			'#suffix' => (empty($globalTooltip['fields'])) ? '</div>' : '',
+				//'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		if (!empty($globalTooltip['fields'])) {
+			$form[$nid]['list_item_fieldset'][$nid . '_field_page_title_global'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Apply to all'),
+				'#default_value' => 0,
+				'#attributes' => array('class' => 'tooltip', 'data-tooltip' => t($globalTooltip['fields'])),
+				'#suffix' => '</div>',
+			);
+		}
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_title'] = array(
+			'#value' => 'The field <em>field_page_title</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left error"><strong>',
+			'#suffix' => '</strong></div>',
+		);
+	}
+	
+		//field_page_metashare_title
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_metashare_title'", $node->type))) {
+		if (!empty($node->field_page_metashare_title[0]['value'])) {
+			$def_value = $node->field_page_metashare_title[0]['value'];
+		}
+		else {
+			$def_value = '';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_title'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Sharing title'),
+			'#default_value' => $def_value,
+			'#cols' => 40,
+			'#rows' => 2,
+			'#description' => t('Title shared over social networks'),
+			'#prefix' => '<div class="mavicmeta_field_right">',
+			'#suffix' => (empty($globalTooltip['fields'])) ? '</div></div><div class="clearBoth"></div>' : '',
+				//'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		if (!empty($globalTooltip['fields'])) {
+			$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_title_global'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Apply to all'),
+				'#default_value' => 0,
+				'#attributes' => array('class' => 'tooltip', 'data-tooltip' => t($globalTooltip['fields']) ),
+				'#suffix' => '</div></div><div class="clearBoth"></div>',
+			);
+		}
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_title'] = array(
+			'#value' => 'The field <em>field_page_metashare_title</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="mavicmeta_field_right error"><strong>',
+			'#suffix' => '</strong></div></div><div class="clearBoth"></div>',
+		);
+	}
+		//field_page_description
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_description'", $node->type))) {
+		if (!empty($node->field_page_description[0]['value'])) {
+			$def_value = $node->field_page_description[0]['value'];
+		}
+		else {
+			$def_value = '';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_description'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Page description'),
+			'#default_value' => $def_value, // print_r($node, true),//
+			'#cols' => 40,
+			'#rows' => 2,
+			'#description' => t('Description of the page'),
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left">',
+			'#suffix' => (empty($globalTooltip['fields'])) ? '</div>' : '',
+				//'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		if (!empty($globalTooltip['fields'])) {
+			$form[$nid]['list_item_fieldset'][$nid . '_field_page_description_global'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Apply to all'),
+        '#default_value' => 0,
+        '#attributes' => array('class' => 'tooltip', 'data-tooltip' => t($globalTooltip['fields'])),
+        '#suffix' => '</div>',
+			);
+		}
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_description'] = array(
+			'#value' => 'The field <em>field_page_description</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left error"><strong>',
+			'#suffix' => '</strong></div>',
+		);
+	}
+
+	//field_page_metashare_description
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_metashare_description'", $node->type))) {
+		if (!empty($node->field_page_metashare_description[0]['value'])) {
+			$def_value = $node->field_page_metashare_description[0]['value'];
+		}
+		else {
+			$def_value = '';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_description'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Sharing description'),
+			'#default_value' => $def_value,
+			'#cols' => 40,
+			'#rows' => 2,
+			'#description' => t('Description shared over social networks'),
+			'#prefix' => '<div class="mavicmeta_field_right">',
+			'#suffix' => (empty($globalTooltip['fields'])) ? '</div></div><div class="clearBoth"></div>' : '',
+
+				//'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		if (!empty($globalTooltip['fields'])) {
+			$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_description_global'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Apply to all'),
+				'#default_value' => 0,
+				'#attributes' => array('class' => 'tooltip', 'data-tooltip' => t($globalTooltip['fields'])),
+				'#suffix' => '</div></div><div class="clearBoth"></div>',
+			);
+		}
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_metashare_description'] = array(
+			'#value' => 'The field <em>field_page_metashare_description</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="mavicmeta_field_right error"><strong>',
+			'#suffix' => '</strong></div></div><div class="clearBoth"></div>',
+		);
+	}
+
+
+	//field_page_keyword
+	if (db_result(db_query("SELECT `widget_active` FROM {content_node_field_instance} WHERE `type_name` = '%s' AND `field_name` = 'field_page_keyword'", $node->type))) {
+		if (!empty($node->field_page_keyword[0]['value'])) {
+			$def_value = $node->field_page_keyword[0]['value'];
+		}
+		else {
+			$def_value = '';
+		}
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_keyword'] = array(
+			'#type' => 'textarea',
+			'#title' => t('Page keywords'),
+			'#default_value' => $def_value,
+			'#cols' => 40,
+			'#rows' => 2,
+			'#description' => t('Key words of the page'),
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left">',
+			'#suffix' => (empty($globalTooltip['fields'])) ? '</div>' : '',
+
+				//'#element_validate' => array('mavicimport_xls_settings_col_range_validate'),
+		);
+		if (!empty($globalTooltip['fields'])) {
+			$form[$nid]['list_item_fieldset'][$nid . '_field_page_keyword_global'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Apply to all'),
+				'#default_value' => 0,
+				'#attributes' => array('class' => 'tooltip', 'data-tooltip' => t($globalTooltip['fields'])),
+				'#suffix' => '</div>',
+			);
+		}
+	}
+	else {
+		$form[$nid]['list_item_fieldset'][$nid . '_field_page_keyword'] = array(
+			'#value' => 'The field <em>field_page_keyword</em> is missing for this content-type. Please contact your administrator.',
+			'#prefix' => '<div class="row_container"><div class="mavicmeta_field_left error"><strong>',
+			'#suffix' => '</strong></div>',
+		);
+	}
+
+	//toggle tokens
+
+	$form[$nid]['list_item_fieldset'][$nid . '_tokens'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Display tokens\' values'),
+		'#default_value' => 0,
+		'#attributes' => array('class' => 'tooltip', 'data-tooltip' => t('When checked, displays the values of tokens within fields (note that the fields cannot be edited while this feature is enabled).')),
+		'#prefix' => '<div class="submit_field mavicmeta_field_right">',
+		'#ajax' => array(
+			'event' => 'change',
+			'callback' => 'mavicmeta_ajax_token',
+			//'path' => 'mavicmeta/ajax_token/' . $nid,
+			'wrapper' => 'mavicmeta_wrapper_contentType',
+		),
+	);
+
+	//submit
+	$form[$nid]['list_item_fieldset'][$nid . 'submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Save'),
+		'#suffix' => '</div></div><div class="clearBoth"></div>',
+		'#ajax' => array(
+			'event' => 'click',
+			'callback' => 'mavicmeta_ajax_submit',
+			//'path' => 'mavicmeta/ajax_submit/' . $nid,
+			'wrapper' => 'mavicmeta_wrapper_contentType',
+		),
+	);
+}
+
+
+function mavicmeta_ajax_submit($target) {
+
+	$validators = array(
+		'file_validate_extensions' => array("jpeg", "gif", "png"),
+		'file_validate_image_resolution' => array("2000x2000", "200x200"),
+		'file_validate_size' => array(0, 0),
+	);
+
+	$cached_form_state = array();
+
+	// Load the form from the Form API cache.
+	if (!($cached_form = form_get_cache($_POST['form_build_id'], $cached_form_state))) {
+		form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+		$output = theme('status_messages');
+		print drupal_to_js(array('status' => TRUE, 'data' => $output));
+		exit();
+	}
+
+	$form_state = array('values' => $_POST);
+
+	//check for synchronisation
+	$syncIt = array();
+	$syncItCont = array();
+	$syncIt['field_page_title'] = (isset($form_state['values'][$target . '_field_page_title_global']) && $form_state['values'][$target . '_field_page_title_global']) ? 1 : 0;
+	$syncIt['field_page_keyword'] = (isset($form_state['values'][$target . '_field_page_keyword_global']) && $form_state['values'][$target . '_field_page_keyword_global']) ? 1 : 0;
+	$syncIt['field_page_description'] = (isset($form_state['values'][$target . '_field_page_description_global']) && $form_state['values'][$target . '_field_page_description_global']) ? 1 : 0;
+	$syncIt['field_page_metashare_description'] = (isset($form_state['values'][$target . '_field_page_metashare_description_global']) && $form_state['values'][$target . '_field_page_metashare_description_global']) ? 1 : 0;
+	$syncIt['field_page_metashare_title'] = (isset($form_state['values'][$target . '_field_page_metashare_title_global']) && $form_state['values'][$target . '_field_page_metashare_title_global']) ? 1 : 0;
+
+	//
+	foreach ($syncIt as $field => $toBeSync) {
+		if ($toBeSync) {
+			$syncItCont[$field] = (isset($form_state['values'][$target . '_' . $field]) && !empty($form_state['values'][$target . '_' . $field])) ? $form_state['values'][$target . '_' . $field] : '';
+		}
+	}
+
+	$node = node_load($target);
+	//synchronize if needed
+	if (!empty($syncItCont)) {
+		$listNidAll = mavicmeta_variable_get('sync');
+		$listNid = $listNidAll[$form_state['values'][$target . '_level']];
+		// save lang syncronise fields for the node type :
+		$syncFields = i18nsync_node_fields($node->type);
+		//deactivate the lang syncronise for the node type :
+		$syncFieldsVar = 'i18nsync_nodeapi_' . $node->type;
+		variable_set($syncFieldsVar, array());
+
+		$syncSuccess = array();
+		$syncErrors = array();
+
+
+		foreach ($listNid as $syncNid => $ok) {
+			$syncNode = node_load($syncNid);
+			$syncItContToken = array();
+			foreach ($syncItCont as $field => $toBeSync) {
+				$toBeSyncTok = token_replace($toBeSync, 'node', $syncNode);//, TOKEN_PREFIX, TOKEN_SUFFIX, array(), true);
+				$syncItContToken[$field] = $toBeSyncTok;
+				$syncNode->$field = array(
+            0 => array(
+            'value' => $toBeSyncTok
+					)
+				);
+				
+			}
+			//do not create a new alias
+			$syncNode->pathauto_perform_alias = FALSE;
+			node_save($syncNode);
+			$haserrors = drupal_get_messages('error');
+			if (empty($haserrors)) {
+				$syncSuccess[] = $syncNode->title . ' [nid: ' . $syncNid . ']';
+				foreach ($syncItContToken as $field => $toBeSync) {
+					$cached_form[$syncNid]['list_item_fieldset'][$syncNid . '_' . $field]['#value'] = $toBeSync;
+				}
+				
+			}
+			else {
+				$syncErrors[] = $syncNode->title . ' [nid: ' . $syncNid . ']' . ' (' . implode(', ',$haserrors['error']) . ')';
+			}
+		}
+
+		//reactivate the lang syncronise for the node type :
+		variable_set($syncFieldsVar, $syncFields);
+	}
+
+
+	//desactivate language syncro if no new img
+	$desactivateSync = TRUE;
+
+	if (user_access('upload files') && ($file = file_save_upload($target . '_img_download', $validators, file_directory_path()))) {
+		$file->list = variable_get('upload_list_default', 1);
+		$file->description = $file->filename;
+		$file->weight = 0;
+		$file->new = TRUE;
+		$node->field_page_metashare_image[0] = (array) $file;
+		$desactivateSync = FALSE;
+	}
+
+
+	$node->field_page_title[0]['value'] = (isset($form_state['values'][$target . '_field_page_title']) && !empty($form_state['values'][$target . '_field_page_title'])) ? token_replace($form_state['values'][$target . '_field_page_title'], 'node', $node) : '';
+	$node->field_page_keyword[0]['value'] = (isset($form_state['values'][$target . '_field_page_keyword']) && !empty($form_state['values'][$target . '_field_page_keyword'])) ? token_replace($form_state['values'][$target . '_field_page_keyword'], 'node', $node) : '';
+	$node->field_page_description[0]['value'] = (isset($form_state['values'][$target . '_field_page_description']) && !empty($form_state['values'][$target . '_field_page_description'])) ? token_replace($form_state['values'][$target . '_field_page_description'], 'node', $node) : '';
+	$node->field_page_metashare_description[0]['value'] = (isset($form_state['values'][$target . '_field_page_metashare_description']) && !empty($form_state['values'][$target . '_field_page_metashare_description'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_description'], 'node', $node) : '';
+	$node->field_page_metashare_title[0]['value'] = (isset($form_state['values'][$target . '_field_page_metashare_title']) && !empty($form_state['values'][$target . '_field_page_metashare_title'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_title'], 'node', $node) : '';
+
+	if ($desactivateSync) {
+		// save syncronise fields for the node type :  	
+		$syncFields = i18nsync_node_fields($node->type);
+		//deactivate the syncronise for the node type :
+		$syncFieldsVar = 'i18nsync_nodeapi_' . $node->type;
+		variable_set($syncFieldsVar, array());
+	}
+	//do not create a new alias
+	$node->pathauto_perform_alias = FALSE;
+	node_save($node);
+
+
+	if ($desactivateSync) {
+		//reactivate the syncronise for the node type :
+		variable_set($syncFieldsVar, $syncFields);
+	}
+
+
+	//get errors
+	$msg = "";
+	$ferrors = drupal_get_messages('error', FALSE);
+	if (empty($ferrors)) {
+		$status = mavicmeta_variable_get('status');
+		$status[$target] = $node->changed;
+		mavicmeta_variable_set('status', $status);
+		$msg = t('The node ' . $node->title . ' [nid: ' . $node->nid . '] was successfully saved.');
+	}
+
+	if (isset($syncSuccess)) {
+		if (!empty($syncSuccess))
+			$msg .= "<br />The folowing nodes have been successfully synchronised : " . implode(", ", $syncSuccess);
+		if (!empty($syncErrors))
+			$msg .= ",<br />The folowing nodes have encountered an error : " . implode(", ", $syncErrors);
+	}
+	if (!empty($msg))
+		drupal_set_message(check_plain($msg), 'status');
+	if (isset($node->field_page_metashare_image) && !empty($node->field_page_metashare_image[0])) {
+		$thumbpath = imagefield_file_admin_thumb_path($node->field_page_metashare_image[0]);
+		$filename = $node->field_page_metashare_image[0]['filename'];
+		$cached_form[$target]['list_item_fieldset'][$target . '_img_download']['#prefix'] = '<div id="mavicmeta_img_' . $target . '" class="mavicmeta_img"><img src="/' . $thumbpath . '" alt="' . $filename . '"/><input id="' . $target . '-remove-img" class="form-submit remove_img" type="submit" value="remove" name="notOp"><div class="imgToHide">';
+		$cached_form[$target]['list_item_fieldset'][$target . '_img_download']['#suffix'] = '</div></div>';
+	}
+
+	$cached_form[$target]['list_item_fieldset'][$target . '_field_page_title']['#value'] = (isset($node->field_page_title) && !empty($node->field_page_title[0]['value'])) ? $node->field_page_title[0]['value'] : '';
+	$cached_form[$target]['list_item_fieldset'][$target . '_field_page_keyword']['#value'] = (isset($node->field_page_keyword) && !empty($node->field_page_keyword[0]['value'])) ? $node->field_page_keyword[0]['value'] : '';
+	$cached_form[$target]['list_item_fieldset'][$target . '_field_page_description']['#value'] = (isset($node->field_page_description) && !empty($node->field_page_description[0]['value'])) ? $node->field_page_description[0]['value'] : '';
+	$cached_form[$target]['list_item_fieldset'][$target . '_field_page_metashare_description']['#value'] = (isset($node->field_page_metashare_description) && !empty($node->field_page_metashare_description[0]['value'])) ? $node->field_page_metashare_description[0]['value'] : '';
+	$cached_form[$target]['list_item_fieldset'][$target . '_field_page_metashare_title']['#value'] = (isset($node->field_page_metashare_title) && !empty($node->field_page_metashare_title[0]['value'])) ? $node->field_page_metashare_title[0]['value'] : '';
+
+	$tempPrefix = $cached_form[$target]['list_item_fieldset']['#prefix'];
+	$cached_form[$target]['list_item_fieldset']['#prefix'] = $tempPrefix . '<p class="error">' . theme('status_messages') . '</p>';
+	$cached_form[$target]['list_item_fieldset']['#collapsed'] = FALSE;
+
+	form_set_cache($_POST['form_build_id'], $cached_form, $cached_form_state);
+	// Render the form for output.
+	$cached_form += array(
+		'#post' => $_POST,
+		'#programmed' => FALSE,
+		'#tree' => FALSE,
+		'#parents' => array(),
+	);
+
+	$empty_form_state = array();
+	$data = &$cached_form;
+	$data['__drupal_alter_by_ref'] = array(&$empty_form_state);
+  //drupal_alter('form', $data, 'mavicmeta_form');
+  /**
+   * @FIXME drupal_alter()
+   */
+  drupal_alter('form', $data);
+
+	$form_state = array('submitted' => FALSE);
+	$form = form_builder('mavicmeta_list_form', $cached_form, $form_state);
+	//	$form[$target]['list_item_fieldset']['#prefix'] = var_export($form,true);
+	$output = drupal_render($form);
+
+	print drupal_to_js(array('status' => TRUE, 'data' => $output));
+	exit;
+}
+
+function mavicmeta_ajax_lang_cat() {
+	$form_state = array('values' => $_POST);
+
+	$langs = (isset($form_state['values']['mavicmeta_lang'])) ? $form_state['values']['mavicmeta_lang'] : 'en';
+	$langStruct = mavicmeta_variable_get('langs');
+	$nextCatNames = array_keys($langStruct[$langs]);
+	if (isset($form_state['values']['mavicmeta_contentType'])) {
+		$curLang = i18n_get_lang();
+		$curCatNames = array_keys($langStruct[$curLang]);
+
+		$key = array_keys($curCatNames, $form_state['values']['mavicmeta_contentType']);
+		$cats = $nextCatNames[$key[0]];
+	}
+	else {
+		$cats = $nextCatNames[0];
+	}
+
+	$menuItem = '';
+	if (isset($form_state['values']['mavicmeta_menu']))
+		$menuItem = ',"' . $form_state['values']['mavicmeta_menu'] . '"';
+
+	$ahah_result = array(
+		'status' => TRUE,
+		'data' => '<img class="mavicmeta_waiting" src="/sites/default/themes/mavic/images/mavic-loader.gif" />',
+		'js' => array(
+			'func' => 'Drupal.mavicmeta.redirect', #the name of a javascript function to call
+			'params' => '"' . $langs . '","' . $cats . '"' . $menuItem, #a string representation of the parameters to pass to that function (gets eval'd anyway)
+		),
+	);
+	print drupal_to_js($ahah_result);
+	exit;
+}
+
+function mavicmeta_ajax_token($target) {
+	$form_state = array('values' => $_POST);
+	$node = node_load($target);
+	$result = array(
+		'edit-' . $target . '-field-page-title' => (isset($form_state['values'][$target . '_field_page_title']) && !empty($form_state['values'][$target . '_field_page_title'])) ? token_replace($form_state['values'][$target . '_field_page_title'], 'node', $node) : '',
+		'edit-' . $target . '-field-page-keyword' => (isset($form_state['values'][$target . '_field_page_keyword']) && !empty($form_state['values'][$target . '_field_page_keyword'])) ? token_replace($form_state['values'][$target . '_field_page_keyword'], 'node', $node) : '',
+		'edit-' . $target . '-field-page-description' => (isset($form_state['values'][$target . '_field_page_description']) && !empty($form_state['values'][$target . '_field_page_description'])) ? token_replace($form_state['values'][$target . '_field_page_description'], 'node', $node) : '',
+		'edit-' . $target . '-field-page-metashare-description' => (isset($form_state['values'][$target . '_field_page_metashare_description']) && !empty($form_state['values'][$target . '_field_page_metashare_description'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_description'], 'node', $node) : '',
+		'edit-' . $target . '-field-page-metashare-title' => (isset($form_state['values'][$target . '_field_page_metashare_title']) && !empty($form_state['values'][$target . '_field_page_metashare_title'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_title'], 'node', $node) : '',
+	);
+	$resultStr = drupal_to_js($result);
+
+	$ahah_result = array(
+		'status' => TRUE,
+		'data' => '',
+		'js' => array(
+			'func' => 'Drupal . mavicmeta . getTokens',
+			'params' => $resultStr . ',' . $target,
+		),
+	); 
+	print drupal_to_js($ahah_result);
+	exit;
+}

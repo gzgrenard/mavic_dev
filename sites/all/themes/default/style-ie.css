@@ -1,0 +1,186 @@
+#right_content
+{
+  margin-left: -2px;
+}
+
+
+#right_content .link
+{
+  padding-left: 5px;
+}
+
+#main_content
+{
+    width: 739px;
+}
+
+
+
+#product .right h2
+{
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+#menu a
+{  
+	padding-top:0px;
+	padding-bottom: 2px;
+    height: 30px;
+    line-height: 30px;
+}
+#menu a.first
+{
+	PADDING-TOP: 4px;
+}
+
+#menu a.search
+  {
+	padding-top: 2px;
+	padding-bottom: 12px;
+  }
+#search_input
+{
+	padding: 8px 0px 0px 10px;
+}
+/*#product .left
+{
+   width: 352px;
+}*/
+
+#tabs_buttons, #tabs_buttons_gamme
+{
+	height: 22px;
+}
+
+.tab_space {
+	margin-top:-5px;
+}
+
+#tabs_buttons div.tab, #tabs_buttons_gamme  div.tab
+{
+   padding-bottom: 4px;
+	 margin-right: 11px;
+}
+
+.submenu .submenucontent
+{
+    width: 742px;
+}
+
+.submenu .submenucontent a.link
+{
+    margin-left: 6px;
+}
+
+html>body .submenu .submenucontent a.link
+{
+    margin-left: 8px;
+}
+
+#submenu_wheels
+{
+        top: 15px;
+}
+
+#submenu_rims
+{
+        top: 51px;
+}
+
+#submenu_tyres
+{
+        top: 89px;
+}
+
+#submenu_computers
+{
+        top: 126px;
+}
+
+#submenu_pedals
+{
+        top: 162px;
+}
+
+#submenu_footwear
+{
+        top: 196px;
+}
+
+#submenu_apparel
+{
+        top: 232px;
+}
+
+#submenu_mavic
+{
+        top: 268px;
+}
+
+#submenu_search
+{
+        top: 306px;
+}
+
+
+.submenu .submenucontent2 .right
+{
+
+    width: 351px;
+    height: 258px;    
+}
+
+
+.submenu .submenucontent2 .left
+{    
+    width: 226px;
+    height: 258px;
+
+}
+
+.submenu .submenucontent2 .right .complement
+{
+    margin-bottom: 10px;
+}
+
+
+#content_gamme_items .product_item .name
+{
+    width: 169px;
+    height:40px;
+}
+
+#content_gamme_items .product_item .name p
+{
+     padding-top: 0px;
+     margin: -2px;
+     padding-left: 50px;
+}
+
+
+#content_gamme_items .select_to_compare
+{
+    width: 169px;
+}
+
+#filters_content
+{
+			margin-top: -18px;
+}
+
+#filters_content div.filter
+{
+      margin-bottom: 15px;
+			margin-top: 33px;
+}
+
+#content_gamme_items .altpop
+{
+	position:absolute;
+}
+
+#content_gamme_items .altpop_int
+{
+	margin-top: -18px;
+}

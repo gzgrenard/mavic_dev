@@ -1,0 +1,10 @@
+; $Id: nodesymlinks.info,v 1.2.2.1 2009/09/12 01:47:51 wojtha Exp $
+name = mavicaltermenu
+description = "alter node form for news date and menu weight the other part of this functionality is in mavic import "
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavicaltermenu"
+
+files[] = mavicaltermenu.install
+

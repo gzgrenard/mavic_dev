@@ -1,0 +1,44 @@
+<?php
+/**
+ * @file
+ * Insert and update mennu for the Mavic Alter Menu module
+ */
+
+
+/**
+ * Implements hook_node_insert
+ * mavicaltermenu_node_insert()
+ * change menu weight and symlink weight by the date if it is a news
+ */
+function mavicaltermenu_node_insert($node) {
+  if (isset($node->menu) && $node->type == 'news') {
+    $day = substr($node->field_news_date[0]['value'],8,2);
+    $month = substr($node->field_news_date[0]['value'],5,2);
+    $year2 = substr($node->field_news_date[0]['value'],2,2);
+    $shortDate = ($day+($month-1)*31+$year2*372)*-1;
+    $node->menu['weight'] = $shortDate;
+    if (isset($node->menu['nodesymlinks']['items'])) {
+      foreach($node->menu['nodesymlinks']['items'] as $key => $value)
+        $node->menu['nodesymlinks']['items'][$key]['weight'] = $shortDate;
+    }
+  }  
+}
+ 
+/**
+ *  Implements hook_node_update
+ *  mavicaltermenu_node_update()
+ *  change menu weight and symlink weight by the date if it is a news
+ */ 
+function mavicaltermenu_node_update($node) { 
+  if (isset($node->menu) && $node->type == 'news') {
+    $day = substr($node->field_news_date[0]['value'],8,2);
+    $month = substr($node->field_news_date[0]['value'],5,2);
+    $year2 = substr($node->field_news_date[0]['value'],2,2);
+    $shortDate = ($day+($month-1)*31+$year2*372)*-1;
+    $node->menu['weight'] = $shortDate;
+    if (isset($node->menu['nodesymlinks']['items'])) {
+      foreach($node->menu['nodesymlinks']['items'] as $key => $value)
+        $node->menu['nodesymlinks']['items'][$key]['weight'] = $shortDate;
+    }
+  }
+} 

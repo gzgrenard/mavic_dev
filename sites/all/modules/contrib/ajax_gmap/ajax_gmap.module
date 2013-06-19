@@ -1,0 +1,58 @@
+<?php
+
+/**
+ *  Implementation of hook_ajax_data_alter()
+ */
+function _ajax_gmap_ajax_data_alter(&$data, $mod, $view) {
+  if ($mod == 'views') {
+    $isgmap = $view->plugin_name == 'gmap';
+    if (($isgmap || ajax_gmap_is_attached()) && ajax_gmap_include()) {
+      $data->isgmap = $isgmap;
+      $data->dom_id = $view->dom_id;
+      $data->name = $view->name;
+      $data->__callbacks[] = _ajax_gmap_js_callback();
+      //get settings
+      $javascript = drupal_add_js(NULL, NULL, NULL);
+      $data->mapset = array();
+      foreach ($javascript as $scope => $arr) {
+        if (isset($arr['setting'])) {
+          foreach ($arr['setting'] as $set) {
+            if (isset($set['gmap'])) {
+              $data->mapset = array_merge($data->mapset, $set['gmap']);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ *  Implementation of hook_views_pre_render()
+ */
+function ajax_gmap_views_pre_render(&$view) {
+  if ($view->use_ajax && ($view->plugin_name === 'gmap' || $view->plugin_name === 'gmapextended') && ajax_gmap_include()) {
+    // $view->is_attachment && ajax_gmap_is_attached(TRUE);
+    $path = drupal_get_path('module', 'ajax_gmap');
+    drupal_add_js($path .'/' . _ajax_gmap_js_library());
+    drupal_add_js($path .'/ajax_gmap.js');
+  }
+}
+
+/**
+ *  Load ajax_gmap library
+ */
+function ajax_gmap_include() {
+  return module_load_include('php', 'ajax_gmap', 'library/ajax_gmap') !== FALSE;
+}
+
+/**
+ *  Checks attachments for gmap view.
+ */
+function ajax_gmap_is_attached($bool = NULL) {
+  static $attached = FALSE;
+  if (isset($bool)) {
+    $attached = $bool;
+  }
+  return $attached;
+}

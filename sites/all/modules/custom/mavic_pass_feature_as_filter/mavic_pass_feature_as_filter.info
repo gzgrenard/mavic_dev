@@ -1,0 +1,9 @@
+; $Id: nodesymlinks.info,v 1.2.2.1 2009/09/12 01:47:51 wojtha Exp $
+name = mavic_pass_feature_as_filter
+description = "alter node form to check or not the filter status of a feature"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "mavic_pass_feature_as_filter"
+
+

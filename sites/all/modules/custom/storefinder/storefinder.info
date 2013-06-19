@@ -1,0 +1,7 @@
+; $Id$
+name = storefinder
+description = "ajax response for storefinder, generate an xml file"
+core = 7.x
+package = mavic
+version = "7.x-1.0"
+project = "storefinder"

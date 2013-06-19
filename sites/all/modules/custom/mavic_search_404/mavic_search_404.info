@@ -1,0 +1,15 @@
+
+name = Mavic Search 404
+description = Redirect 404 to mavic search engine
+dependencies[] = search
+recommends[] = mavic_search
+core = 7.x
+package = mavic
+
+
+version = "7.x-1.0"
+core = "7.x"
+project = "mavic_search_404"
+
+files[] = assets/mavic_search_404.module
+
