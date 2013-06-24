@@ -1,7 +1,7 @@
 /**
  * IE Patch : Submit event not load on submit button
 */
-$('document').ready(function() {
+jQuery(document).ready(function($) {
     $('#xml_field_show').trigger('click');
 })
 
@@ -12,19 +12,19 @@ Drupal.ajaxSubmit = Drupal.ajaxSubmit || {};
  */
 Drupal.behaviors.ajaxSubmit = {
     attach: function (context) {
-        $('#edit-ignore-warnings', context).change(function () {
+        jQuery('#edit-ignore-warnings', context).change(function () {
             Drupal.ajaxSubmit.enable_submit();
         });
-        $('#edit-ignore-warnings-wrapper').hide();
-        $('#edit-delete-prodFeatures').click(function () {
+        jQuery('#edit-ignore-warnings-wrapper').hide();
+        jQuery('#edit-delete-prodFeatures').click(function () {
             if (this.checked){
                 //alert('Warning : you are about to delete all features : once deleted, those nodes will not be recoverable and you will need to import all necessary xml !');
                  Drupal.t('Warning : you are about to delete all features : once deleted, those nodes will not be recoverable and you will need to import all necessary xml !');
             }
                 
         });
-        $('#edit-delete-prodFeatures-wrapper').hide();
-        $('#choice_upload input').click(function(){
+        jQuery('#edit-delete-prodFeatures-wrapper').hide();
+        jQuery('#choice_upload input').click(function($){
             if ($('#xml_field_show').is(':checked')) {
                 $('#xml_fields').show();
                 $('#xlsx_field').hide();
@@ -34,10 +34,10 @@ Drupal.behaviors.ajaxSubmit = {
             }
         });
             
-        $('form.ajaxsubmit:not(.ajaxsubmit-processing)').each(function () {
-            var form = $(this);
+        jQuery('form.ajaxsubmit:not(.ajaxsubmit-processing)').each(function () {
+            var form = jQuery(this);
             var options = Drupal.ajaxSubmit.addOptions();
-            $(this)
+            jQuery(this)
             .addClass('ajaxsubmit-processing')
             .ajaxForm(options)
             .find('input[name=ajaxsubmit]')
@@ -45,7 +45,7 @@ Drupal.behaviors.ajaxSubmit = {
             .end()
             .find('input.form-submit');
         });
-   };
+   }
 };
 
 /**
@@ -318,7 +318,7 @@ Drupal.ajaxSubmit.addOptions = function (options){
         }
     };
     var optionsP = {};
-    $.each(options, function(objN, objA) {
+    jQuery.each(options, function(objN, objA) {
         switch (objN){
             case 'beforeSubmit':
                 optionsP.beforeSubmit = function () {
@@ -329,7 +329,7 @@ Drupal.ajaxSubmit.addOptions = function (options){
                 break;
         }
     });
-    return $.extend(baseOptions, optionsP);
+    return jQuery.extend(baseOptions, optionsP);
 };
 /**
 * Handler for building warnings tables

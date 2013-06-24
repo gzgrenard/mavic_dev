@@ -21,7 +21,17 @@ function mavicsitemap_menu() {
 }
 
 function mavicsitemap_output() {
-    $lang = substr($_REQUEST['q'], 0, 2);
+    //$lang = substr($_REQUEST['q'], 0, 2);
+    if(substr($_REQUEST['q'], 0, 2) != '') {
+      $lang = substr($_REQUEST['q'], 0, 2);
+    }
+    else {
+      $lang = 'en';
+      /**
+       * @FIXME
+       * change 'en' to 'si' when internationalization is enable
+       */
+    }
     $date = new DateTime();
     //if no specific language, print the sitemap index
     if ($lang == 'si') {
@@ -36,7 +46,7 @@ function mavicsitemap_output() {
             $url .= '</sitemap>' . "\n";
         }
         $url .= '</sitemapindex>' . "\n";
-        header("Content-type: text/xml; charset=utf-8");
+        drupal_add_http_header("Content-type:", "text/xml; charset=utf-8");
 	echo $url;
     //else print the according sitemap
     }
@@ -52,29 +62,24 @@ function mavicsitemap_output() {
         $url .= '<priority>1.0</priority>' . "\n";
         $url .= '</url>' . "\n";
        //landingpages
-        $res = db_query("SELECT DISTINCT n.nid, n.changed, n.language
-                        FROM {node} n 
-                        WHERE n.type IN ('cxr_landing_page', 
-                        'crossmax_landing_page',
-                        'discipline_home_page',
-                        'landing_page_ss2011',
-                        'range_landing_page',
-                        'tyre_landing_page',
-                        'ss2012_range_landing_page',
-                        'cc40_landing_page',
-						            'ss2013_landing_page')
-                        AND n.language = '" . (string) $lang . "'
-                        AND n.status=1");
-	while ($node = db_fetch_array($res)) {
-            $dt = new DateTime("@" . $node['changed']);
-            $link = 'node/' . $node['nid'];
+      $res = db_select('node', 'n')
+          ->fields('n', array('nid', 'changed', 'language'))
+          ->distinct()
+          ->condition('type', array('crossmax_landing_page', 'landing_page_ss2011', 'range_landing_page', 'tyre_landing_page', 'ss2012_range_landing_page', 'cc40_landing_page', 'ss2013_landing_page'), 'IN')
+          ->condition('language', (string) $lang, '=')
+          ->condition('status', '1', '=')
+          ->execute();
+          foreach($res as $node) {
+            $dt = new DateTime("@" . $node->changed);
+            $link = 'node/' . $node->nid;
             $url .= '<url>' . "\n";
             $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
             $url .= '<lastmod>' . date_format($dt, 'Y-m-d') . '</lastmod>' . "\n";
             $url .= '<changefreq>weekly</changefreq>' . "\n";
             $url .= '<priority>1.0</priority>' . "\n";
-            $url .= '</url>' . "\n";
-        }
+            $url .= '</url>' . "\n";              
+            } 
+
        //products
         $menuP = 'menu-primary-links-' . $lang;
         $menuPTree = menu_tree_page_data($menuP);
@@ -84,16 +89,20 @@ function mavicsitemap_output() {
                     foreach ($ssdata['below'] as $subdata) {
                         $item = menu_get_item($subdata['link']['href']);
                         $images = $item['page_arguments'][0]->field_otherarticle[0]['nid'];
-                        $res = db_query("SELECT n.title FROM {node} n WHERE n.nid = %d", $images);
-                        while ($node = db_fetch_array($res)) {
-                            $imgName = $node['title'];
+                        $res = db_select('node', 'n')
+                          ->fields('n', array('title'))
+                          ->condition('nid', $images, '=')
+                          ->execute();
+                        foreach ($res as $node) {
+                            $imgName = $node->title;
                         }
                         $url .= '<url>' . "\n";
                         $url .= '<loc>' . url($subdata['link']['href'], array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
                         $url .= '<lastmod>' . $dateFormated . '01</lastmod>' . "\n";
                         $url .= '<changefreq>monthly</changefreq>' . "\n";
                         $url .= '<priority>0.9</priority>' . "\n";
-                        if (file_exists(file_directory_path() . '/products/zoom/' . $imgName . '.jpg')) {
+                        $file_dir = file_stream_wrapper_get_instance_by_uri('public://')->realpath();
+                        if (file_exists($file_dir . '/products/zoom/' . $imgName . '.jpg')) {
                             $url .= '<image:image>' . "\n";
                             $url .= '<image:loc>http://www.mavic.com/sites/default/files/products/zoom/' . $imgName . '.jpg</image:loc>' . "\n";//
                             $url .= '</image:image>' . "\n";
@@ -105,22 +114,23 @@ function mavicsitemap_output() {
         }
         //technos
         $prodval = 'prodvalcarac';
-        $res = db_query("SELECT DISTINCT n.nid, n.changed, n.language
-                        FROM {node} n
-                        INNER JOIN {content_type_prodvalcarac} p using (nid)
-                        WHERE n.type = '%s'
-			AND n.language = '%s'
-			AND p.`field_technologie_value` IN (" . db_placeholders(range(2, 3), 'int') . ")", array($prodval, $lang, 2, 3));
-	while ($node = db_fetch_array($res)) {
-            $dt = new DateTime("@" . $node['changed']);
-            $link = 'node/' . $node['nid'];
-            $url .= '<url>' . "\n";
-            $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
-            $url .= '<lastmod>' . date_format($dt, 'Y-m-d') . '</lastmod>' . "\n";
-            $url .= '<changefreq>monthly</changefreq>' . "\n";
-            $url .= '<priority>0.8</priority>' . "\n";
-            $url .= '</url>' . "\n";
-        }
+        $res = db_select('node', 'n')
+          ->fields('nid', 'changed', 'language')
+          ->joins('content_type_prodvalcarac', 'p', 'n.nid = p.nid')
+          ->condition('n.type', $prodval, '=')
+          ->condition('n.language', $lang, '=')
+          ->condition('p.field_technologie_value', array('2', '3'))
+          ->execute();
+       foreach ($res as $node) {
+        $dt = new DateTime("@" . $node->changed);
+        $link = 'node/' . $node->nid;
+        $url .= '<url>' . "\n";
+        $url .= '<loc>' . url($link, array('language' => $lang, 'absolute' => TRUE, 'alias' => FALSE, 'prefix' => $lang . '/')) . '</loc>' . "\n";
+        $url .= '<lastmod>' . date_format($dt, 'Y-m-d') . '</lastmod>' . "\n";
+        $url .= '<changefreq>monthly</changefreq>' . "\n";
+        $url .= '<priority>0.8</priority>' . "\n";
+        $url .= '</url>' . "\n";
+      }
         //video
         $menuV = 'menu-videos';
         $menuVTree = menu_tree_page_data($menuV);
@@ -225,7 +235,7 @@ function mavicsitemap_output() {
                 $url .= '</url>' . "\n";
             }
         }     
-	header("Content-type: text/xml; charset=utf-8");
+	drupal_add_http_header("Content-type:", "text/xml; charset=utf-8");
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	echo "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:video=\"http://www.google.com/schemas/sitemap-video/1.1\" xmlns:news=\"http://www.google.com/schemas/sitemap-news/0.9\" xmlns:image=\"http://www.google.com/schemas/sitemap-image/1.1\" >\n";
         echo $url;

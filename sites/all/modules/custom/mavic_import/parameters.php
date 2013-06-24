@@ -105,7 +105,11 @@ $parameters['excel_default'] = array(
         $AzArR = array_flip($AzAr);
         $parameters_default = $parameters['excel_default'];
 	$res = db_query("SELECT * FROM {mavicimport_settings}");
-	while ($settings = db_fetch_object($res)){
+  $res = db_select('mavicimport_settings', 'ms')
+    ->fields('ms')
+    ->execute();
+    
+	foreach ($res as $settings){
             if (!empty($settings->system_name) && !empty($settings->settings)) {
                 $parameters_default = unserialize($settings->settings);
             }

@@ -17,7 +17,8 @@ function phptemplate_preprocess(&$vars, $hook) {
 	
 	if (preg_match('/(?i)msie [1-8]/', $_SERVER['HTTP_USER_AGENT'])) { // if IE<=8 
 		$vars['userAgent'] = 'msie7andminus';
-	} else { // if other
+	}
+	else { // if other
 		$vars['userAgent'] = 'other';
 	}
 	$vars['mobile'] = 'desktop';
@@ -192,21 +193,27 @@ function phptemplate_preprocess(&$vars, $hook) {
 				$nbLand = count($land_tab);
 				if ($vars['node']->type == 'cxr_landing_page') {
 					$vars['landscape'] = $vars['theme_images'] . '/landingpage/cxr/background.jpg';
-				} elseif ($vars['node']->type == 'ss2012_range_landing_page') {
+				}
+				elseif ($vars['node']->type == 'ss2012_range_landing_page') {
 					$vars['landscape'] = $vars['theme_images'] . '/landingpage/ss2012/landscape.jpg';
-				} elseif ($vars['node']->type == 'cc40_landing_page') {
+				}
+				elseif ($vars['node']->type == 'cc40_landing_page') {
 					$vars['landscape'] = $vars['theme_images'] . '/landscapes/road_mountain.jpg';//$vars['theme_images'] . '/landingpage/cc40c/cc40_bg.jpg';
-				} elseif ($vars['node']->type == 'ss2013_landing_page') {
+				}
+				elseif ($vars['node']->type == 'ss2013_landing_page') {
 					if ($vars['discipline'] == 'mtb' || $_GET['disc'] == 'mtb') {
 						$vars['landscape'] = $vars['theme_images'] . '/landscapes/MTB_cross-country.jpg';
-					} else {
+					}
+					else {
 						$vars['landscape'] = $vars['theme_images'] . '/landscapes/road_mountain.jpg';
 					}
 					$tempLandscape = 'road';
-				} else {
+				}
+				else {
 					$vars['landscape'] = $vars['theme_images'] . '/landscapes/' . $land_tab[rand(0, $nbLand - 1)]['value'] . '.jpg?v=2';
 				}
-			} else {
+			}
+			else {
 								$defNodeNid = mavicmeta_variable_get('defNid');
 				$defNode = node_load($defNodeNid[$vars['lang']]);
 				
@@ -218,7 +225,8 @@ function phptemplate_preprocess(&$vars, $hook) {
 				$vars['og_img'] = $base_root . '/' . $defNode->field_page_metashare_image[0]['filepath'];
 
 			}
-		} elseif ($hook == "node" && $vars['page']) { // node de page
+		}
+		elseif ($hook == "node" && $vars['page']) { // node de page
 			//
 			// get article, associated article and parent macromodel
 			//
@@ -285,7 +293,8 @@ function phptemplate_preprocess(&$vars, $hook) {
 					}
 					if (!empty($vars['list_color'][$_POST['default_article']])) {
 						$vars['default_color'] = $_POST['default_article'];
-					} else {
+					}
+					else {
 						$vars['default_color'] = key($vars['list_color']);
 					}
 
@@ -344,7 +353,8 @@ function phptemplate_preprocess(&$vars, $hook) {
 					$head_title = $vars['node']->title . ' - Mavic';
 					if (isset($vars['node']->field_facebook_img[0]['filepath']) && !empty($vars['node']->field_facebook_img[0]['filepath'])) {
 						$facebook_thumbnail = base_path() . $vars['node']->field_facebook_img[0]['filepath'];
-					} else {
+					}
+					else {
 						$facebook_thumbnail = base_path() . path_to_theme() . '/images/logo.png';
 					}
 					break;
@@ -365,7 +375,8 @@ function phptemplate_preprocess(&$vars, $hook) {
 				$tempOgImg = (!empty($vars['node']->field_page_metashare_image[0]['filepath'])) ? $vars['node']->field_page_metashare_image[0]['filepath'] : $vars['node']->field_facebook_img[0]['filepath'];
 				$og_img = (!empty($tempOgImg)) ? $base_root . '/' . $tempOgImg : $base_root . '/' . $defNode->field_page_metashare_image[0]['filepath'];
 				
-		} else { // view all news
+		}
+		else { // view all news
 			
 				$defNodeNid = mavicmeta_variable_get('defNid');
 				$defNode = node_load($defNodeNid[$vars['lang']]);

@@ -602,7 +602,8 @@ function mavic_search_404_redirect_edit($url_id) {
 	$data['target_id'] = $url_id;
 	$form_state['rebuild'] = TRUE;
 	$data['__drupal_alter_by_ref'] = array(&$form_state);
-	drupal_alter('form', $data, 'mavic_search_404_redirect_form');
+  //drupal_alter('form', $data, 'mavic_search_404_redirect_form');
+  drupal_alter('form', $data);
 
 	//cache it
 	$form_state = array('submitted' => FALSE);
@@ -825,12 +826,15 @@ function mavic_search_404_form_alter(&$form, &$form_state, $form_id) {
 			}
 		}
 
-		$query = "SELECT *, IF((`url_to_redirect` = ''),0,IF((`url_to_redirect` IS NULL),0,1)) AS status FROM {mavic_redirect} ORDER BY " . implode(',', $order_by);
-
+		//$query = "SELECT *, IF((`url_to_redirect` = ''),0,IF((`url_to_redirect` IS NULL),0,1)) AS status FROM {mavic_redirect} ORDER BY " . implode(',', $order_by);
+    $query = db_query("SELECT *, IF((`url_to_redirect` = ''),0,IF((`url_to_redirect` IS NULL),0,1)) AS status FROM {mavic_redirect} ORDER BY :order_by", array(':order_by' => implode(',', $order_by)));
 		$limit = 15;
+    $result = $query->extend('PagerDefault')
+      ->limit($limit)
+      ->execute();
 
-		$result = pager_query($query, $limit);//"SELECT COUNT(*) FROM url_to_redirect"
-		while ($row_object = db_fetch_object($result)) {
+		//$result = pager_query($query, $limit);//"SELECT COUNT(*) FROM url_to_redirect"
+		foreach ($result as $row_object) {
 			$prefix = ($row_object->status) ? '<div class="toFloat">' : '<div class="toFloat missing">';
 			$form['list']['id_' . $row_object->id] = array(
 				'list_id_' . $row_object->id => array(

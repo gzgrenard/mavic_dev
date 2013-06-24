@@ -14,3 +14,4 @@ files[] = mavicimport_news_form_submit.php
 files[] = mavicimport_shop_form_submit.php
 files[] = mavicimport_xls_bulk_form_submit.php
 files[] = mavicimport.install
+files[] = parameters.php

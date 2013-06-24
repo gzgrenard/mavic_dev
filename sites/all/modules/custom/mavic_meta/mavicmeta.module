@@ -75,9 +75,13 @@ function mavicmeta_form_alter(&$form, &$form_state, $form_id) {
 		//get list of menus
 		$menusList = menu_get_menus();
 		//get list of content-type
-		$contentTypesList = content_types();
+		$contentTypesList = node_type_get_names();
+    print_r($contentTypesList);
 		//get list of availables tokens per content-type
-		$tokensList = token_get_list();
+		//$tokensList = token_get_list();
+    $tokensList = mavicmeta_extract_tokens('shop');  
+    print_r($tokensList);
+    exit();
 		$tokensContypeList = array();
 		//get default tokens 
 		$tokensDefault = array();
@@ -163,7 +167,12 @@ function mavicmeta_form_alter(&$form, &$form_state, $form_id) {
 				}
 				elseif (is_int($type)) {
 					$typeName = 'node';
-					$LevelType[] = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $type));
+          $LevelType[] = db_select('node', 'n')
+            ->fields('n', array('type'))
+            ->condition('nid', $type, '=')
+            ->execute();
+					//$LevelType[] = db_result(db_query("SELECT type FROM {node} WHERE nid = %d", $type));
+          
 				//default (home page)	
 				}
 				else {
@@ -588,7 +597,7 @@ function mavicmeta_form_populate($nid, $dataType, $form, $form_state, $syncNodes
 		'#title' => $node->title,
 		'#collapsible' => TRUE,
 		'#collapsed' => !($count === NULL || $count === 1 || $thisMenuItem == $nid),
-		'#prefix' => '<div id="autocomplete_' . $nid . '" class="autocomplete"><script>tokenList["autocomplete_' . $nid . '"] = ' . drupal_to_js($dataType['structure'][$level]) . ';</script>',
+		'#prefix' => '<div id="autocomplete_' . $nid . '" class="autocomplete"><script>tokenList["autocomplete_' . $nid . '"] = ' . drupal_json_encode($dataType['structure'][$level]) . ';</script>',
 		'#suffix' => '</div>',
 	);
 	//node level identify which node^s to synchronise if needed)
@@ -872,7 +881,7 @@ function mavicmeta_ajax_submit($target) {
 	if (!($cached_form = form_get_cache($_POST['form_build_id'], $cached_form_state))) {
 		form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
 		$output = theme('status_messages');
-		print drupal_to_js(array('status' => TRUE, 'data' => $output));
+		print drupal_json_encode(array('status' => TRUE, 'data' => $output));
 		exit();
 	}
 
@@ -1038,7 +1047,7 @@ function mavicmeta_ajax_submit($target) {
 	//	$form[$target]['list_item_fieldset']['#prefix'] = var_export($form,true);
 	$output = drupal_render($form);
 
-	print drupal_to_js(array('status' => TRUE, 'data' => $output));
+	print drupal_json_encode(array('status' => TRUE, 'data' => $output));
 	exit;
 }
 
@@ -1071,7 +1080,7 @@ function mavicmeta_ajax_lang_cat() {
 			'params' => '"' . $langs . '","' . $cats . '"' . $menuItem, #a string representation of the parameters to pass to that function (gets eval'd anyway)
 		),
 	);
-	print drupal_to_js($ahah_result);
+	print drupal_json_encode($ahah_result);
 	exit;
 }
 
@@ -1085,7 +1094,7 @@ function mavicmeta_ajax_token($target) {
 		'edit-' . $target . '-field-page-metashare-description' => (isset($form_state['values'][$target . '_field_page_metashare_description']) && !empty($form_state['values'][$target . '_field_page_metashare_description'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_description'], 'node', $node) : '',
 		'edit-' . $target . '-field-page-metashare-title' => (isset($form_state['values'][$target . '_field_page_metashare_title']) && !empty($form_state['values'][$target . '_field_page_metashare_title'])) ? token_replace($form_state['values'][$target . '_field_page_metashare_title'], 'node', $node) : '',
 	);
-	$resultStr = drupal_to_js($result);
+	$resultStr = drupal_json_encode($result);
 
 	$ahah_result = array(
 		'status' => TRUE,
@@ -1095,6 +1104,29 @@ function mavicmeta_ajax_token($target) {
 			'params' => $resultStr . ',' . $target,
 		),
 	); 
-	print drupal_to_js($ahah_result);
+	print drupal_json_encode($ahah_result);
 	exit;
 }
+
+/**
+ * @FIXME
+ */
+/**
+ * Extract tokens that can be used by the $type.
+ */
+function mavicmeta_extract_tokens($type) {
+  $tokens = token_info();
+  print_r($tokens['tokens']['nodesymlink']);
+  // If no tokens for the type exists, return an empty array.
+  if (!isset($tokens['tokens'][$type])) {
+    return array();
+  }
+
+  $available_tokens = array();
+  foreach ($tokens['tokens'][$type] as $token_key => $token) {
+    $available_tokens[] = '[' . $type . ':' . $token_key . ']';
+  }
+
+
+  return $available_tokens;
+} 
