@@ -1,0 +1,227 @@
+/*
+ * Sample CSS for adding new styles to the /style directory of the Superfish library.
+ * 
+ * Instructions:
+ *
+ * 1. Replace the mavic_sf (below) with the name of the new style.
+ *    For example, if the style name is drupal, the class will be sf-style-drupal .
+ *
+ * 2. Save the file as CSS with the style name as its name.
+ *    For example, if the style name is drupal the file will be drupal.css and therefore
+ *    libraries/superfish/style/drupal.css.
+ *
+ * 3. That's it! go to the block conifguration, use the new style, make sure everything is right :)
+ *
+ */
+
+.sf-menu.sf-style-mavic_sf {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+.sf-menu.sf-style-mavic_sf.sf-navbar {
+  width: 100%;
+}
+.sf-menu.sf-style-mavic_sf ul {
+  padding-left: 0;
+}
+
+.sf-menu.sf-style-mavic_sf li.menuparent .sf-sub-indicator {
+    display: none;
+}
+
+.sf-menu.sf-style-mavic_sf li.sf-depth-1 > a:active {
+    /*border-bottom: 3px solid #fae300;*/
+}
+
+.sf-menu.sf-style-mavic_sf li.sfHover > ul {
+   /* background: #ffffff;*/
+}
+
+#zone-menu li.sf-depth-1:parent:hover {
+    background: red;
+}
+
+#superfish-1 {
+    padding: 15px 0 0 0;
+}
+
+#superfish-1 > li.sf-depth-1 > a {
+    color: #ffffff;
+}
+
+#superfish-1 > li.sf-depth-1:hover {
+    border-bottom: 3px solid #FBE201;
+}
+
+#superfish-1 > li.sf-depth-1 > a:hover,
+#superfish-1 > li.sf-depth-1.sfHover,
+#superfish-1:hover li a {
+    color: #000000;
+}
+
+
+#superfish-1 {
+    z-index: 99;
+    padding-bottom: 5em;
+}
+
+#superfish-1 > li.sf-depth-1:first-child {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+#superfish-1 > li.sf-depth-1 {
+    margin-left: 2.25em;
+    padding-left: 0;
+}
+
+#superfish-1:hover .sf-megamenu {
+    display: block;
+}
+
+#superfish-1 ul.sf-megamenu {
+    /*top: 5em;
+    left: -15.7em;*/
+   padding-top: 2em !important;
+   left: -11.5em;
+}
+
+#superfish-1 ul.sf-megamenu > li {
+    margin: 0;
+}
+
+#superfish-1 ul.sf-megamenu {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.sf-megamenu-column > a,
+.sf-megamenu-column li > a {
+
+}
+
+.sf-menu.sf-horizontal.sf-shadow ul, .sf-menu.sf-vertical.sf-shadow ul, .sf-menu.sf-navbar.sf-shadow ul ul {
+    background: none;
+}
+
+.sf-menu.sf-style-mavic_sf a  {
+  color: #000000;
+  padding: 0.75em 0.75em;
+}
+/*.sf-menu.sf-style-mavic_sf a.sf-with-ul {
+  padding-right: 2.25em;
+}*/
+.sf-menu.sf-style-mavic_sf.rtl a.sf-with-ul {
+  padding-left: 2.25em;
+  padding-right: 1em;
+}
+.sf-menu.sf-style-mavic_sf span.sf-description {
+  color: #0000ff;
+  display: block;
+  font-size: 0.8em;
+  line-height: 1.5em;
+  margin: 5px 0 0 5px;
+  padding: 0;
+}
+.sf-menu.sf-style-mavic_sf li,
+.sf-menu.sf-style-mavic_sf.sf-navbar {
+
+}
+.sf-menu.sf-style-mavic_sf li li {
+
+}
+.sf-menu.sf-style-mavic_sf li li li {
+
+}
+
+div.sf-megamenu-column a.sf-depth-2.menuparent {
+    /*background: url('../images/arrows-777777.png') no-repeat -10px -100px;*/
+}
+
+ul.sf-menu-primary-links-en li a{
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.sf-menu.sf-style-mavic_sf li a.sf-depth-3 {
+    font-weight: normal;
+    text-transform: capitalize;
+}
+
+.sf-menu.sf-style-mavic_sf li:hover,
+.sf-menu.sf-style-mavic_sf li.sfHover,
+.sf-menu.sf-style-mavic_sf a:focus,
+.sf-menu.sf-style-mavic_sf a:hover,
+.sf-menu.sf-style-mavic_sf a:active {
+  /*background: #ffffff;*/
+  outline: 0;
+}
+
+.sf-menu.sf-style-mavic_sf li.sf-depth-1.sfHover:hover,
+.sf-menu.sf-style-mavic_sf li.sf-depth-1 a:focus {
+  /*background: #ffffff;*/
+  outline: 0;
+  border-bottom: 3px solid #fae300;
+}
+
+.sf-menu.sf-style-mavic_sf ul.sf-megamenu li.sf-megamenu-wrapper ol,
+.sf-menu.sf-style-mavic_sf ul.sf-megamenu li.sf-megamenu-wrapper ol li {
+  margin: 0;
+  padding: 0;
+}
+.sf-menu.sf-style-mavic_sf ul.sf-megamenu li.sf-megamenu-wrapper a.menuparent {
+  font-weight: bold;
+  font-style: italic;
+}
+.sf-menu.sf-style-mavic_sf ul.sf-megamenu li.sf-megamenu-wrapper ol li.sf-megamenu-column {
+  display: inline;
+  float: left;
+  width: 12em;
+}
+.sf-menu.sf-style-mavic_sf.rtl ul.sf-megamenu li.sf-megamenu-wrapper ol li.sf-megamenu-column {
+  float: right;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-1 ul.sf-megamenu {
+  width: 12em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-2 ul.sf-megamenu {
+  width: 24em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-3 ul.sf-megamenu {
+  width: 36em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-4 ul.sf-megamenu {
+  width: 48em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-5 ul.sf-megamenu {
+  width: 60em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-6 ul.sf-megamenu {
+  width: 72em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-7 ul.sf-megamenu {
+  width: 84em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-8 ul.sf-megamenu {
+  width: 96em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-9 ul.sf-megamenu {
+  width: 108em;
+}
+.sf-menu.sf-style-mavic_sf li.sf-parent-children-10 ul.sf-megamenu {
+  width: 120em;
+}
+
+ul.sf-megamenu ol > li.sf-depth-2 > div > a {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: -11px -182px;
+}
+
+ul.sf-megamenu ol > li.sf-item-7.sf-depth-2 {
+    background-color: #f5f5f5;
+    padding: 37px !important;
+}

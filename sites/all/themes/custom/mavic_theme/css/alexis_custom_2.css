@@ -1,0 +1,36 @@
+/*
+h3.field-content.title{
+    font-family: helvetica !important;
+}*/
+
+.views-field.views-field-title{
+    margin-bottom: 7px;
+}
+
+.view-id-home_block_mavic_live_news .views-field.views-field-title{
+    margin-top: 7px !important;
+}
+
+#zone-home .col4 .views-row{
+    height: 280px !important;
+}
+
+#filter-mavic span.filter{
+    width: 20%;
+} 
+
+#zone-home .col2.couple .views-row.views-row-last{
+    margin-left: 14px !important;
+}
+
+/*#block-views-home-latest-product-block-1{
+    overflow: hidden !important;
+}
+
+#block-views-home-latest-product-block-1 .field-content.more.discover{
+    margin-left: -290px !important;
+}
+
+#block-views-home-latest-product-block-1 .views-row.views-row-1.views-row-odd.views-row-first.views-row-last{
+    float: right;
+}*/

@@ -1,0 +1,29 @@
+#google-cse-results-searchbox-form #edit-query {
+    font-size: 11px !important;
+}
+
+.menu-views .view-content .views-field-title{
+    padding-top: 5px;
+}
+
+.sf-megamenu .menuparent .last.sf-depth-2.sf-no-children{
+    margin-top: 30px !important;
+}
+
+.engineers-talks .view-content{
+    padding: 0 !important;
+}
+
+#zone-home .view-content div.views-field.views-field-title,
+#zone-home .view-content div.views-field-body{
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.block.block-block.mavic-live-title.block-9.block-block-9.odd.block-without-title{
+    margin-left: -21px !important;
+}
+
+.block.block-block.latest-videos.block-10.block-block-10.odd.block-without-title{
+    margin-right: 24px !important;
+}

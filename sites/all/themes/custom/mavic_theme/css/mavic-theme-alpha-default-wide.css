@@ -1,0 +1,21 @@
+/* This file will hold styles that are loaded using the same media query as the wide grid. */
+
+#region-branding {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 140px;
+}
+
+/**
+ *     start override alpha-default-wide-12.css
+ */
+.container-12 .prefix-1 {
+  padding-left: 140px !important;
+}
+
+.container-12 .suffix-1 {
+  padding-right: 60px !important;
+}
+/**
+ *     end override alpha-default-wide-12.css
+ */

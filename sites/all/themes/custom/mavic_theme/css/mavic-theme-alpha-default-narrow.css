@@ -1,0 +1,202 @@
+/* This file will hold styles that are loaded using the same media query as the narrow grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the normal and widescreen layouts. You may override these styles in the normal 
+ *  and widescreen CSS files as appropriate. */
+
+
+
+.filters .block1-filter {
+
+}
+
+
+span.filter {
+    width: 18%;
+}
+
+.latest-videos {
+    right: 12.8%;
+    margin-top: -26px;
+}
+
+#zone-home .block-views-upcoming-events-block.col2 .views-row-1,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-2,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-3,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-4 {
+    width: 46%;
+}
+
+#block-superfish-2 {
+    margin: 0;
+}
+
+#block-google-cse-google-cse {
+    padding: 0 5px 0 0;
+}
+
+#block-views-engineers-talk-block img{
+	margin-left: auto;
+}
+
+#zone-menu-wrapper{
+    background: url("/sites/default/files/images/img_home.jpg") no-repeat center center transparent;
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    background-size: 100% 100%;
+    position: relative;
+}
+
+#block-superfish-2 ul li.sf-item-1 a {
+    text-indent: 0;
+    height: auto;
+    background-color: none;
+}
+
+#block-superfish-2 ul li.sf-item-1 {
+    height: auto;
+    width: auto;
+    background-position: -10px -70px;
+    float: left;
+}
+
+#superfish-1 {
+    background: none;
+}
+
+#superfish-1 > li.sf-depth-1 {
+    float: left;
+}
+
+ul.sf-menu-primary-links-en li a {
+    font-weight: normal;
+}
+
+#block-superfish-3,
+#block-superfish-2 ul li.sf-item-2,
+#block-block-9,
+#block-block-10,
+#block-block-11,
+#zone-header-wrapper,
+article.node-mv-gamme .toolbar-links,
+.upcoming-events,
+.block-home-next-event-block,
+.block-upcoming-events-block,
+#zone-postscript-wrapper,
+.block-menu-footer-products,
+.block-menu-block-4,
+#block-block-7,
+#zone-postscript {
+    display: block;
+}
+
+#superfish-2 li.sf-item-1, #superfish-2 li.sf-item-2 {
+    padding: 3px 3px 5px 16px;
+}
+
+#superfish-2 li.sf-item-1 {
+    margin-right: 20px;
+}
+
+#zone-user-wrapper {
+    height: 40px;
+    background-color: #f5f5f5;
+}
+
+.toolbar-links {
+    height: 40px;
+}
+
+.toolbar-links a.product-compare {
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -6px -945px;
+    text-transform: uppercase;
+    padding: 0 0 2px 24px;
+    text-decoration: none;
+    float: right;
+}
+
+
+.block-listing-produits .view-filters {
+    background-color: #ededed;
+    min-width: 868px;
+}
+
+.block-listing-produits .view-filters .views-exposed-widget {
+    width: 100%;
+}
+
+.block-listing-produits ul.bef-tree {
+    padding-left: 0;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1 {
+    float: left;
+    border-left: 2px solid #dcdcdc;
+    width: 14%;
+    padding-left: 8px;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1:first-of-type {
+    border-left: none;
+    padding-left: 0;
+}
+
+.block-listing-produits ul.bef-tree li {
+    list-style: none;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1 > .form-type-bef-link {
+    text-transform: uppercase;
+    font-family: "HelveticaNeueW02-77BdCn 694069";
+}
+
+
+.taxonomy-term.vocabulary-segments h2 {
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -5px -148px;
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-weight: normal;
+    letter-spacing: -0.05em;
+    margin-top: 28px;
+}
+
+.view-gamme > .view-content > .views-row {
+    float: left;
+    width: 33%;
+}
+
+.view-gamme > .view-content > .views-row:nth-child(5) {
+    clear: both;
+}
+
+.view-gamme h3 {
+    clear: left;
+}
+
+.view-gamme > .view-content > .views-row:nth-child(n+5) {
+  padding-top: 40px;
+}
+
+.block-autres-gammes {
+    clear: left;
+}
+
+/** Structure grid **/
+
+.container-12 .suffix-1 {
+    padding-right: 0px !important;
+}
+
+.container-12 .prefix-1 {
+    padding-left: 101px !important;
+}

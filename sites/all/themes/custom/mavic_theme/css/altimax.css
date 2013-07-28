@@ -1,0 +1,49 @@
+.view-fiche-produit-galerie-couleur{
+	width:688px;
+	padding-top:668px;
+	height:32px;
+	position:relative;
+	float:right;
+}
+.view-fiche-d-tail-choix-d-clinaison.view-display-id-block{
+	width:422px;
+}
+
+.view-fiche-d-tail-choix-d-clinaison.view-display-id-block li{
+	width:110px;
+	height:110px;
+	display:block;
+	float:left;
+}
+.view-fiche-produit-galerie-couleur .views-field-field-d-clinaisons li,
+.view-gamme .views-field-field-d-clinaisons li,
+.view-id-fiche_d_tail_choix_d_clinaison.view-display-id-block_1 li{
+	display:none;
+}
+
+.view-fiche-produit-galerie-couleur  .views-field-field-d-clinaisons li.first,
+.view-gamme .views-field-field-d-clinaisons li.first,
+.view-id-fiche_d_tail_choix_d_clinaison.view-display-id-block_1 li.first{
+	display:block;
+}
+
+.view-fiche-produit-galerie-couleur  .views-field-field-d-clinaisons .field-type-image{
+
+position:absolute;
+top:0;
+left:0;
+
+	display:none;
+}
+
+.view-fiche-produit-galerie-couleur  .views-field-field-d-clinaisons .field-type-image.field-name-field-photo-principale{
+	display:block;
+}
+
+.view-fiche-produit-galerie-couleur  .views-field-field-d-clinaisons .field-type-text{
+	float:left;
+}
+
+.view-id-fiche_d_tail_choix_d_clinaison.view-display-id-block_2{
+	display:none;
+}

@@ -1,0 +1,1648 @@
+/* This file will hold styles that are loaded using the same media query as the normal grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the widescreen layout unless they are overridden by the widescreen styles. */
+
+/**
+ *     General
+ */
+body {
+    color: #000000;
+}
+
+img {
+    margin: 0;
+}
+
+.more {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: -4px -133px;
+    margin: 0;
+    padding: 3px 5px 3px 22px;
+    overflow: hidden;
+    font-style: italic;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: initial;
+    position: absolute;
+    bottom: 10px;
+}
+
+.more a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 0.9em;
+    padding-right: 2px; 
+	font-style:normal;
+}
+
+.discover {
+    margin: 0;
+    padding: 6px 12px 6px 29px;
+    overflow: hidden;
+    border: 1px solid #000000; 
+}
+
+.more.discover {
+    background-position: -4px -133px;
+}
+
+.more.discover:hover {
+    
+}
+
+.container-12 .grid-6.suffix-2 {
+    padding-top: 18px;
+}
+
+.logo-img {
+    width: 137px;
+}
+
+.logo-img > a > img {
+    z-index: 97;
+    position: relative;
+}
+
+#section-content .region-inner {
+    padding: 0;
+}
+
+/* Fin General */
+
+/**
+ *     Section header
+ */
+#section-header {
+    padding-bottom: 41px;
+}
+
+/**
+ *     HomePage
+ */
+
+#zone-home {
+}
+
+#zone-home .latest-products .block-inner .content,
+#zone-home .mavic-live-title .block-inner .content,
+#zone-home .upcoming-events .block-inner .content,
+#zone-home .block-block-11 .block-inner .content {
+    padding: 6px 0 16px 0;
+}
+
+#zone-home .block-block-11 .block-inner .content {
+   margin-top: 15px;
+}
+
+#zone-home .col2.first-block .block-inner .content {
+    padding: 0 1px 0 0;
+}
+
+#zone-home .col2.last-block .block-inner .content {
+    padding: 0;
+}
+
+div.engineers-talks .discover {
+    /*position: absolute;*/
+   /* margin-left: 10px; 
+display: inline-block;/*
+    float: left;*/
+}
+
+#zone-home .col2#block-views-engineers-talk-block .view-content .views-row {
+    float: none;
+    width: 100%;
+}
+
+.engineers-talks div.views-field-field-blog-link {
+    padding: 0;
+    display: block;
+    width: 45.7%;
+    float: left;
+    margin-left: 5px;
+    margin-top: 79px;
+	 
+}
+
+.engineers-talks div.views-field-field-blog-link  a,
+div.home-news .view-footer .field-content a,
+#zone-home .col2.block-views-home-latest-product-block-1 .more a,
+#block-views-upcoming-events-block .discover a{
+ font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-size: 1.1em;
+    font-weight: normal;
+    letter-spacing: 0.03em;
+}
+
+.engineers-talks div.views-field-field-blog-link .more.discover {
+   position: static;
+   background-position: -2px -131px;
+}
+
+.engineers-talks div.views-field-body {
+    display: inline-block;
+    width: 50%;
+}
+
+.block-engineers-talk-block.block-views-engineers-talk-block,
+.block-home-video-block.block-views-home-video-block {
+    float: left;
+    width: 48.7%;
+    position: relative; 
+}
+/*
+#zone-home .col2 {
+    float: left;
+    width: 49%;
+    position: relative;
+}*/
+
+#zone-home .col2.first-block {
+   margin-right: 17px;
+}
+
+#zone-home h3.title {
+    max-width: 100%;
+    line-height: 95%;
+}
+
+#zone-home .col4 h3.title {
+     font-size: 1.45em;
+}
+
+#zone-home .col4 {
+    float: left;
+    width: 100%;
+    position: relative; 
+}
+
+#zone-home .col4 .block-inner .content {
+    padding: 0;
+}
+
+.field-content.more:not(.discover) {
+    bottom: -18px;
+}
+
+.latest-products {
+     float: left;
+    margin-left: -21px;
+    margin-top: 25px;
+    padding-top: 25px;
+    width: 100%;
+}
+
+.home-latest-products .block-home-latest-product-block-1 {
+    float: left;
+    display: block;
+}
+
+.home-latest-products .block-home-latest-product-block-1 .view-content .views-field-title {
+    bottom: 60%;
+}
+
+.view-display-id-block_1.home-latest-products .views-field.views-field-title {
+}
+
+.home-latest-products .views-field.views-field-title {
+    position: absolute;
+    left: 16px;
+    bottom: 55px;
+}
+
+.home-latest-products .views-field-field-page-description {
+    position: absolute;
+    bottom: 46px;
+    left: 16px;
+    overflow: hidden;
+    padding: 5px 5px 0 5px;
+}
+
+.home-latest-products .product_description {
+    color: #ffffff;
+    font-size: 1.4em;
+    max-width: 100%;
+    line-height: 95%;
+    text-transform: uppercase;
+font-family: 'HelveticaNeueW02-77BdCn 694069';
+    vertical-align: baseline;
+    margin: 0;
+    letter-spacing: 0.1em;
+}
+
+#zone-home .col2.block-views-home-latest-product-block .more {
+    background-position: 12px -213px;
+    padding-left: 37px;
+}
+
+#zone-home .col2.block-views-home-latest-product-block .field-content.more:not(.discover) {
+    bottom: -1px;
+}
+
+#zone-home .col2.block-views-home-latest-product-block-1 .more {
+   padding: 5px 12px 5px 29px;
+    background-position: -2px -130px;
+    margin-left: 16px;
+}
+
+.block-home-latest-product-block .home-latest-products .more a {
+    color: #ffffff;
+}
+
+.block-home-latest-product-block-1 .home-latest-products .discover.more a {
+    color: #000000;
+}
+
+.block-views-home-latest-product-block .more a:hover {
+    color: red;
+}
+
+#region-home .block-home-latest-product-block.block-views {
+    margin-bottom: 0;
+}
+
+
+.block-home-latest-product-block .home-latest-products .views-field.views-field-title h3 {
+    color: #ffffff;
+    font-size: 1.4em;
+	letter-spacing:0.1em;
+}
+
+
+#zone-home .block-home-latest-product-block-1 .home-latest-products .views-field.views-field-title h3.title {
+    color: #000000;
+    font-size: 2.2em;
+    letter-spacing: 0.01em;
+	line-height: 0.9em;
+    white-space: pre-wrap;
+}
+
+#zone-home .block-views-upcoming-events-block.block-views {
+   margin: 0;
+}
+
+#zone-home .block-views-upcoming-events-block.col2 .views-row {
+    height: auto;
+}
+
+#zone-home .block-views-upcoming-events-block.col2 .views-row-1,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-2,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-3,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-4 {
+    float: left;
+    display: inline-block;
+    width: 48%;
+    margin-right: 0;
+}
+
+#zone-home .block-views-upcoming-events-block.col2 .views-row-3,
+#zone-home .block-views-upcoming-events-block.col2 .views-row-4 {
+    
+}
+
+#block-views-home-latest-product-block-1 {
+    float: left;
+    width: 48.7%;
+    margin-left: 16px;
+}
+
+#region-home #block-views-home-latest-product-block-1.block-views {
+    margin-bottom: 0;
+}
+
+#zone-home .col2 .views-row {
+    float: left;
+    position: relative;
+/*    height: 255px;
+    overflow: hidden;    */
+}
+
+#zone-home .col2.couple {
+    width: 48.7%;
+    float: left;
+    display: block;
+    clear: left;
+}
+
+#zone-home .col2.couple .views-row {
+    width: 48.72%;
+    float: left;
+    display: inline-table;
+}
+
+#zone-home .col2.couple .views-row.views-row-last {
+    margin-right: 0;
+    margin-left: 16px;
+    float: left;
+}
+
+#zone-home .col2.single .views-row.views-row-last {
+    margin-left: 0;
+}
+
+#zone-home .col2.single.block-views-home-latest-product-block-1 .views-row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.block-views-home-latest-product-block-1 .more.discover:hover {
+    margin-left: 30px;
+}
+
+.block-views-home-latest-product-block-1 .discover {
+    border: 1px solid #000000;
+}
+
+.block-views-home-latest-product-block-1 .discover:hover a {
+    color: #000000;
+}
+
+#zone-home .col2.single .views-row {
+    margin-right: 0;
+}
+
+#zone-home .col4 .views-row {
+    float: left;
+    width: 23.72%;
+    position: relative;
+    margin-right: 16px;
+    height: 270px;
+    overflow: hidden;
+}
+
+#zone-home .col4 .views-row-last {
+    margin-right: 0;
+}
+
+h2.block-title {
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    background-position: -5px -148px;
+    margin-top: 23px;
+    clear: both;
+}
+
+.latest-products h2.block-title {
+    background-position: -5px -148px;
+}
+
+.upcoming-events h2.block-title {
+    background-position: -5px -148px;
+}
+
+
+.home-videos .views-field-title {
+    display: inline;
+    position: absolute;
+    top: 77%;
+    left: 3%;
+    width: 65%;
+}
+
+.home-videos .views-field-title h3.title {
+letter-spacing: 0.015em;
+    color: #ffffff;
+    font-size: 2.3em;
+    cursor: pointer;
+}
+
+.home-videos .views-field-field-vimeo-description,
+.home-videos .views-field-view-node {
+    display: none !important;
+}
+
+#region-home .block-views {
+    margin-bottom: 16px;
+}
+
+#region-home div.home-news div.views-row,
+#region-home div.home-latest-products div.views-row,
+#region-home div.home-upcoming-events div.views-row {
+    margin-bottom: 0;
+}
+
+/**
+ *     Bouton More news & videos
+ */
+#zone-home .col2 .home-upcoming-events .views-row {
+    height: auto;
+}
+
+.home-upcoming-events .views-field.views-field-title {
+    position: absolute;
+    bottom: 11%;
+    left: 4%;
+}
+
+.home-upcoming-events .views-field.views-field-title h3,
+.home-upcoming-events .views-field.views-field-title h3.title.link a {
+    color: #ffffff;
+    font-size: 1.6em;
+	font-family: 'HelveticaNeueW02-77BdCn 694069';
+}
+
+div.home-news .more {
+    padding-left: 19px;
+	margin-left: 4px;
+    background-position: -9px -132px;
+}
+
+div.home-news .more.discover {
+    padding: 5px 12px 5px 29px;
+    background-position: -2px -129px;
+}
+
+div.home-news .view-content,
+div.home-news .view-footer {
+    display: inline-block;
+}
+
+div.home-news .view-footer .field-content {
+    display: inline-block;
+    position: absolute;
+    right: 14px;
+    bottom: -2px;
+}
+
+#region-home .view-content div.views-field-title {
+    overflow: hidden;
+
+}
+
+.view.engineers-talks .view-content,
+.view.engineers-talks .view-content .views-row {
+    width: 100%;
+}
+
+.view.engineers-talks .view-content div.views-field-title {
+    display: inline-block;
+    width: 47.7%;
+    float: right;
+}
+
+.view.engineers-talks .view-content div.views-field-body {
+    display: inline-block;
+    width: 47.7%;
+    float: right;
+}
+
+
+.home-latest-products .views-field-field-image-large {
+}
+
+/**
+ *     Mavic live - Engineers talks
+ */
+#block-views-engineers-talk-block div.engineers-talks {
+    background-color: #F5F5F5;
+}
+
+.view-engineers-talk .views-field-body {
+    display: inline-block;
+    width: 50%;
+    padding-left: 0;
+}
+
+.engineers-talks img{
+    float: left;
+/*    width: 40%;
+    height: 40%;*/
+    padding-right: 10px;
+}
+
+div.engineers-talks h3.title {
+letter-spacing: 0.015em;
+    font-size: 2.3em;
+    padding: 3px 0 0 0;
+}
+
+.m-y_event {
+    font-size: 1.4em;
+}
+
+.day_event {
+    line-height: 1.1em;
+}
+
+#zone-home .home-next-events {
+ height: 324px;
+}
+
+#block-views-home-next-event-block.block-views {
+    float: left;
+    width: 48.7%;
+    clear: both;
+    margin-bottom: 0;
+}
+
+#block-views-upcoming-events-block {
+    float: left;
+    width: 48.7%; 
+}
+
+.home-next-events .views-field.views-field-title {
+    line-height: 1em;
+}
+/*
+.home-next-events .field-content.date-event,
+.home-next-events span.event {
+    font-style: italic;
+}*/
+
+#zone-home .col2 .home-next-events .view-content div.views-field.views-field-title {
+    width: 69%;
+}
+
+#zone-home .col2.block-views-home-latest-product-block .view-content div.views-field.views-field-title {
+    width: 81.7%;
+}
+
+#zone-home .col2.block-views-home-latest-product-block-1 .view-content div.views-field.views-field-title {
+    width: 45.7%;
+    bottom: 75px;
+    left: 16px;
+    padding-left: 0;
+}
+
+#block-views-upcoming-events-block .view-content {
+    padding: 15px 15px 26px 15px;
+    display: inline-block;
+}
+
+#block-views-upcoming-events-block .view-footer {
+    padding-bottom: 43px;
+    display: inline-block;
+}
+
+@-moz-document url-prefix() {
+#block-views-upcoming-events-block .view-footer {
+    padding-bottom: 26px;
+}
+}
+
+
+.engineers-talks div.views-field-field-visuel-engineer {
+    padding: 0;
+    float: left;
+}
+
+#block-views-engineers-talk-block .view-content,
+#block-views-upcoming-events-block .content {
+    background: #F5F5F5;
+    display: inline-block;
+}
+
+#block-views-upcoming-events-block .views-row:nth-child(3),
+#block-views-upcoming-events-block .views-row:nth-child(4) {
+    padding-top: 13px;
+}
+
+#block-views-upcoming-events-block .views-row:nth-child(2n+1) {
+    border-right: 1px solid #E4E2E2;
+}
+
+#block-views-upcoming-events-block .views-row:nth-child(2n+0) {
+    padding-left: 20px;
+}
+
+#block-views-upcoming-events-block .content {
+    height: auto;
+}
+
+#block-views-upcoming-events-block .discover {
+    padding: 7px 12px 7px 29px;
+    background-position: -2px -130px;
+    margin-left: 15px;
+    position: static;
+}
+
+#zone-home .view-content div.views-field.views-field-title,
+#zone-home .view-content div.views-field-body {
+    padding-top: 5px;
+}
+
+#zone-home .view-content div.views-field.views-field-title,
+#zone-home .view-content div..views-field.views-field-type {
+    padding-bottom: 5px;
+}
+
+#zone-home #block-views-upcoming-events-block .view-content div.views-field.views-field-title {
+    padding-top: 0;
+    padding-left: 0;
+}
+
+#zone-home #block-views-upcoming-events-block .view-content div.views-field-field-lieu {
+}
+
+#zone-home .view-content .views-field-view-node {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    bottom: 4%;
+}
+
+.engineers-talks span.engineers-talks{
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: 9px -663px;
+    margin: 0;
+    margin-top: 10px;
+    padding: 7px 0 3px 42px;
+    overflow: hidden;
+    text-transform: uppercase;
+
+    font-size: 1.2em;
+    letter-spacing: 0.15em;
+    display: inline-block;
+}
+
+.engineers-talks h2.title {
+    text-transform: uppercase;
+    font-style: italic;
+    margin-bottom: 0;
+    font-size: 1.2em;
+    max-width: 82%;
+}
+
+.engineers-talks .body-teaser {
+    max-width: 90%;
+    font-size: 0.85em;
+    letter-spacing: -0.65px;
+    display: inherit;
+    padding: 0 0 10px 0;
+}
+/* Fin HomePage */
+
+/*
+ * Zone User
+ */
+
+#zone-user-wrapper {
+    height: 40px;
+    background-color: #f5f5f5;
+    z-index: 97;
+}
+
+#zone-user {
+    padding-top: 12px;
+}
+
+#zone-user a {
+    text-decoration: none;
+}
+
+/**
+ *     Header-first
+ */
+.game {
+    position: absolute;
+    top: 400px;
+	padding-left: 10px;
+}
+
+.game .content {
+    
+}
+
+.game .content .first-line {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 5.1em;
+    font-family:"HelveticaNeueW02-56Ital";
+    text-transform: uppercase;
+    width: 55%;
+    line-height: 0.8em;
+    margin-bottom: 5px;
+}
+
+.game .content .second-line {
+    color: #ffffff;
+	letter-spacing: 0.04em;
+    font-size: 1.7em;
+	font-family: 'HelveticaNeueW02-77BdCn 694069';
+    line-height: 1em;
+    text-transform: uppercase;
+    width: 54%;
+}
+
+.game .content .participate {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: 7px -204px;
+    display: inline-block;
+    margin-top: 20px;
+    border: 1px solid #ffffff;
+	padding-left: 38px;
+    padding-right: 21px;
+	height: 41px;
+    line-height: 41px;
+}
+
+.game .content .participate a {
+letter-spacing: 0.03em;
+    color: #ffffff;
+    font-size: 1.5em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    text-transform: uppercase;
+    text-decoration: none;    
+}
+
+.game .content .participate:hover,
+.game .content .participate:hover a {
+    border: 1px solid #FBE201;
+    background-color: #FBE201;
+    color: #000000;
+     background-position: 7px -123px;
+    cursor: pointer;
+}
+/* fin texte concours */
+
+
+/**
+ *     Header second
+ */
+.region-inner.region-header-second-inner {
+    display: inline-block;
+    float: right;
+}
+/**
+ *     Bloc latest videos
+ */
+.latest-videos {
+    position: absolute;
+   /*right: 318px;*/
+    right: 17.8%;
+    margin-top: -26px;
+    margin-right: 10px;
+}
+
+.latest-videos span.latest {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat;
+    background-position: 2px -235px;
+    font-size: 1.3em;
+	font-family: 'HelveticaNeueW02-77BdCn 694069';
+    text-transform: uppercase;
+   padding: 10px 19px 10px 33px;
+    line-height: 1em;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.latest-videos span.latest:hover {
+    background-color: #FBE201;
+    color: #000000;
+    cursor: pointer;     
+}
+/* fin bloc latest videos */
+
+/**
+ *     Bloc title Mavic Live + Filter
+ */
+.mavic-live-title {
+    float: left;
+    width: 70%;
+    margin-left: -17px;
+}
+
+.filters {
+    display: inline-block;
+    width: 30%;
+    float: right;
+}
+
+.filters #filter-mavic {
+    float: right;
+    width: 339px;
+    margin-top: 15px;
+    padding-top: 5px;
+    display: inline-block;
+    margin-right: 14px;
+}
+
+span.filter {
+    float: left;
+   /* width: 15%;*/
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+	font-size:1.2em;
+    padding-top: 5px;
+    padding-left: 13px;
+}
+
+.filters .block-filters {
+    float: right;
+    width: 248px;
+}
+
+.filters .block1-filter {
+    float: left;
+    /*width: 45.5%;*/
+}
+
+.filters .block2-filter {
+    float: right;
+   /* width: 37.5%;*/    
+}
+/* fin bloc title Mavic live + filter */
+
+/**
+ *     Bloc bouton retour haut de page
+ */
+#btn_up
+{
+    position: fixed;
+    bottom: 15px;
+    right: 25px;
+    cursor: pointer;
+    display:none;
+    background-color: #FBE201;
+    padding: 12px 6px 6px 5px;
+    z-index: 99;        
+}
+
+#btn_up a {
+    font-size: 0.87em;
+    font-weight: 600;
+    padding: 13px 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: url('/sites/default/files/images/pictos2.png') no-repeat;
+    background-position: -1px -875px;
+}
+/* fin bloc bouton retour haut de page */
+
+/**
+ *     Top Navigation menu
+ */
+#zone-menu-wrapper { 
+    min-height: 913px;
+    background: url('/sites/default/files/images/img_home.jpg') no-repeat transparent;
+}
+
+.sf-style-mavic_sf li:hover #zone-menu-wrapper {
+    background: #ffffff;
+    
+}
+
+div.region-user-second div.block {
+    float: left;
+}
+
+/**
+ *     Top-menu-left
+ */
+#block-superfish-2 {
+    padding: 3px 0 0 0;
+    margin-left: 38px;
+    float: none;
+}
+
+#superfish-2 a.sf-depth-1 {
+    font-size: 0.8em;
+}
+
+#superfish-2 li.sf-item-1,
+#superfish-2 li.sf-item-2 {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    padding: 3px 3px 5px 16px;    
+}
+
+#superfish-2 li.sf-item-1 {
+    background-position: -10px -70px;
+    margin-right: 20px;
+}
+
+#superfish-2 li.sf-item-2 {
+    background-position: -10px -39px;
+}
+
+/**
+ *     Top-menu-right
+ */
+#block-superfish-3 {
+    padding: 3px 0 0 5px;
+    float: right;
+}
+
+#superfish-3 > li.sf-depth-1:first-child {
+    margin-left: 0.313em;
+}
+
+#superfish-3 a.sf-depth-1 {
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px 0 0 0;
+    font-size: 0.85em;
+}
+
+#superfish-3 li.sf-item-1 {
+    border-right: 1px solid #777777;
+    padding-right: 13px;
+}
+
+#superfish-3 li.sf-item-2 {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: -5px -104px;
+    padding: 0 3px 5px 24px;
+    margin-left: 0.813em;
+}
+
+/**
+ *     Form google search
+ */
+#block-google-cse-google-cse {
+    float: left;
+    padding: 0 5px 0 56px;
+}
+
+#google-cse-results-searchbox-form #edit-query {
+    background-image: url('/sites/default/files/images/pictos2.png') !important;
+    background-position: 196px -7px !important;
+    background-repeat: no-repeat !important;
+    background-color: transparent !important;
+    border: 1px solid #C7C4C4 !important;
+    width: 229px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    height: 23px;
+}
+
+#google-cse-results-searchbox-form input[type="submit"] {
+    display: none;
+}
+/* fin Form google search */
+
+#region-user-second {
+    padding-left: 187px;
+}
+
+
+/**
+ *     Main menu
+ * cf : /sites/all/libraries/superfish/style/mavic_sf.css
+ */
+#zone-menu {
+    padding-top: 17px;
+	padding-left: 20px;
+}
+
+#bloc-menu-hover {
+    background-color: #ffffff;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    z-index: 97;
+    padding-top: 10px;
+}
+
+/**
+ *     Bloc menu Product - Main menu
+ */
+#block-superfish-1 .menu-views .view-id-home_block_mavic_live_news .views-row {
+    float: left;
+    width: 24.4%;
+    padding-right: 5px;
+    vertical-align: top;
+}
+
+.menu-views .view-id-home_block_mavic_live_news .views-row:last-child {
+    padding-right: 0;
+}
+
+.menu-views {
+    display: inline-block;
+    width: 100%;
+}
+
+.menu-views .view-id-home_block_mavic_live_news .views-row .view-footer .field-content {
+    display: none;
+}
+/* Bloc menu Product - Main menu */
+
+/**
+ *     Footer
+ */
+footer#section-footer {
+    margin-top: 98px;
+}
+
+/**
+ *     Footer - zone post script
+ */
+footer #zone-postscript-wrapper {
+    background-color: #ededed;
+}
+
+.region-postscript-first-inner {
+    width: 100%;
+}
+
+.region-postscript-first-inner h2 {
+   font-style: normal;
+}
+
+.region-postscript-first-inner .block {
+    width: 19%;
+    float: left;
+    padding-right: 70px;
+}
+
+.region-postscript-first-inner .block h2.block-title {
+    padding-left: 34px;
+}
+
+.region-postscript-first-inner .block:last-child {
+    padding-right: 0;
+}
+
+.region-postscript-first-inner .block .content {
+    padding-left: 34px;
+}
+
+.region-postscript-first-inner .block-2 h2.block-title {
+    background-position: -2px -619px;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    line-height: 2.6em;
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 11px;
+	 font-family: arial;
+	 font-weight: bold;
+}
+
+.region-postscript-first-inner .block-3 h2.block-title {
+    background-position: -2px -568px;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    line-height: 2.6em;
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 11px;    
+	font-family: arial;
+	 font-weight: bold;
+}
+
+.region-postscript-first-inner .block-4 h2.block-title {
+    background-position: -2px -517px;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    line-height: 2.6em;
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 11px;
+	font-family: arial;
+	 font-weight: bold;
+}
+
+.region-postscript-first-inner .block-5 h2.block-title {
+    background-position: -2px -470px;
+    text-transform: capitalize;
+    font-size: 0.9em;
+    line-height: 2.6em;
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 11px;
+	font-family: arial;
+	 font-weight: bold;
+}
+
+#zone-postscript {
+    padding: 18px 0;
+    height: 85px;
+}
+
+#zone-postscript .content {
+    font-size: 0.8em;
+	line-height: 13px;
+}
+
+/**
+ *     Footer - first
+ */
+footer div.region-footer-first {
+    
+}
+
+#zone-branding #block-block-14 span.sitemap,
+#zone-branding #block-block-14 span.conditions-generales-de-vente,
+#zone-branding #block-block-14 span.professionnels {
+    display: initial;
+}
+
+/**
+ *     Footer - second
+ */
+footer div.region-footer-second {
+    background-color: #fff;
+}
+
+footer #zone-footer-wrapper {
+    background-color: #f5f5f5;
+    padding-top: 16px;
+    padding-bottom: 44px;
+}
+
+#zone-footer h2.block-title {
+    background: none;
+    font-size: 1em;
+    line-height: 1em;
+    padding: 0;
+}
+
+#zone-footer span.block-title {
+    background: none;
+    font-size: 1.1em;
+font-family: 'HelveticaNeueW02-77BdCn 694069';
+letter-spacing:0.05em;
+    text-transform: uppercase;
+    
+    vertical-align: baseline;
+    margin-top: 28px;
+    margin-bottom: 10px;
+    display: inline-block;
+    line-height: 1em;
+    padding: 0;
+    
+}
+
+#zone-footer .region-inner {
+    width: 100%;
+}
+
+#zone-footer .region-inner .block-menu,
+#zone-footer .region-inner .block-menu-block {
+    width: 16%;
+    float: left;
+}
+
+#zone-footer .region-inner .menu-block-wrapper ul li,
+#zone-footer .region-inner .block-menu-menu-footer-products ul li {
+    margin: 0;
+	font-size: 0.8em;
+    line-height: 16px;
+}
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    padding: 2px 3px 5px 23px;
+    overflow: hidden;
+}
+
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li.facebook {
+    background-position: -7px -392px;
+}
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li.flickr {
+    background-position: -6px -412px;
+}
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li.twitter {
+    background-position: -8px -431px;
+}
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li.vimeo {
+    background-position: -6px -369px;
+}
+
+#zone-footer .region-inner .menu-name-menu-r-seaux ul > li.youtube {
+    background-position: -6px -345px;
+}
+
+#zone-footer ul li {
+    list-style: none;
+}
+
+#zone-footer li > a {
+    text-decoration: none;
+}
+
+/**
+ *     Bloc texte bas de page
+ */
+
+#block-block-6 {
+    padding-top: 10px;
+    display: inline-block;
+    width: 58%;
+    color: #BBBABA;
+	font-size: 0.8em;
+}
+
+/* fin bloc texte bas de page */
+
+/**
+ *     Bloc selection langue
+ */
+
+#block-block-7 {
+    position: absolute;
+    right: 16px;;
+    top: 10px;
+}
+/* fin bloc selection langue */
+
+
+.upcoming-events {
+    float: left;
+    width: 100%;
+    margin-left: -21px;
+    display: inline-block;
+}
+
+/* Affichage des blocs footer */
+
+/**
+ *     Bloc footer @2013 Mavic
+ */
+footer .footer2 .block-footer-mavic {
+    padding-top: 6px;
+}
+
+footer .footer2 .block-footer-mavic p {
+    margin-bottom: 0;
+}
+
+footer .footer2 .block-footer-mavic p span.block-title {
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+footer .footer2 .block-footer-mavic p .sep {
+    border-right: 1px solid #000000;
+    padding: 0 8px;
+}
+
+footer .footer2 .block-footer-mavic p .sep:last-child {
+    border-right: none;
+}
+
+footer .footer2 .block-footer-mavic p .sep a {
+    text-decoration: none;
+	font-size: 0.8em;
+}
+/* fin bloc footer @2013 Mavic */
+
+/* footer marge exterieure entre footer1 et footer2 */
+.region-footer-second {
+    padding-top: 10px;
+}
+
+/**
+ *     Override du style selectbox
+ */
+/* Selectbox filter */
+
+.block1-filter a.selectBox,
+.block1-filter .selectBox-dropdown {
+    min-width: 132px;
+}
+
+.block2-filter a.selectBox,
+.block2-filter .selectBox-dropdown {
+    min-width: 107px;
+    
+}
+
+.block1-filter .selectBox-dropdown .selectBox-label {
+    width: 113px;
+    padding-top: 4px;
+    padding-left: 9px;
+}
+
+.block2-filter .selectBox-dropdown .selectBox-label {
+    width: 85px;
+    padding-top: 4px;
+    padding-left: 9px;    
+}
+
+#filter-mavic .selectBox-dropdown .selectBox-arrow {
+    background: url('/sites/default/files/images/pictos2.png') 50% center no-repeat;
+    background-position: -6px -272px;
+    border: none;
+}
+
+#filter-mavic .selectBox-dropdown .selectBox-label {
+    font-weight: normal;
+    font-style: normal;
+	font-size:1.2em;
+	font-family: 'HelveticaNeueW02-77BdCn 694069';
+    text-transform: uppercase;
+}
+
+.selectBox-dropdown {
+    border:solid 1px #000000;
+    background: #ffffff;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    float: none;
+}
+
+/* Selectbox language switcher */
+.language-switcher .selectBox-dropdown .selectBox-label {
+    text-transform: none;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.language-switcher .selectBox-dropdown .selectBox-arrow {
+    background: url('/sites/default/files/images/pictos2.png') 50% center no-repeat;
+    background-position: -10px -272px;
+}
+
+.language-switcher .selectBox-dropdown {
+    background: url('/sites/default/files/images/icos_cadre2.png') no-repeat;
+    background-position: -4px -348px;
+    padding: 6px 7px 2px 6px;
+    border: none;
+}
+
+.menu-views .views-field.views-field-view-node {
+    display: none;
+}
+
+.menu-views .view-footer span.discover {
+    display: none;
+}
+
+/**
+ *     Affichage des blocs footer (cachés en affichage mobile)
+ */
+#block-superfish-3,
+#block-superfish-2 ul li.sf-item-2,
+#block-block-9,
+#block-block-10,
+#block-block-11,
+#zone-header-wrapper,
+article.node-mv-gamme .toolbar-links,
+.upcoming-events,
+.block-home-next-event-block,
+.block-upcoming-events-block,
+#zone-postscript-wrapper,
+.block-menu-footer-products,
+.block-menu-block-4,
+#block-block-7,
+#zone-postscript {
+    display: block;
+}
+
+.mobile #block-superfish-2 ul li.sf-item-1 {
+    background-color: #FBE201;
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-position: 4px -815px;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 40px;
+    float: right;
+}
+
+.mobile #block-superfish-2 ul li.sf-item-1 a {
+    text-indent: -999px;
+    height: 40px;
+}
+
+.mobile #zone-menu-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.mobile #zone-menu-wrapper #region-branding {
+    margin: 0;
+}
+
+/**
+ *     Page Gamme
+ */
+.toolbar-links {
+    height: 40px;
+}
+
+.toolbar-links a.product-compare {
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -6px -945px;
+    text-transform: uppercase;
+    padding: 0 0 2px 24px;
+    text-decoration: none;
+    float: right;
+}
+
+.block-listing-produits .view-filters {
+    background-color: #ededed;
+    min-width: 868px;
+}
+
+.block-listing-produits .view-filters .views-exposed-widget {
+    width: 100%;
+}
+
+.block-listing-produits ul.bef-tree {
+    padding-left: 0;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1 {
+    float: left;
+    border-left: 2px solid #dcdcdc;
+    width: 14%;
+    padding-left: 8px;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1:first-of-type {
+    border-left: none;
+    padding-left: 0;
+}
+
+.block-listing-produits ul.bef-tree li {
+    list-style: none;
+}
+
+.block-listing-produits ul.bef-tree li.depth-1 > .form-type-bef-link {
+    text-transform: uppercase;
+    font-family: "HelveticaNeueW02-77BdCn 694069";
+}
+
+.taxonomy-term.vocabulary-segments h2 {
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -5px -148px;
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-weight: normal;
+    letter-spacing: -0.05em;
+    margin-top: 28px;
+}
+
+.view-gamme > .view-content > .views-row {
+    float: left;
+    width: 33%;
+}
+
+.view-gamme > .view-content > .views-row:nth-child(5) {
+    clear: both;
+}
+
+.view-gamme h3 {
+    clear: left;
+}
+
+.view-gamme > .view-content > .views-row:nth-child(n+5) {
+  padding-top: 40px;
+}
+
+.block-autres-gammes {
+    clear: left;
+}
+
+.block-autres-gammes h2 {
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -5px -148px;
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-weight: normal;
+    letter-spacing: -0.05em;
+    margin-top: 28px; 
+}
+
+.view-autres-gammes .view-content .views-row {
+    float: left;
+    width: 25%;
+}
+
+.block-campagnes h2 {
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -5px -148px;
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-weight: normal;
+    letter-spacing: -0.05em;
+    margin-top: 28px; 
+}
+
+.view-block-campagne .view-content .views-row {
+    float: left;
+    width: 33%;
+}
+
+.block-mavic-live h2 {
+    background-image: url('/sites/default/files/images/pictos2.png');
+    background-repeat: no-repeat;
+    background-position: -5px -148px;
+    line-height: 1.5em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding-left: 33px;
+    text-transform: uppercase;
+    font-size: 2.4em;
+    font-family: 'HelveticaNeueW02-77BdCn 694069';
+    font-weight: normal;
+    letter-spacing: -0.05em;
+    margin-top: 28px;     
+}
+
+.view-home-block-mavic-live-news .view-content .views-row {
+    float: left;
+    width: 34%;
+}
+
+.view-home-video .view-content .views-row {
+    float: left;
+}
+
+#block-superfish-1{
+	margin-left:23px;
+}
+
+#superfish-1 {
+    float: none;
+    background-color: transparent;
+    padding: 15px 0 5em 0;
+}
+
+#superfish-1 > li.sf-depth-1 {
+    float: left;
+    margin-left: 2.25em;
+    padding-left: 0
+}
+
+#superfish-1 > li.sf-depth-1 > a {
+    color: #ffffff;
+}
+
+#superfish-1 #menu-80628-1 {
+    display: block;   
+}
+
+#block-menu-block-3 ul li {
+    float: none;
+}
+
+#superfish-1 > li.sf-depth-1 ul.sf-megamenu {
+    display: block;
+    position: absolute;
+}
+
+#superfish-1 .sf-megamenu-column a {
+    background: url('/sites/default/files/images/pictos2.png') no-repeat transparent;
+    background-position: -11px -182px;
+}
+
+#superfish-1 .sf-megamenu-column ol a {
+    background: none;
+}
+
+#superfish-1 .sf-megamenu-column ol {
+    display: block;
+}
+
+.sf-menu.sf-style-mavic_sf ul.sf-megamenu li.sf-megamenu-wrapper ol li.sf-megamenu-column {
+    float: left;
+    width: 12em;
+}
+
+#block-menu-block-3 ul li.facebook a,
+#block-menu-block-3 ul li.flickr a,
+#block-menu-block-3 ul li.twitter a,
+#block-menu-block-3 ul li.vimeo a,
+#block-menu-block-3 ul li.youtube a {
+    background-image: none;
+    text-indent: 0;
+    height: auto;
+    width: auto;
+    display: initial;
+}
+
+#block-block-14 .block-footer-mavic .block-title {
+    font: inherit;
+    font-weight: bold;
+}
+
+.view-home-block-mavic-live-news.view-id-home_block_mavic_live_news{
+	padding-bottom:40px;
+	position:relative;
+}
+
+#block-block-13{
+	margin-top:35px;
+}
+
+
